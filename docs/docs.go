@@ -1944,7 +1944,7 @@ var doc = `{
         "schema.LoginCaptcha": {
             "type": "object",
             "properties": {
-                "captcha_id": {
+                "captchaId": {
                     "description": "验证码ID",
                     "type": "string"
                 }
@@ -1953,17 +1953,17 @@ var doc = `{
         "schema.LoginParam": {
             "type": "object",
             "required": [
-                "captcha_code",
-                "captcha_id",
+                "captchaCode",
+                "captchaId",
                 "password",
-                "user_name"
+                "userName"
             ],
             "properties": {
-                "captcha_code": {
+                "captchaCode": {
                     "description": "验证码",
                     "type": "string"
                 },
-                "captcha_id": {
+                "captchaId": {
                     "description": "验证码ID",
                     "type": "string"
                 },
@@ -1971,7 +1971,7 @@ var doc = `{
                     "description": "密码(md5加密)",
                     "type": "string"
                 },
-                "user_name": {
+                "userName": {
                     "description": "用户名",
                     "type": "string"
                 }
@@ -1980,15 +1980,15 @@ var doc = `{
         "schema.LoginTokenInfo": {
             "type": "object",
             "properties": {
-                "access_token": {
+                "accessToken": {
                     "description": "访问令牌",
                     "type": "string"
                 },
-                "expires_at": {
+                "expiresAt": {
                     "description": "令牌到期时间戳",
                     "type": "integer"
                 },
-                "token_type": {
+                "tokenType": {
                     "description": "令牌类型",
                     "type": "string"
                 }
@@ -1998,7 +1998,7 @@ var doc = `{
             "type": "object",
             "required": [
                 "name",
-                "show_status",
+                "showStatus",
                 "status"
             ],
             "properties": {
@@ -2009,7 +2009,7 @@ var doc = `{
                         "$ref": "#/definitions/schema.MenuAction"
                     }
                 },
-                "created_at": {
+                "createdAt": {
                     "description": "创建时间",
                     "type": "string"
                 },
@@ -2033,11 +2033,11 @@ var doc = `{
                     "description": "菜单名称",
                     "type": "string"
                 },
-                "parent_id": {
+                "parentId": {
                     "description": "父级ID",
                     "type": "string"
                 },
-                "parent_path": {
+                "parentPath": {
                     "description": "父级路径",
                     "type": "string"
                 },
@@ -2049,7 +2049,7 @@ var doc = `{
                     "description": "排序值",
                     "type": "integer"
                 },
-                "show_status": {
+                "showStatus": {
                     "description": "显示状态(1:显示 2:隐藏)",
                     "type": "integer"
                 },
@@ -2057,7 +2057,7 @@ var doc = `{
                     "description": "状态(1:启用 2:禁用)",
                     "type": "integer"
                 },
-                "updated_at": {
+                "updatedAt": {
                     "description": "更新时间",
                     "type": "string"
                 }
@@ -2067,7 +2067,7 @@ var doc = `{
             "type": "object",
             "required": [
                 "code",
-                "menu_id",
+                "menuId",
                 "name"
             ],
             "properties": {
@@ -2079,7 +2079,7 @@ var doc = `{
                     "description": "唯一标识",
                     "type": "string"
                 },
-                "menu_id": {
+                "menuId": {
                     "description": "菜单ID",
                     "type": "string"
                 },
@@ -2103,7 +2103,7 @@ var doc = `{
                 "path"
             ],
             "properties": {
-                "action_id": {
+                "actionId": {
                     "description": "菜单动作ID",
                     "type": "string"
                 },
@@ -2150,11 +2150,11 @@ var doc = `{
                     "description": "菜单名称",
                     "type": "string"
                 },
-                "parent_id": {
+                "parentId": {
                     "description": "父级ID",
                     "type": "string"
                 },
-                "parent_path": {
+                "parentPath": {
                     "description": "父级路径",
                     "type": "string"
                 },
@@ -2166,7 +2166,7 @@ var doc = `{
                     "description": "排序值",
                     "type": "integer"
                 },
-                "show_status": {
+                "showStatus": {
                     "description": "显示状态(1:显示 2:隐藏)",
                     "type": "integer"
                 },
@@ -2194,11 +2194,11 @@ var doc = `{
             "type": "object",
             "required": [
                 "name",
-                "role_menus",
+                "roleMenus",
                 "status"
             ],
             "properties": {
-                "created_at": {
+                "createdAt": {
                     "description": "创建时间",
                     "type": "string"
                 },
@@ -2218,7 +2218,7 @@ var doc = `{
                     "description": "角色名称",
                     "type": "string"
                 },
-                "role_menus": {
+                "roleMenus": {
                     "description": "角色菜单列表",
                     "type": "array",
                     "items": {
@@ -2233,7 +2233,7 @@ var doc = `{
                     "description": "状态(1:启用 2:禁用)",
                     "type": "integer"
                 },
-                "updated_at": {
+                "updatedAt": {
                     "description": "更新时间",
                     "type": "string"
                 }
@@ -2242,12 +2242,12 @@ var doc = `{
         "schema.RoleMenu": {
             "type": "object",
             "required": [
-                "action_id",
-                "menu_id",
-                "role_id"
+                "actionId",
+                "menuId",
+                "roleId"
             ],
             "properties": {
-                "action_id": {
+                "actionId": {
                     "description": "动作ID",
                     "type": "string"
                 },
@@ -2255,11 +2255,11 @@ var doc = `{
                     "description": "唯一标识",
                     "type": "string"
                 },
-                "menu_id": {
+                "menuId": {
                     "description": "菜单ID",
                     "type": "string"
                 },
-                "role_id": {
+                "roleId": {
                     "description": "角色ID",
                     "type": "string"
                 }
@@ -2277,15 +2277,15 @@ var doc = `{
         "schema.UpdatePasswordParam": {
             "type": "object",
             "required": [
-                "new_password",
-                "old_password"
+                "newPassword",
+                "oldPassword"
             ],
             "properties": {
-                "new_password": {
+                "newPassword": {
                     "description": "新密码(md5加密)",
                     "type": "string"
                 },
-                "old_password": {
+                "oldPassword": {
                     "description": "旧密码(md5加密)",
                     "type": "string"
                 }
@@ -2348,7 +2348,7 @@ var doc = `{
         "schema.UserLoginInfo": {
             "type": "object",
             "properties": {
-                "real_name": {
+                "realName": {
                     "description": "真实姓名",
                     "type": "string"
                 },
@@ -2359,11 +2359,11 @@ var doc = `{
                         "$ref": "#/definitions/schema.Role"
                     }
                 },
-                "user_id": {
+                "userId": {
                     "description": "用户ID",
                     "type": "string"
                 },
-                "user_name": {
+                "userName": {
                     "description": "用户名",
                     "type": "string"
                 }
