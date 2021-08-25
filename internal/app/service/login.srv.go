@@ -10,7 +10,6 @@ import (
 	"github.com/LyricTian/captcha"
 	"github.com/google/wire"
 	"net/http"
-	"sort"
 )
 
 // LoginSet 注入Login
@@ -18,13 +17,11 @@ var LoginSet = wire.NewSet(wire.Struct(new(Login), "*"))
 
 // Login 登陆管理
 type Login struct {
-	Auth            auth.Auther
-	UserModel       *repo.User
-	UserRoleModel   *repo.UserRole
-	RoleModel       *repo.Role
-	RoleMenuModel   *repo.RoleMenu
-	MenuModel       *repo.Menu
-	MenuActionModel *repo.MenuAction
+	Auth          auth.Auther
+	UserModel     *repo.User
+	UserRoleModel *repo.UserRole
+	RoleModel     *repo.Role
+	MenuModel     *repo.Menu
 }
 
 // GetCaptcha 获取图形验证码信息
@@ -174,11 +171,7 @@ func (a *Login) QueryUserMenuTree(ctx context.Context, userID string) (schema.Me
 			return nil, err
 		}
 
-		menuActionResult, err := a.MenuActionModel.Query(ctx, schema.MenuActionQueryParam{})
-		if err != nil {
-			return nil, err
-		}
-		return result.Data.FillMenuAction(menuActionResult.Data.ToMenuIDMap()).ToTree(), nil
+		return result.Data.ToTree(), nil
 	}
 
 	userRoleResult, err := a.UserRoleModel.Query(ctx, schema.UserRoleQueryParam{
@@ -190,53 +183,7 @@ func (a *Login) QueryUserMenuTree(ctx context.Context, userID string) (schema.Me
 		return nil, errors.ErrNoPerm
 	}
 
-	roleMenuResult, err := a.RoleMenuModel.Query(ctx, schema.RoleMenuQueryParam{
-		RoleIDs: userRoleResult.Data.ToRoleIDs(),
-	})
-	if err != nil {
-		return nil, err
-	} else if len(roleMenuResult.Data) == 0 {
-		return nil, errors.ErrNoPerm
-	}
-
-	menuResult, err := a.MenuModel.Query(ctx, schema.MenuQueryParam{
-		IDs:    roleMenuResult.Data.ToMenuIDs(),
-		Status: 1,
-	})
-	if err != nil {
-		return nil, err
-	} else if len(menuResult.Data) == 0 {
-		return nil, errors.ErrNoPerm
-	}
-
-	mData := menuResult.Data.ToMap()
-
-	//	获取授权菜单的父级菜单，判断那些父级菜单不在之前的授权菜单中,存放与qIDs切片
-	var qIDs []string
-	for _, pid := range menuResult.Data.SplitParentIDs() {
-		if _, ok := mData[pid]; !ok {
-			qIDs = append(qIDs, pid)
-		}
-	}
-	//	获取这些差异的父级菜单的信息,补充到menuResult.Data中
-	if len(qIDs) > 0 {
-		pmenuResult, err := a.MenuModel.Query(ctx, schema.MenuQueryParam{
-			IDs: qIDs,
-		})
-		if err != nil {
-			return nil, err
-		}
-		menuResult.Data = append(menuResult.Data, pmenuResult.Data...)
-	}
-	sort.Sort(menuResult.Data)
-	menuActionResult, err := a.MenuActionModel.Query(ctx, schema.MenuActionQueryParam{
-		IDs: roleMenuResult.Data.ToActionIDs(),
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return menuResult.Data.FillMenuAction(menuActionResult.Data.ToMenuIDMap()).ToTree(), nil
+	return nil, nil
 }
 
 // UpdatePassword 更新当前用户登陆密码

@@ -19,8 +19,6 @@ var CasbinAdapterSet = wire.NewSet(wire.Struct(new(CasbinAdapter), "*"), wire.Bi
 // CasbinAdapter casbin适配器
 type CasbinAdapter struct {
 	RoleModel         *repo.Role
-	RoleMenuModel     *repo.RoleMenu
-	MenuResourceModel *repo.MenuActionResource
 	UserModel         *repo.User
 	UserRoleModel     *repo.UserRole
 }
@@ -52,39 +50,6 @@ func (a *CasbinAdapter) LoadRolePolicy(ctx context.Context, m casbinModel.Model)
 		return err
 	} else if len(roleResult.Data) == 0 {
 		return nil
-	}
-
-	roleMenuResult, err := a.RoleMenuModel.Query(ctx, schema.RoleMenuQueryParam{})
-	if err != nil {
-		return err
-	}
-	mRoleMenus := roleMenuResult.Data.ToRoleIDMap()
-
-	menuResourceResult, err := a.MenuResourceModel.Query(ctx, schema.MenuActionResourceQueryParam{})
-	if err != nil {
-		return err
-	}
-
-	mMenuResources := menuResourceResult.Data.ToActionIDMap()
-
-	for _, item := range roleResult.Data {
-		mcache := make(map[string]struct{})
-		if rms, ok := mRoleMenus[item.ID]; ok {
-			for _, actionID := range rms.ToActionIDs() {
-				if mrs, ok := mMenuResources[actionID]; ok {
-					for _, mr := range mrs {
-						if mr.Path == "" || mr.Method == "" {
-							continue
-						} else if _, ok := mcache[mr.Path+mr.Method]; ok {
-							continue
-						}
-						mcache[mr.Path+mr.Method] = struct{}{}
-						line := fmt.Sprintf("p,%s,%s,%s", item.ID, mr.Path, mr.Method)
-						persist.LoadPolicyLine(line, m)
-					}
-				}
-			}
-		}
 	}
 	return nil
 }

@@ -29,7 +29,7 @@ type Menu struct {
 // @Success 200 {object} schema.ListResult{list=[]schema.Menu} "查询结果"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/menus [get]
+// @Router /api/v1/management/menus [get]
 func (a *Menu) Query(c *gin.Context) {
 	ctx := c.Request.Context()
 	var params schema.MenuQueryParam
@@ -58,7 +58,7 @@ func (a *Menu) Query(c *gin.Context) {
 // @Success 200 {object} schema.ListResult{list=[]schema.MenuTree} "查询结果"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/menus.tree [get]
+// @Router /api/v1/management/menus.tree [get]
 func (a *Menu) QueryTree(c *gin.Context) {
 	ctx := c.Request.Context()
 	var params schema.MenuQueryParam
@@ -86,7 +86,7 @@ func (a *Menu) QueryTree(c *gin.Context) {
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 404 {object} schema.ErrorResult "{error:{code:0,message:资源不存在}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/menus/{id} [get]
+// @Router /api/v1/management/menus/{id} [get]
 func (a *Menu) Get(c *gin.Context) {
 	ctx := c.Request.Context()
 	item, err := a.MenuSrv.Get(ctx, c.Param("id"))
@@ -106,7 +106,7 @@ func (a *Menu) Get(c *gin.Context) {
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/menus [post]
+// @Router /api/v1/management/menus [post]
 func (a *Menu) Create(c *gin.Context) {
 	ctx := c.Request.Context()
 	var item schema.Menu
@@ -134,7 +134,7 @@ func (a *Menu) Create(c *gin.Context) {
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/menus/{id} [put]
+// @Router /api/v1/management/menus/{id} [put]
 func (a *Menu) Update(c *gin.Context) {
 	ctx := c.Request.Context()
 	var item schema.Menu
@@ -159,7 +159,7 @@ func (a *Menu) Update(c *gin.Context) {
 // @Success 200 {object} schema.StatusResult "{status:OK}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/menus/{id} [delete]
+// @Router /api/v1/management/menus/{id} [delete]
 func (a *Menu) Delete(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := a.MenuSrv.Delete(ctx, c.Param("id"))
@@ -178,7 +178,7 @@ func (a *Menu) Delete(c *gin.Context) {
 // @Success 200 {object} schema.StatusResult "{status:OK}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/menus/{id}/enable [patch]
+// @Router /api/v1/management/menus/{id}/enable [patch]
 func (a *Menu) Enable(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := a.MenuSrv.UpdateStatus(ctx, c.Param("id"), 1)
@@ -197,7 +197,7 @@ func (a *Menu) Enable(c *gin.Context) {
 // @Success 200 {object} schema.StatusResult "{status:OK}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/menus/{id}/disable [patch]
+// @Router /api/v1/management/menus/{id}/disable [patch]
 func (a *Menu) Disable(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := a.MenuSrv.UpdateStatus(ctx, c.Param("id"), 2)

@@ -21,7 +21,6 @@ type Menu struct {
 	Creator    string      `json:"creator"`                                    // 创建者
 	CreatedAt  time.Time   `json:"createdAt""`                                 // 创建时间
 	UpdatedAt  time.Time   `json:"updatedAt"`                                 // 更新时间
-	Actions    MenuActions `json:"actions"`                                    // 动作列表
 }
 
 func (a *Menu) String() string {
@@ -111,20 +110,9 @@ func (a Menus) ToTree() MenuTrees {
 			Sequence:   item.Sequence,
 			ShowStatus: item.ShowStatus,
 			Status:     item.Status,
-			Actions:    item.Actions,
 		}
 	}
 	return list.ToTree()
-}
-
-// FillMenuAction 填充菜单动作列表
-func (a Menus) FillMenuAction(mActions map[string]MenuActions) Menus {
-	for _, item := range a {
-		if v, ok := mActions[item.ID]; ok {
-			item.Actions = v
-		}
-	}
-	return a
 }
 
 // ----------------------------------------MenuTree--------------------------------------
@@ -140,7 +128,6 @@ type MenuTree struct {
 	Sequence   int         `yaml:"sequence" json:"sequence"`                     // 排序值
 	ShowStatus int         `yaml:"-" json:"showStatus"`                         // 显示状态(1:显示 2:隐藏)
 	Status     int         `yaml:"-" json:"status"`                              // 状态(1:启用 2:禁用)
-	Actions    MenuActions `yaml:"actions,omitempty" json:"actions"`             // 动作列表
 	Children   *MenuTrees  `yaml:"children,omitempty" json:"children,omitempty"` // 子级树
 }
 
@@ -172,110 +159,4 @@ func (a MenuTrees) ToTree() MenuTrees {
 		}
 	}
 	return list
-}
-
-// ----------------------------------------MenuAction--------------------------------------
-
-// MenuAction 菜单动作对象
-type MenuAction struct {
-	ID        string              `yaml:"-" json:"id"`                          // 唯一标识
-	MenuID    string              `yaml:"-" binding:"required" json:"menuId"`  // 菜单ID
-	Code      string              `yaml:"code" binding:"required" json:"code"`  // 动作编号
-	Name      string              `yaml:"name" binding:"required" json:"name"`  // 动作名称
-	Resources MenuActionResources `yaml:"resources,omitempty" json:"resources"` // 资源列表
-}
-
-// MenuActionQueryParam 查询条件
-type MenuActionQueryParam struct {
-	PaginationParam
-	MenuID string   // 菜单ID
-	IDs    []string // 唯一标识列表
-}
-
-// MenuActionQueryOptions 查询可选参数项
-type MenuActionQueryOptions struct {
-	OrderFields []*OrderField // 排序字段
-}
-
-// MenuActionQueryResult 查询结果
-type MenuActionQueryResult struct {
-	Data       MenuActions
-	PageResult *PaginationResult
-}
-
-// MenuActions 菜单动作管理列表
-type MenuActions []*MenuAction
-
-// ToMap 转换为map
-func (a MenuActions) ToMap() map[string]*MenuAction {
-	m := make(map[string]*MenuAction)
-	for _, item := range a {
-		m[item.Code] = item
-	}
-	return m
-}
-
-// FillResources 填充资源数据
-func (a MenuActions) FillResources(mResources map[string]MenuActionResources) {
-	for i, item := range a {
-		a[i].Resources = mResources[item.ID]
-	}
-}
-
-// ToMenuIDMap 转换为菜单ID映射
-func (a MenuActions) ToMenuIDMap() map[string]MenuActions {
-	m := make(map[string]MenuActions)
-	for _, item := range a {
-		m[item.MenuID] = append(m[item.MenuID], item)
-	}
-	return m
-}
-
-// ----------------------------------------MenuActionResource--------------------------------------
-
-// MenuActionResource 菜单动作关联资源对象
-type MenuActionResource struct {
-	ID       string `yaml:"-" json:"id"`                             // 唯一标识
-	ActionID string `yaml:"-" json:"actionId"`                      // 菜单动作ID
-	Method   string `yaml:"method" binding:"required" json:"method"` // 资源请求方式(支持正则)
-	Path     string `yaml:"path" binding:"required" json:"path"`     // 资源请求路径（支持/:id匹配）
-}
-
-// MenuActionResourceQueryParam 查询条件
-type MenuActionResourceQueryParam struct {
-	PaginationParam
-	MenuID  string   // 菜单ID
-	MenuIDs []string // 菜单ID列表
-}
-
-// MenuActionResourceQueryOptions 查询可选参数项
-type MenuActionResourceQueryOptions struct {
-	OrderFields []*OrderField // 排序字段
-}
-
-// MenuActionResourceQueryResult 查询结果
-type MenuActionResourceQueryResult struct {
-	Data       MenuActionResources
-	PageResult *PaginationResult
-}
-
-// MenuActionResources 菜单动作关联资源管理列表
-type MenuActionResources []*MenuActionResource
-
-// ToMap 转换为map
-func (a MenuActionResources) ToMap() map[string]*MenuActionResource {
-	m := make(map[string]*MenuActionResource)
-	for _, item := range a {
-		m[item.Method+item.Path] = item
-	}
-	return m
-}
-
-// ToActionIDMap 转换为动作ID映射
-func (a MenuActionResources) ToActionIDMap() map[string]MenuActionResources {
-	m := make(map[string]MenuActionResources)
-	for _, item := range a {
-		m[item.ActionID] = append(m[item.ActionID], item)
-	}
-	return m
 }

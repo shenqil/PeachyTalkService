@@ -19,8 +19,6 @@ var MenuSet = wire.NewSet(wire.Struct(new(Menu), "*"))
 type Menu struct {
 	TransModel              *repo.Trans
 	MenuModel               *repo.Menu
-	MenuActionModel         *repo.MenuAction
-	MenuActionResourceModel *repo.MenuActionResource
 }
 
 // InitData 初始化菜单数据
@@ -68,7 +66,6 @@ func (a *Menu) createMenus(ctx context.Context, parentID string, list schema.Men
 				ParentID:   parentID,
 				Status:     1,
 				ShowStatus: 1,
-				Actions:    item.Actions,
 			}
 			if v := item.ShowStatus; v > 0 {
 				sitem.ShowStatus = v
@@ -93,16 +90,10 @@ func (a *Menu) createMenus(ctx context.Context, parentID string, list schema.Men
 
 // Query 查询数据
 func (a *Menu) Query(ctx context.Context, params schema.MenuQueryParam, opts ...schema.MenuQueryOptions) (*schema.MenuQueryResult, error) {
-	menuActionResult, err := a.MenuActionModel.Query(ctx, schema.MenuActionQueryParam{})
-	if err != nil {
-		return nil, err
-	}
-
 	result, err := a.MenuModel.Query(ctx, params, opts...)
 	if err != nil {
 		return nil, err
 	}
-	result.Data.FillMenuAction(menuActionResult.Data.ToMenuIDMap())
 	return result, nil
 }
 
@@ -115,36 +106,7 @@ func (a *Menu) Get(ctx context.Context, id string, opts ...schema.MenuQueryOptio
 		return nil, errors.ErrNotFound
 	}
 
-	actions, err := a.QueryActions(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	item.Actions = actions
-
 	return item, nil
-}
-
-// QueryActions 查询动作数据
-func (a *Menu) QueryActions(ctx context.Context, id string) (schema.MenuActions, error) {
-	result, err := a.MenuActionModel.Query(ctx, schema.MenuActionQueryParam{
-		MenuID: id,
-	})
-	if err != nil {
-		return nil, err
-	} else if len(result.Data) == 0 {
-		return nil, nil
-	}
-
-	resourceResult, err := a.MenuActionResourceModel.Query(ctx, schema.MenuActionResourceQueryParam{
-		MenuID: id,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	result.Data.FillResources(resourceResult.Data.ToActionIDMap())
-
-	return result.Data, nil
 }
 
 func (a *Menu) checkName(ctx context.Context, item schema.Menu) error {
@@ -176,42 +138,13 @@ func (a *Menu) Create(ctx context.Context, item schema.Menu) (*schema.IDResult, 
 	item.ParentPath = parentPath
 	item.ID = uuid.MustString()
 
-	err = a.TransModel.Exec(ctx, func(ctx context.Context) error {
-		err := a.createActions(ctx, item.ID, item.Actions)
-		if err != nil {
-			return err
-		}
+	err = a.MenuModel.Create(ctx, item)
 
-		return a.MenuModel.Create(ctx, item)
-	})
 	if err != nil {
 		return nil, err
 	}
 
 	return schema.NewIDResult(item.ID), nil
-}
-
-// 创建动作数据
-func (a *Menu) createActions(ctx context.Context, menuID string, items schema.MenuActions) error {
-	for _, item := range items {
-		item.ID = uuid.MustString()
-		item.MenuID = menuID
-		err := a.MenuActionModel.Create(ctx, *item)
-		if err != nil {
-			return err
-		}
-
-		for _, ritem := range item.Resources {
-			ritem.ID = uuid.MustString()
-			ritem.ActionID = item.ID
-			err := a.MenuActionResourceModel.Create(ctx, *ritem)
-			if err != nil {
-				return err
-			}
-		}
-
-	}
-	return nil
 }
 
 // 获取父级路径
@@ -269,10 +202,6 @@ func (a *Menu) Update(ctx context.Context, id string, item schema.Menu) error {
 	}
 
 	return a.TransModel.Exec(ctx, func(ctx context.Context) error {
-		err := a.updateActions(ctx, id, oldItem.Actions, item.Actions)
-		if err != nil {
-			return err
-		}
 
 		err = a.updateChildParentPath(ctx, *oldItem, item)
 		if err != nil {
@@ -281,100 +210,6 @@ func (a *Menu) Update(ctx context.Context, id string, item schema.Menu) error {
 
 		return a.MenuModel.Update(ctx, id, item)
 	})
-}
-
-// 更新动作数据
-func (a *Menu) updateActions(ctx context.Context, menuID string, oldItems, newItems schema.MenuActions) error {
-	addActions, delActions, updateActions := a.compareActions(ctx, oldItems, newItems)
-
-	err := a.createActions(ctx, menuID, addActions)
-	if err != nil {
-		return err
-	}
-
-	for _, item := range delActions {
-		err := a.MenuActionModel.Delete(ctx, item.ID)
-		if err != nil {
-			return err
-		}
-
-		err = a.MenuActionResourceModel.DeleteByActionID(ctx, item.ID)
-		if err != nil {
-			return err
-		}
-	}
-
-	mOldItems := oldItems.ToMap()
-	for _, item := range updateActions {
-		oitem := mOldItems[item.Code]
-		// 只更新动作名称
-		if item.Name != oitem.Name {
-			oitem.Name = item.Name
-			err := a.MenuActionModel.Update(ctx, item.ID, *oitem)
-			if err != nil {
-				return err
-			}
-		}
-
-		// 计算需要更新的资源配置（只包括新增和删除的，更新的不关心）
-		addResources, delResources := a.compareResources(ctx, oitem.Resources, item.Resources)
-		for _, aritem := range addResources {
-			aritem.ID = uuid.MustString()
-			aritem.ActionID = oitem.ID
-			err := a.MenuActionResourceModel.Create(ctx, *aritem)
-			if err != nil {
-				return err
-			}
-		}
-
-		for _, ditem := range delResources {
-			err := a.MenuActionResourceModel.Delete(ctx, ditem.ID)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
-}
-
-// 对比动作列表
-func (a *Menu) compareActions(ctx context.Context, oldActions, newActions schema.MenuActions) (addList, delList, updateList schema.MenuActions) {
-	mOldActions := oldActions.ToMap()
-	mNewActions := newActions.ToMap()
-
-	for k, item := range mNewActions {
-		if _, ok := mOldActions[k]; ok {
-			updateList = append(updateList, item)
-			delete(mOldActions, k)
-			continue
-		}
-		addList = append(addList, item)
-	}
-
-	for _, item := range mOldActions {
-		delList = append(delList, item)
-	}
-	return
-}
-
-// 对比资源列表
-func (a *Menu) compareResources(ctx context.Context, oldResources, newResources schema.MenuActionResources) (addList, delList schema.MenuActionResources) {
-	mOldResources := oldResources.ToMap()
-	mNewResources := newResources.ToMap()
-
-	for k, item := range mNewResources {
-		if _, ok := mOldResources[k]; ok {
-			delete(mOldResources, k)
-			continue
-		}
-		addList = append(addList, item)
-	}
-
-	for _, item := range mOldResources {
-		delList = append(delList, item)
-	}
-	return
 }
 
 // 检查并更新下级节点的父级路径
@@ -420,19 +255,7 @@ func (a *Menu) Delete(ctx context.Context, id string) error {
 		return errors.ErrNotAllowDeleteWithChild
 	}
 
-	return a.TransModel.Exec(ctx, func(ctx context.Context) error {
-		err = a.MenuActionResourceModel.DeleteByMenuID(ctx, id)
-		if err != nil {
-			return err
-		}
-
-		err := a.MenuActionModel.DeleteByMenuID(ctx, id)
-		if err != nil {
-			return err
-		}
-
-		return a.MenuModel.Delete(ctx, id)
-	})
+	return a.MenuModel.Delete(ctx, id)
 }
 
 // UpdateStatus 更新状态

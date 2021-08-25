@@ -43,51 +43,55 @@ func (a *Router) RegisterAPI(app *gin.Engine) {
 			pub.POST("/refresh-token", a.LoginAPI.RefreshToken)
 		}
 
-		gDemo := v1.Group("demos")
+		management:=v1.Group("/management")
 		{
-			gDemo.GET("", a.DemoAPI.Query)
-			gDemo.GET(":id", a.DemoAPI.Get)
-			gDemo.POST("", a.DemoAPI.Create)
-			gDemo.PUT(":id", a.DemoAPI.Update)
-			gDemo.DELETE(":id", a.DemoAPI.Delete)
-			gDemo.PATCH(":id/enable", a.DemoAPI.Enable)
-			gDemo.PATCH(":id/disable", a.DemoAPI.Disable)
+			gDemo := management.Group("demos")
+			{
+				gDemo.GET("", a.DemoAPI.Query)
+				gDemo.GET(":id", a.DemoAPI.Get)
+				gDemo.POST("", a.DemoAPI.Create)
+				gDemo.PUT(":id", a.DemoAPI.Update)
+				gDemo.DELETE(":id", a.DemoAPI.Delete)
+				gDemo.PATCH(":id/enable", a.DemoAPI.Enable)
+				gDemo.PATCH(":id/disable", a.DemoAPI.Disable)
+			}
+
+			gMenu := management.Group("menus")
+			{
+				gMenu.GET("", a.MenuAPI.Query)
+				gMenu.GET(":id", a.MenuAPI.Get)
+				gMenu.POST("", a.MenuAPI.Create)
+				gMenu.PUT(":id", a.MenuAPI.Update)
+				gMenu.DELETE(":id", a.MenuAPI.Delete)
+				gMenu.PATCH(":id/enable", a.MenuAPI.Enable)
+				gMenu.PATCH(":id/disable", a.MenuAPI.Disable)
+			}
+			management.GET("/menus.tree", a.MenuAPI.QueryTree)
+
+			gRole := management.Group("roles")
+			{
+				gRole.GET("", a.RoleAPI.Query)
+				gRole.GET(":id", a.RoleAPI.Get)
+				gRole.POST("", a.RoleAPI.Create)
+				gRole.PUT(":id", a.RoleAPI.Update)
+				gRole.DELETE(":id", a.RoleAPI.Delete)
+				gRole.PATCH(":id/enable", a.RoleAPI.Enable)
+				gRole.PATCH(":id/disable", a.RoleAPI.Disable)
+			}
+			management.GET("/roles.select", a.RoleAPI.QuerySelect)
+
+			gUser := management.Group("users")
+			{
+				gUser.GET("", a.UserAPI.Query)
+				gUser.GET(":id", a.UserAPI.Get)
+				gUser.POST("", a.UserAPI.Create)
+				gUser.PUT(":id", a.UserAPI.Update)
+				gUser.DELETE(":id", a.UserAPI.Delete)
+				gUser.PATCH(":id/enable", a.UserAPI.Enable)
+				gUser.PATCH(":id/disable", a.UserAPI.Disable)
+			}
 		}
 
-		gMenu := v1.Group("menus")
-		{
-			gMenu.GET("", a.MenuAPI.Query)
-			gMenu.GET(":id", a.MenuAPI.Get)
-			gMenu.POST("", a.MenuAPI.Create)
-			gMenu.PUT(":id", a.MenuAPI.Update)
-			gMenu.DELETE(":id", a.MenuAPI.Delete)
-			gMenu.PATCH(":id/enable", a.MenuAPI.Enable)
-			gMenu.PATCH(":id/disable", a.MenuAPI.Disable)
-		}
-		v1.GET("/menus.tree", a.MenuAPI.QueryTree)
-
-		gRole := v1.Group("roles")
-		{
-			gRole.GET("", a.RoleAPI.Query)
-			gRole.GET(":id", a.RoleAPI.Get)
-			gRole.POST("", a.RoleAPI.Create)
-			gRole.PUT(":id", a.RoleAPI.Update)
-			gRole.DELETE(":id", a.RoleAPI.Delete)
-			gRole.PATCH(":id/enable", a.RoleAPI.Enable)
-			gRole.PATCH(":id/disable", a.RoleAPI.Disable)
-		}
-		v1.GET("/roles.select", a.RoleAPI.QuerySelect)
-
-		gUser := v1.Group("users")
-		{
-			gUser.GET("", a.UserAPI.Query)
-			gUser.GET(":id", a.UserAPI.Get)
-			gUser.POST("", a.UserAPI.Create)
-			gUser.PUT(":id", a.UserAPI.Update)
-			gUser.DELETE(":id", a.UserAPI.Delete)
-			gUser.PATCH(":id/enable", a.UserAPI.Enable)
-			gUser.PATCH(":id/disable", a.UserAPI.Disable)
-		}
 	}
 
 	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

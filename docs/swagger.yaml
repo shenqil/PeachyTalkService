@@ -97,11 +97,6 @@ definitions:
     type: object
   schema.Menu:
     properties:
-      actions:
-        description: 动作列表
-        items:
-          $ref: '#/definitions/schema.MenuAction'
-        type: array
       createdAt:
         description: 创建时间
         type: string
@@ -146,55 +141,8 @@ definitions:
     - showStatus
     - status
     type: object
-  schema.MenuAction:
-    properties:
-      code:
-        description: 动作编号
-        type: string
-      id:
-        description: 唯一标识
-        type: string
-      menuId:
-        description: 菜单ID
-        type: string
-      name:
-        description: 动作名称
-        type: string
-      resources:
-        description: 资源列表
-        items:
-          $ref: '#/definitions/schema.MenuActionResource'
-        type: array
-    required:
-    - code
-    - menuId
-    - name
-    type: object
-  schema.MenuActionResource:
-    properties:
-      actionId:
-        description: 菜单动作ID
-        type: string
-      id:
-        description: 唯一标识
-        type: string
-      method:
-        description: 资源请求方式(支持正则)
-        type: string
-      path:
-        description: 资源请求路径（支持/:id匹配）
-        type: string
-    required:
-    - method
-    - path
-    type: object
   schema.MenuTree:
     properties:
-      actions:
-        description: 动作列表
-        items:
-          $ref: '#/definitions/schema.MenuAction'
-        type: array
       children:
         description: 子级树
         items:
@@ -254,11 +202,6 @@ definitions:
       name:
         description: 角色名称
         type: string
-      roleMenus:
-        description: 角色菜单列表
-        items:
-          $ref: '#/definitions/schema.RoleMenu'
-        type: array
       sequence:
         description: 排序值
         type: integer
@@ -270,27 +213,7 @@ definitions:
         type: string
     required:
     - name
-    - roleMenus
     - status
-    type: object
-  schema.RoleMenu:
-    properties:
-      actionId:
-        description: 动作ID
-        type: string
-      id:
-        description: 唯一标识
-        type: string
-      menuId:
-        description: 菜单ID
-        type: string
-      roleId:
-        description: 角色ID
-        type: string
-    required:
-    - actionId
-    - menuId
-    - roleId
     type: object
   schema.StatusResult:
     properties:
@@ -411,7 +334,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /api/v1/demos:
+  /api/v1/management/demos:
     get:
       parameters:
       - default: 1
@@ -485,7 +408,7 @@ paths:
       summary: 创建数据
       tags:
       - Demo
-  /api/v1/demos/{id}:
+  /api/v1/management/demos/{id}:
     delete:
       parameters:
       - description: 唯一标识
@@ -575,7 +498,7 @@ paths:
       summary: 更新数据
       tags:
       - Demo
-  /api/v1/demos/{id}/disable:
+  /api/v1/management/demos/{id}/disable:
     patch:
       parameters:
       - description: 唯一标识
@@ -601,7 +524,7 @@ paths:
       summary: 禁用数据
       tags:
       - Demo
-  /api/v1/demos/{id}/enable:
+  /api/v1/management/demos/{id}/enable:
     patch:
       parameters:
       - description: 唯一标识
@@ -627,7 +550,7 @@ paths:
       summary: 启用数据
       tags:
       - Demo
-  /api/v1/menus:
+  /api/v1/management/menus:
     get:
       parameters:
       - default: 1
@@ -713,7 +636,7 @@ paths:
       summary: 创建数据
       tags:
       - 菜单管理
-  /api/v1/menus.tree:
+  /api/v1/management/menus.tree:
     get:
       parameters:
       - description: 状态(1:启用 2:禁用)
@@ -749,7 +672,7 @@ paths:
       summary: 查询菜单树
       tags:
       - 菜单管理
-  /api/v1/menus/{id}:
+  /api/v1/management/menus/{id}:
     delete:
       parameters:
       - description: 唯一标识
@@ -839,7 +762,7 @@ paths:
       summary: 更新数据
       tags:
       - 菜单管理
-  /api/v1/menus/{id}/disable:
+  /api/v1/management/menus/{id}/disable:
     patch:
       parameters:
       - description: 唯一标识
@@ -865,7 +788,7 @@ paths:
       summary: 禁用数据
       tags:
       - 菜单管理
-  /api/v1/menus/{id}/enable:
+  /api/v1/management/menus/{id}/enable:
     patch:
       parameters:
       - description: 唯一标识
@@ -891,6 +814,490 @@ paths:
       summary: 启用数据
       tags:
       - 菜单管理
+  /api/v1/management/roles:
+    get:
+      parameters:
+      - default: 1
+        description: 分页索引
+        in: query
+        name: current
+        required: true
+        type: integer
+      - default: 10
+        description: 分页大小
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - description: 查询值
+        in: query
+        name: queryValue
+        type: string
+      - description: 状态(1:启用 2:禁用)
+        in: query
+        name: status
+        type: integer
+      responses:
+        "200":
+          description: 查询结果
+          schema:
+            allOf:
+            - $ref: '#/definitions/schema.ListResult'
+            - properties:
+                list:
+                  items:
+                    $ref: '#/definitions/schema.Role'
+                  type: array
+              type: object
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询数据
+      tags:
+      - 角色管理
+    post:
+      parameters:
+      - description: 创建数据
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.Role'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.IDResult'
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建数据
+      tags:
+      - 角色管理
+  /api/v1/management/roles.select:
+    get:
+      parameters:
+      - description: 查询值
+        in: query
+        name: queryValue
+        type: string
+      - description: 状态(1:启用 2:禁用)
+        in: query
+        name: status
+        type: integer
+      responses:
+        "200":
+          description: 查询结果
+          schema:
+            allOf:
+            - $ref: '#/definitions/schema.ListResult'
+            - properties:
+                list:
+                  items:
+                    $ref: '#/definitions/schema.Role'
+                  type: array
+              type: object
+        "400":
+          description: '{error:{code:0,message:未知的查询类型}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询选择数据
+      tags:
+      - 角色管理
+  /api/v1/management/roles/{id}:
+    delete:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除数据
+      tags:
+      - 角色管理
+    get:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.Role'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询指定数据
+      tags:
+      - 角色管理
+    put:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新数据
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.Role'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.Role'
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新数据
+      tags:
+      - 角色管理
+  /api/v1/management/roles/{id}/disable:
+    patch:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 禁用数据
+      tags:
+      - 角色管理
+  /api/v1/management/roles/{id}/enable:
+    patch:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 启用数据
+      tags:
+      - 角色管理
+  /api/v1/management/users:
+    get:
+      parameters:
+      - default: 1
+        description: 分页索引
+        in: query
+        name: current
+        required: true
+        type: integer
+      - default: 10
+        description: 分页大小
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - description: 查询值
+        in: query
+        name: queryValue
+        type: string
+      - description: 角色ID(多个以英文逗号分隔)
+        in: query
+        name: roleIDs
+        type: string
+      - description: 状态(1:启用 2:停用)
+        in: query
+        name: status
+        type: integer
+      responses:
+        "200":
+          description: 查询结果
+          schema:
+            allOf:
+            - $ref: '#/definitions/schema.ListResult'
+            - properties:
+                list:
+                  items:
+                    $ref: '#/definitions/schema.UserShow'
+                  type: array
+              type: object
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询数据
+      tags:
+      - 用户管理
+    post:
+      parameters:
+      - description: 创建数据
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.User'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.IDResult'
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建数据
+      tags:
+      - 用户管理
+  /api/v1/management/users/{id}:
+    delete:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除数据
+      tags:
+      - 用户管理
+    get:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.User'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询指定数据
+      tags:
+      - 用户管理
+    put:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新数据
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.User'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.User'
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新数据
+      tags:
+      - 用户管理
+  /api/v1/management/users/{id}/disable:
+    patch:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 禁用数据
+      tags:
+      - 用户管理
+  /api/v1/management/users/{id}/enable:
+    patch:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 启用数据
+      tags:
+      - 用户管理
   /api/v1/pub/current/menutree:
     get:
       responses:
@@ -1062,488 +1469,4 @@ paths:
       summary: 刷新令牌
       tags:
       - 登录管理
-  /api/v1/roles:
-    get:
-      parameters:
-      - default: 1
-        description: 分页索引
-        in: query
-        name: current
-        required: true
-        type: integer
-      - default: 10
-        description: 分页大小
-        in: query
-        name: pageSize
-        required: true
-        type: integer
-      - description: 查询值
-        in: query
-        name: queryValue
-        type: string
-      - description: 状态(1:启用 2:禁用)
-        in: query
-        name: status
-        type: integer
-      responses:
-        "200":
-          description: 查询结果
-          schema:
-            allOf:
-            - $ref: '#/definitions/schema.ListResult'
-            - properties:
-                list:
-                  items:
-                    $ref: '#/definitions/schema.Role'
-                  type: array
-              type: object
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 查询数据
-      tags:
-      - 角色管理
-    post:
-      parameters:
-      - description: 创建数据
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/schema.Role'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.IDResult'
-        "400":
-          description: '{error:{code:0,message:无效的请求参数}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 创建数据
-      tags:
-      - 角色管理
-  /api/v1/roles.select:
-    get:
-      parameters:
-      - description: 查询值
-        in: query
-        name: queryValue
-        type: string
-      - description: 状态(1:启用 2:禁用)
-        in: query
-        name: status
-        type: integer
-      responses:
-        "200":
-          description: 查询结果
-          schema:
-            allOf:
-            - $ref: '#/definitions/schema.ListResult'
-            - properties:
-                list:
-                  items:
-                    $ref: '#/definitions/schema.Role'
-                  type: array
-              type: object
-        "400":
-          description: '{error:{code:0,message:未知的查询类型}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 查询选择数据
-      tags:
-      - 角色管理
-  /api/v1/roles/{id}:
-    delete:
-      parameters:
-      - description: 唯一标识
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{status:OK}'
-          schema:
-            $ref: '#/definitions/schema.StatusResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 删除数据
-      tags:
-      - 角色管理
-    get:
-      parameters:
-      - description: 唯一标识
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.Role'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "404":
-          description: '{error:{code:0,message:资源不存在}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 查询指定数据
-      tags:
-      - 角色管理
-    put:
-      parameters:
-      - description: 唯一标识
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: 更新数据
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/schema.Role'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.Role'
-        "400":
-          description: '{error:{code:0,message:无效的请求参数}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 更新数据
-      tags:
-      - 角色管理
-  /api/v1/roles/{id}/disable:
-    patch:
-      parameters:
-      - description: 唯一标识
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{status:OK}'
-          schema:
-            $ref: '#/definitions/schema.StatusResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 禁用数据
-      tags:
-      - 角色管理
-  /api/v1/roles/{id}/enable:
-    patch:
-      parameters:
-      - description: 唯一标识
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{status:OK}'
-          schema:
-            $ref: '#/definitions/schema.StatusResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 启用数据
-      tags:
-      - 角色管理
-  /api/v1/users:
-    get:
-      parameters:
-      - default: 1
-        description: 分页索引
-        in: query
-        name: current
-        required: true
-        type: integer
-      - default: 10
-        description: 分页大小
-        in: query
-        name: pageSize
-        required: true
-        type: integer
-      - description: 查询值
-        in: query
-        name: queryValue
-        type: string
-      - description: 角色ID(多个以英文逗号分隔)
-        in: query
-        name: roleIDs
-        type: string
-      - description: 状态(1:启用 2:停用)
-        in: query
-        name: status
-        type: integer
-      responses:
-        "200":
-          description: 查询结果
-          schema:
-            allOf:
-            - $ref: '#/definitions/schema.ListResult'
-            - properties:
-                list:
-                  items:
-                    $ref: '#/definitions/schema.UserShow'
-                  type: array
-              type: object
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 查询数据
-      tags:
-      - 用户管理
-    post:
-      parameters:
-      - description: 创建数据
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/schema.User'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.IDResult'
-        "400":
-          description: '{error:{code:0,message:无效的请求参数}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 创建数据
-      tags:
-      - 用户管理
-  /api/v1/users/{id}:
-    delete:
-      parameters:
-      - description: 唯一标识
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{status:OK}'
-          schema:
-            $ref: '#/definitions/schema.StatusResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 删除数据
-      tags:
-      - 用户管理
-    get:
-      parameters:
-      - description: 唯一标识
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.User'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "404":
-          description: '{error:{code:0,message:资源不存在}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 查询指定数据
-      tags:
-      - 用户管理
-    put:
-      parameters:
-      - description: 唯一标识
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: 更新数据
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/schema.User'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.User'
-        "400":
-          description: '{error:{code:0,message:无效的请求参数}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 更新数据
-      tags:
-      - 用户管理
-  /api/v1/users/{id}/disable:
-    patch:
-      parameters:
-      - description: 唯一标识
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{status:OK}'
-          schema:
-            $ref: '#/definitions/schema.StatusResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 禁用数据
-      tags:
-      - 用户管理
-  /api/v1/users/{id}/enable:
-    patch:
-      parameters:
-      - description: 唯一标识
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{status:OK}'
-          schema:
-            $ref: '#/definitions/schema.StatusResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 启用数据
-      tags:
-      - 用户管理
 swagger: "2.0"

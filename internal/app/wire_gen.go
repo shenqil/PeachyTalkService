@@ -29,12 +29,6 @@ func BuildInjector() (*Injector, func(), error) {
 	role := &repo.Role{
 		DB: db,
 	}
-	roleMenu := &repo.RoleMenu{
-		DB: db,
-	}
-	menuActionResource := &repo.MenuActionResource{
-		DB: db,
-	}
 	user := &repo.User{
 		DB: db,
 	}
@@ -42,11 +36,9 @@ func BuildInjector() (*Injector, func(), error) {
 		DB: db,
 	}
 	casbinAdapter := &adapter.CasbinAdapter{
-		RoleModel:         role,
-		RoleMenuModel:     roleMenu,
-		MenuResourceModel: menuActionResource,
-		UserModel:         user,
-		UserRoleModel:     userRole,
+		RoleModel:     role,
+		UserModel:     user,
+		UserRoleModel: userRole,
 	}
 	syncedEnforcer, cleanup3, err := InitCasbin(casbinAdapter)
 	if err != nil {
@@ -66,17 +58,12 @@ func BuildInjector() (*Injector, func(), error) {
 	menu := &repo.Menu{
 		DB: db,
 	}
-	menuAction := &repo.MenuAction{
-		DB: db,
-	}
 	login := &service.Login{
-		Auth:            auther,
-		UserModel:       user,
-		UserRoleModel:   userRole,
-		RoleModel:       role,
-		RoleMenuModel:   roleMenu,
-		MenuModel:       menu,
-		MenuActionModel: menuAction,
+		Auth:          auther,
+		UserModel:     user,
+		UserRoleModel: userRole,
+		RoleModel:     role,
+		MenuModel:     menu,
 	}
 	apiLogin := &api.Login{
 		LoginSrv: login,
@@ -85,20 +72,17 @@ func BuildInjector() (*Injector, func(), error) {
 		DB: db,
 	}
 	serviceMenu := &service.Menu{
-		TransModel:              trans,
-		MenuModel:               menu,
-		MenuActionModel:         menuAction,
-		MenuActionResourceModel: menuActionResource,
+		TransModel: trans,
+		MenuModel:  menu,
 	}
 	apiMenu := &api.Menu{
 		MenuSrv: serviceMenu,
 	}
 	serviceRole := &service.Role{
-		Enforcer:      syncedEnforcer,
-		TransModel:    trans,
-		RoleModel:     role,
-		RoleMenuModel: roleMenu,
-		UserModel:     user,
+		Enforcer:   syncedEnforcer,
+		TransModel: trans,
+		RoleModel:  role,
+		UserModel:  user,
 	}
 	apiRole := &api.Role{
 		RoleSrv: serviceRole,

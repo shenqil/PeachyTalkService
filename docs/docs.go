@@ -24,7 +24,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/demos": {
+        "/api/v1/management/demos": {
             "get": {
                 "security": [
                     {
@@ -144,7 +144,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/demos/{id}": {
+        "/api/v1/management/demos/{id}": {
             "get": {
                 "security": [
                     {
@@ -287,7 +287,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/demos/{id}/disable": {
+        "/api/v1/management/demos/{id}/disable": {
             "patch": {
                 "security": [
                     {
@@ -329,7 +329,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/demos/{id}/enable": {
+        "/api/v1/management/demos/{id}/enable": {
             "patch": {
                 "security": [
                     {
@@ -371,7 +371,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/menus": {
+        "/api/v1/management/menus": {
             "get": {
                 "security": [
                     {
@@ -509,7 +509,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/menus.tree": {
+        "/api/v1/management/menus.tree": {
             "get": {
                 "security": [
                     {
@@ -571,7 +571,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/menus/{id}": {
+        "/api/v1/management/menus/{id}": {
             "get": {
                 "security": [
                     {
@@ -714,7 +714,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/menus/{id}/disable": {
+        "/api/v1/management/menus/{id}/disable": {
             "patch": {
                 "security": [
                     {
@@ -756,7 +756,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/menus/{id}/enable": {
+        "/api/v1/management/menus/{id}/enable": {
             "patch": {
                 "security": [
                     {
@@ -765,6 +765,786 @@ var doc = `{
                 ],
                 "tags": [
                     "菜单管理"
+                ],
+                "summary": "启用数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/roles": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "查询数据",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "分页索引",
+                        "name": "current",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "分页大小",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "查询值",
+                        "name": "queryValue",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "状态(1:启用 2:禁用)",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询结果",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schema.ListResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.Role"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "创建数据",
+                "parameters": [
+                    {
+                        "description": "创建数据",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.Role"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.IDResult"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:无效的请求参数}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/roles.select": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "查询选择数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "查询值",
+                        "name": "queryValue",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "状态(1:启用 2:禁用)",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询结果",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schema.ListResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.Role"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:未知的查询类型}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/roles/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "查询指定数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.Role"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "404": {
+                        "description": "{error:{code:0,message:资源不存在}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "更新数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "更新数据",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.Role"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.Role"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:无效的请求参数}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "删除数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/roles/{id}/disable": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "禁用数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/roles/{id}/enable": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "启用数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/users": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "查询数据",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "分页索引",
+                        "name": "current",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "分页大小",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "查询值",
+                        "name": "queryValue",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "角色ID(多个以英文逗号分隔)",
+                        "name": "roleIDs",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "状态(1:启用 2:停用)",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询结果",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schema.ListResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.UserShow"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "创建数据",
+                "parameters": [
+                    {
+                        "description": "创建数据",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.IDResult"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:无效的请求参数}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/users/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "查询指定数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.User"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "404": {
+                        "description": "{error:{code:0,message:资源不存在}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "更新数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "更新数据",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.User"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:无效的请求参数}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "删除数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/users/{id}/disable": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "禁用数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/users/{id}/enable": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "用户管理"
                 ],
                 "summary": "启用数据",
                 "parameters": [
@@ -1075,786 +1855,6 @@ var doc = `{
                     }
                 }
             }
-        },
-        "/api/v1/roles": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "查询数据",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "default": 1,
-                        "description": "分页索引",
-                        "name": "current",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "default": 10,
-                        "description": "分页大小",
-                        "name": "pageSize",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "查询值",
-                        "name": "queryValue",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "状态(1:启用 2:禁用)",
-                        "name": "status",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "查询结果",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schema.ListResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "list": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/schema.Role"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "创建数据",
-                "parameters": [
-                    {
-                        "description": "创建数据",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/schema.Role"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.IDResult"
-                        }
-                    },
-                    "400": {
-                        "description": "{error:{code:0,message:无效的请求参数}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/roles.select": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "查询选择数据",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "查询值",
-                        "name": "queryValue",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "状态(1:启用 2:禁用)",
-                        "name": "status",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "查询结果",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schema.ListResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "list": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/schema.Role"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "{error:{code:0,message:未知的查询类型}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/roles/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "查询指定数据",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "唯一标识",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.Role"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "404": {
-                        "description": "{error:{code:0,message:资源不存在}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "更新数据",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "唯一标识",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "更新数据",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/schema.Role"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.Role"
-                        }
-                    },
-                    "400": {
-                        "description": "{error:{code:0,message:无效的请求参数}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "删除数据",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "唯一标识",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{status:OK}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.StatusResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/roles/{id}/disable": {
-            "patch": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "禁用数据",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "唯一标识",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{status:OK}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.StatusResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/roles/{id}/enable": {
-            "patch": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "启用数据",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "唯一标识",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{status:OK}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.StatusResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/users": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "用户管理"
-                ],
-                "summary": "查询数据",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "default": 1,
-                        "description": "分页索引",
-                        "name": "current",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "default": 10,
-                        "description": "分页大小",
-                        "name": "pageSize",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "查询值",
-                        "name": "queryValue",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "角色ID(多个以英文逗号分隔)",
-                        "name": "roleIDs",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "状态(1:启用 2:停用)",
-                        "name": "status",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "查询结果",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schema.ListResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "list": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/schema.UserShow"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "用户管理"
-                ],
-                "summary": "创建数据",
-                "parameters": [
-                    {
-                        "description": "创建数据",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/schema.User"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.IDResult"
-                        }
-                    },
-                    "400": {
-                        "description": "{error:{code:0,message:无效的请求参数}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/users/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "用户管理"
-                ],
-                "summary": "查询指定数据",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "唯一标识",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.User"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "404": {
-                        "description": "{error:{code:0,message:资源不存在}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "用户管理"
-                ],
-                "summary": "更新数据",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "唯一标识",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "更新数据",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/schema.User"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.User"
-                        }
-                    },
-                    "400": {
-                        "description": "{error:{code:0,message:无效的请求参数}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "用户管理"
-                ],
-                "summary": "删除数据",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "唯一标识",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{status:OK}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.StatusResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/users/{id}/disable": {
-            "patch": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "用户管理"
-                ],
-                "summary": "禁用数据",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "唯一标识",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{status:OK}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.StatusResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/users/{id}/enable": {
-            "patch": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "用户管理"
-                ],
-                "summary": "启用数据",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "唯一标识",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{status:OK}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.StatusResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -2002,13 +2002,6 @@ var doc = `{
                 "status"
             ],
             "properties": {
-                "actions": {
-                    "description": "动作列表",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/schema.MenuAction"
-                    }
-                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
@@ -2063,74 +2056,9 @@ var doc = `{
                 }
             }
         },
-        "schema.MenuAction": {
-            "type": "object",
-            "required": [
-                "code",
-                "menuId",
-                "name"
-            ],
-            "properties": {
-                "code": {
-                    "description": "动作编号",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "唯一标识",
-                    "type": "string"
-                },
-                "menuId": {
-                    "description": "菜单ID",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "动作名称",
-                    "type": "string"
-                },
-                "resources": {
-                    "description": "资源列表",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/schema.MenuActionResource"
-                    }
-                }
-            }
-        },
-        "schema.MenuActionResource": {
-            "type": "object",
-            "required": [
-                "method",
-                "path"
-            ],
-            "properties": {
-                "actionId": {
-                    "description": "菜单动作ID",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "唯一标识",
-                    "type": "string"
-                },
-                "method": {
-                    "description": "资源请求方式(支持正则)",
-                    "type": "string"
-                },
-                "path": {
-                    "description": "资源请求路径（支持/:id匹配）",
-                    "type": "string"
-                }
-            }
-        },
         "schema.MenuTree": {
             "type": "object",
             "properties": {
-                "actions": {
-                    "description": "动作列表",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/schema.MenuAction"
-                    }
-                },
                 "children": {
                     "description": "子级树",
                     "type": "array",
@@ -2194,7 +2122,6 @@ var doc = `{
             "type": "object",
             "required": [
                 "name",
-                "roleMenus",
                 "status"
             ],
             "properties": {
@@ -2218,13 +2145,6 @@ var doc = `{
                     "description": "角色名称",
                     "type": "string"
                 },
-                "roleMenus": {
-                    "description": "角色菜单列表",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/schema.RoleMenu"
-                    }
-                },
                 "sequence": {
                     "description": "排序值",
                     "type": "integer"
@@ -2235,32 +2155,6 @@ var doc = `{
                 },
                 "updatedAt": {
                     "description": "更新时间",
-                    "type": "string"
-                }
-            }
-        },
-        "schema.RoleMenu": {
-            "type": "object",
-            "required": [
-                "actionId",
-                "menuId",
-                "roleId"
-            ],
-            "properties": {
-                "actionId": {
-                    "description": "动作ID",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "唯一标识",
-                    "type": "string"
-                },
-                "menuId": {
-                    "description": "菜单ID",
-                    "type": "string"
-                },
-                "roleId": {
-                    "description": "角色ID",
                     "type": "string"
                 }
             }

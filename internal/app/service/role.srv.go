@@ -18,7 +18,6 @@ type Role struct {
 	Enforcer      *casbin.SyncedEnforcer
 	TransModel    *repo.Trans
 	RoleModel     *repo.Role
-	RoleMenuModel *repo.RoleMenu
 	UserModel     *repo.User
 }
 
@@ -36,24 +35,7 @@ func (a *Role) Get(ctx context.Context, id string, opts ...schema.RoleQueryOptio
 		return nil, errors.ErrNotFound
 	}
 
-	roleMenus, err := a.QueryRoleMenus(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	item.RoleMenus = roleMenus
-
 	return item, nil
-}
-
-// QueryRoleMenus 查询角色菜单列表
-func (a *Role) QueryRoleMenus(ctx context.Context, roleID string) (schema.RoleMenus, error) {
-	result, err := a.RoleMenuModel.Query(ctx, schema.RoleMenuQueryParam{
-		RoleID: roleID,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return result.Data, nil
 }
 
 // Create 创建数据
@@ -65,14 +47,6 @@ func (a *Role) Create(ctx context.Context, item schema.Role) (*schema.IDResult, 
 
 	item.ID = uuid.MustString()
 	err = a.TransModel.Exec(ctx, func(ctx context.Context) error {
-		for _, rmItem := range item.RoleMenus {
-			rmItem.ID = uuid.MustString()
-			rmItem.RoleID = item.ID
-			err := a.RoleMenuModel.Create(ctx, *rmItem)
-			if err != nil {
-				return err
-			}
-		}
 		return a.RoleModel.Create(ctx, item)
 	})
 	if err != nil {
@@ -113,23 +87,6 @@ func (a *Role) Update(ctx context.Context, id string, item schema.Role) error {
 	item.Creator = oldItem.Creator
 	item.CreatedAt = oldItem.CreatedAt
 	err = a.TransModel.Exec(ctx, func(ctx context.Context) error {
-		addRoleMenus, delRoleMenus := a.compareRoleMenus(ctx, oldItem.RoleMenus, item.RoleMenus)
-		for _, rmitem := range addRoleMenus {
-			rmitem.ID = uuid.MustString()
-			rmitem.RoleID = id
-			err := a.RoleMenuModel.Create(ctx, *rmitem)
-			if err != nil {
-				return err
-			}
-		}
-
-		for _, rmitem := range delRoleMenus {
-			err := a.RoleMenuModel.Delete(ctx, rmitem.ID)
-			if err != nil {
-				return err
-			}
-		}
-
 		return a.RoleModel.Update(ctx, id, item)
 	})
 	if err != nil {
@@ -137,24 +94,6 @@ func (a *Role) Update(ctx context.Context, id string, item schema.Role) error {
 	}
 	LoadCasbinPolicy(ctx, a.Enforcer)
 	return nil
-}
-
-func (a *Role) compareRoleMenus(ctx context.Context, oldRoleMenus, newRoleMenus schema.RoleMenus) (addList, delList schema.RoleMenus) {
-	mOldRoleMenus := oldRoleMenus.ToMap()
-	mNewRoleMenus := newRoleMenus.ToMap()
-
-	for k, item := range mNewRoleMenus {
-		if _, ok := mOldRoleMenus[k]; ok {
-			delete(mOldRoleMenus, k)
-			continue
-		}
-		addList = append(addList, item)
-	}
-
-	for _, item := range mOldRoleMenus {
-		delList = append(delList, item)
-	}
-	return
 }
 
 // Delete 删除数据
@@ -177,11 +116,6 @@ func (a *Role) Delete(ctx context.Context, id string) error {
 	}
 
 	err = a.TransModel.Exec(ctx, func(ctx context.Context) error {
-		err := a.RoleMenuModel.DeleteByRoleID(ctx, id)
-		if err != nil {
-			return err
-		}
-
 		return a.RoleModel.Delete(ctx, id)
 	})
 	if err != nil {
