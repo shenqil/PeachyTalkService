@@ -1219,6 +1219,359 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/management/routerResources": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "路由资源"
+                ],
+                "summary": "查询数据",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "分页索引",
+                        "name": "current",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "分页大小",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "查询值",
+                        "name": "queryValue",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "启用状态",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询结果",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schema.ListResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.RouterResource"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "路由资源"
+                ],
+                "summary": "创建数据",
+                "parameters": [
+                    {
+                        "description": "创建数据",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.RouterResource"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.IDResult"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:无效的请求参数}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/routerResources/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "路由资源"
+                ],
+                "summary": "查询指定数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.RouterResource"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "404": {
+                        "description": "{error:{code:0,message:资源不存在}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "路由资源"
+                ],
+                "summary": "更新数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "更新数据",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.RouterResource"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:无效的请求参数}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "路由资源"
+                ],
+                "summary": "删除数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/routerResources/{id}/disable": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "路由资源"
+                ],
+                "summary": "禁用数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/management/routerResources/{id}/enable": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "路由资源"
+                ],
+                "summary": "启用数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/management/users": {
             "get": {
                 "security": [
@@ -2155,6 +2508,51 @@ var doc = `{
                 },
                 "updatedAt": {
                     "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "schema.RouterResource": {
+            "type": "object",
+            "required": [
+                "method",
+                "name",
+                "path",
+                "status"
+            ],
+            "properties": {
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "创建者",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "memo": {
+                    "description": "资源备注",
+                    "type": "string"
+                },
+                "method": {
+                    "description": "资源请求方式(支持正则)",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "资源名称",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "资源请求路径（支持/:id匹配）",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "状态(1:启用 2:禁用)",
+                    "type": "integer"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }

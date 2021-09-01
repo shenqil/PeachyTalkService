@@ -43,7 +43,7 @@ func (a *Router) RegisterAPI(app *gin.Engine) {
 			pub.POST("/refresh-token", a.LoginAPI.RefreshToken)
 		}
 
-		management:=v1.Group("/management")
+		management := v1.Group("/management")
 		{
 			gDemo := management.Group("demos")
 			{
@@ -89,6 +89,17 @@ func (a *Router) RegisterAPI(app *gin.Engine) {
 				gUser.DELETE(":id", a.UserAPI.Delete)
 				gUser.PATCH(":id/enable", a.UserAPI.Enable)
 				gUser.PATCH(":id/disable", a.UserAPI.Disable)
+			}
+
+			gRouterResources := management.Group("routerResources")
+			{
+				gRouterResources.GET("", a.RouterResource.Query)
+				gRouterResources.GET(":id", a.RouterResource.Get)
+				gRouterResources.POST("", a.RouterResource.Create)
+				gRouterResources.PUT(":id", a.RouterResource.Update)
+				gRouterResources.DELETE(":id", a.RouterResource.Delete)
+				gRouterResources.PATCH(":id/enable", a.RouterResource.Enable)
+				gRouterResources.PATCH(":id/disable", a.RouterResource.Disable)
 			}
 		}
 

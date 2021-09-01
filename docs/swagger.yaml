@@ -215,6 +215,39 @@ definitions:
     - name
     - status
     type: object
+  schema.RouterResource:
+    properties:
+      createdAt:
+        description: 创建时间
+        type: string
+      creator:
+        description: 创建者
+        type: string
+      id:
+        type: string
+      memo:
+        description: 资源备注
+        type: string
+      method:
+        description: 资源请求方式(支持正则)
+        type: string
+      name:
+        description: 资源名称
+        type: string
+      path:
+        description: 资源请求路径（支持/:id匹配）
+        type: string
+      status:
+        description: 状态(1:启用 2:禁用)
+        type: integer
+      updatedAt:
+        type: string
+    required:
+    - method
+    - name
+    - path
+    - status
+    type: object
   schema.StatusResult:
     properties:
       status:
@@ -1074,6 +1107,226 @@ paths:
       summary: 启用数据
       tags:
       - 角色管理
+  /api/v1/management/routerResources:
+    get:
+      parameters:
+      - default: 1
+        description: 分页索引
+        in: query
+        name: current
+        required: true
+        type: integer
+      - default: 10
+        description: 分页大小
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - description: 查询值
+        in: query
+        name: queryValue
+        type: string
+      - description: 启用状态
+        in: query
+        name: status
+        type: integer
+      responses:
+        "200":
+          description: 查询结果
+          schema:
+            allOf:
+            - $ref: '#/definitions/schema.ListResult'
+            - properties:
+                list:
+                  items:
+                    $ref: '#/definitions/schema.RouterResource'
+                  type: array
+              type: object
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询数据
+      tags:
+      - 路由资源
+    post:
+      parameters:
+      - description: 创建数据
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.RouterResource'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.IDResult'
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建数据
+      tags:
+      - 路由资源
+  /api/v1/management/routerResources/{id}:
+    delete:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除数据
+      tags:
+      - 路由资源
+    get:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.RouterResource'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询指定数据
+      tags:
+      - 路由资源
+    put:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新数据
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.RouterResource'
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新数据
+      tags:
+      - 路由资源
+  /api/v1/management/routerResources/{id}/disable:
+    patch:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 禁用数据
+      tags:
+      - 路由资源
+  /api/v1/management/routerResources/{id}/enable:
+    patch:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 启用数据
+      tags:
+      - 路由资源
   /api/v1/management/users:
     get:
       parameters:

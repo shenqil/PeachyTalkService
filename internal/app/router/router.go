@@ -28,6 +28,7 @@ type Router struct {
 	MenuAPI        *api.Menu
 	RoleAPI        *api.Role
 	UserAPI        *api.User
+	RouterResource *api.RouterResource
 }
 
 func (a *Router) Register(app *gin.Engine) error {
@@ -40,4 +41,3 @@ func (a *Router) Prefixes() []string {
 		"/api/",
 	}
 }
-

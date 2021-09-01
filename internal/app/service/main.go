@@ -9,4 +9,5 @@ var ServiceSet = wire.NewSet(
 	MenuSet,
 	RoleSet,
 	UserSet,
+	RouterResourceSet,
 )

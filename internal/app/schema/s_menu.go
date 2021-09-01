@@ -8,19 +8,19 @@ import (
 
 // Menu 菜单对象
 type Menu struct {
-	ID         string      `json:"id"`                                         // 唯一标识
-	Name       string      `json:"name" binding:"required"`                    // 菜单名称
-	Sequence   int         `json:"sequence"`                                   // 排序值
-	Icon       string      `json:"icon"`                                       // 菜单图标
-	Router     string      `json:"router"`                                     // 访问路由
-	ParentID   string      `json:"parentId"`                                  // 父级ID
-	ParentPath string      `json:"parentPath""`                                // 父级路径
-	ShowStatus int         `json:"showStatus" binding:"required,max=2,min=1"` // 显示状态(1:显示 2:隐藏)
-	Status     int         `json:"status" binding:"required,max=2,min=1"`      // 状态(1:启用 2:禁用)
-	Memo       string      `json:"memo"`                                       // 备注
-	Creator    string      `json:"creator"`                                    // 创建者
-	CreatedAt  time.Time   `json:"createdAt""`                                 // 创建时间
-	UpdatedAt  time.Time   `json:"updatedAt"`                                 // 更新时间
+	ID         string    `json:"id"`                                        // 唯一标识
+	Name       string    `json:"name" binding:"required"`                   // 菜单名称
+	Sequence   int       `json:"sequence"`                                  // 排序值
+	Icon       string    `json:"icon"`                                      // 菜单图标
+	Router     string    `json:"router"`                                    // 访问路由
+	ParentID   string    `json:"parentId"`                                  // 父级ID
+	ParentPath string    `json:"parentPath"`                                // 父级路径
+	ShowStatus int       `json:"showStatus" binding:"required,max=2,min=1"` // 显示状态(1:显示 2:隐藏)
+	Status     int       `json:"status" binding:"required,max=2,min=1"`     // 状态(1:启用 2:禁用)
+	Memo       string    `json:"memo"`                                      // 备注
+	Creator    string    `json:"creator"`                                   // 创建者
+	CreatedAt  time.Time `json:"createdAt"`                                 // 创建时间
+	UpdatedAt  time.Time `json:"updatedAt"`                                 // 更新时间
 }
 
 func (a *Menu) String() string {
@@ -119,16 +119,16 @@ func (a Menus) ToTree() MenuTrees {
 
 // MenuTree 菜单树
 type MenuTree struct {
-	ID         string      `yaml:"-" json:"id"`                                  // 唯一标识
-	Name       string      `yaml:"name" json:"name"`                             // 菜单名称
-	Icon       string      `yaml:"icon" json:"icon"`                             // 菜单图标
-	Router     string      `yaml:"router,omitempty" json:"router"`               // 访问路由
-	ParentID   string      `yaml:"-" json:"parentId"`                           // 父级ID
-	ParentPath string      `yaml:"-" json:"parentPath"`                         // 父级路径
-	Sequence   int         `yaml:"sequence" json:"sequence"`                     // 排序值
-	ShowStatus int         `yaml:"-" json:"showStatus"`                         // 显示状态(1:显示 2:隐藏)
-	Status     int         `yaml:"-" json:"status"`                              // 状态(1:启用 2:禁用)
-	Children   *MenuTrees  `yaml:"children,omitempty" json:"children,omitempty"` // 子级树
+	ID         string     `yaml:"-" json:"id"`                                  // 唯一标识
+	Name       string     `yaml:"name" json:"name"`                             // 菜单名称
+	Icon       string     `yaml:"icon" json:"icon"`                             // 菜单图标
+	Router     string     `yaml:"router,omitempty" json:"router"`               // 访问路由
+	ParentID   string     `yaml:"-" json:"parentId"`                            // 父级ID
+	ParentPath string     `yaml:"-" json:"parentPath"`                          // 父级路径
+	Sequence   int        `yaml:"sequence" json:"sequence"`                     // 排序值
+	ShowStatus int        `yaml:"-" json:"showStatus"`                          // 显示状态(1:显示 2:隐藏)
+	Status     int        `yaml:"-" json:"status"`                              // 状态(1:启用 2:禁用)
+	Children   *MenuTrees `yaml:"children,omitempty" json:"children,omitempty"` // 子级树
 }
 
 // MenuTrees 菜单树列表
