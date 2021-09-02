@@ -47,6 +47,9 @@ func (a *Role) Query(ctx context.Context, params schema.RoleQueryParam, opts ...
 		v = "%" + v + "%"
 		db = db.Where("name LIKE ? OR memo LIKE ?", v, v)
 	}
+	if v := params.Status; v != 0 {
+		db = db.Where("status=?", v)
+	}
 
 	opt.OrderFields = append(opt.OrderFields, schema.NewOrderField("id", schema.OrderByDESC))
 	db = db.Order(ParseOrder(opt.OrderFields))

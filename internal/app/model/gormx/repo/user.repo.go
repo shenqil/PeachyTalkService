@@ -40,7 +40,7 @@ func (a *User) Query(ctx context.Context, params schema.UserQueryParam, opts ...
 		subQuery := entity.GetUserRoleDB(ctx, a.DB).
 			Select("user_id").
 			Where("role_id IN (?)", v)
-		db = db.Where("id IN ?", subQuery)
+		db = db.Where("id IN (?)", subQuery)
 	}
 	if v := params.QueryValue; v != "" {
 		v = "%" + v + "%"

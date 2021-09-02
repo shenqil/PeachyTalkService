@@ -24,3 +24,7 @@
       icon: user
       router: "/system/user"
       sequence: 3
+    - name: 路由资源管理
+      icon: routerResource
+      router: "/system/routerResource"
+      sequence: 4

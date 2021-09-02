@@ -35,6 +35,7 @@ func (a *Demo) Query(ctx context.Context, params schema.DemoQueryParam, opts ...
 	}
 	if v := params.QueryValue; v != "" {
 		v = "%" + v + "%"
+		db = db.Where("name=?", v)
 	}
 
 	opt.OrderFields = append(opt.OrderFields, schema.NewOrderField("id", schema.OrderByDESC))
