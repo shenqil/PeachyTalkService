@@ -78,11 +78,19 @@ func BuildInjector() (*Injector, func(), error) {
 	apiMenu := &api.Menu{
 		MenuSrv: serviceMenu,
 	}
+	roleRouter := &repo.RoleRouter{
+		DB: db,
+	}
+	routerResource := &repo.RouterResource{
+		DB: db,
+	}
 	serviceRole := &service.Role{
-		Enforcer:   syncedEnforcer,
-		TransModel: trans,
-		RoleModel:  role,
-		UserModel:  user,
+		Enforcer:            syncedEnforcer,
+		TransModel:          trans,
+		RoleModel:           role,
+		UserModel:           user,
+		RoleRouterModel:     roleRouter,
+		RouterResourceModel: routerResource,
 	}
 	apiRole := &api.Role{
 		RoleSrv: serviceRole,
@@ -97,11 +105,9 @@ func BuildInjector() (*Injector, func(), error) {
 	apiUser := &api.User{
 		UserSrv: serviceUser,
 	}
-	routerResource := &repo.RouterResource{
-		DB: db,
-	}
 	serviceRouterResource := &service.RouterResource{
 		RouterResourceModel: routerResource,
+		RoleRouterModel:     roleRouter,
 	}
 	apiRouterResource := &api.RouterResource{
 		RouterResourceSrv: serviceRouterResource,

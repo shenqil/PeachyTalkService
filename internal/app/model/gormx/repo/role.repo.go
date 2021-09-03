@@ -41,7 +41,7 @@ func (a *Role) Query(ctx context.Context, params schema.RoleQueryParam, opts ...
 			Where("deleted_at is null").
 			Where("user_id=?", v).
 			Select("role_id")
-		db = db.Where("id IN ?", subQuery)
+		db = db.Where("id IN (?)", subQuery)
 	}
 	if v := params.QueryValue; v != "" {
 		v = "%" + v + "%"

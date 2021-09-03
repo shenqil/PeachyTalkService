@@ -32,6 +32,9 @@ func (a *RoleRouter) Query(ctx context.Context, params schema.RoleRouterQueryPar
 	if v := params.RoleID; v != "" {
 		db = db.Where("role_id=?", v)
 	}
+	if v := params.RouterID; v != "" {
+		db = db.Where("router_id=?", v)
+	}
 	if v := params.RoleIDs; len(v) > 0 {
 		db = db.Where("role_id in (?)", v)
 	}

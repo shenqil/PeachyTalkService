@@ -202,6 +202,11 @@ definitions:
       name:
         description: 角色名称
         type: string
+      roleRouters:
+        description: 路由资源
+        items:
+          $ref: '#/definitions/schema.RoleRouter'
+        type: array
       sequence:
         description: 排序值
         type: integer
@@ -214,6 +219,18 @@ definitions:
     required:
     - name
     - status
+    type: object
+  schema.RoleRouter:
+    properties:
+      id:
+        description: 唯一标识
+        type: string
+      roleId:
+        description: 角色ID
+        type: string
+      routerId:
+        description: 路由资源
+        type: string
     type: object
   schema.RouterResource:
     properties:
@@ -1125,6 +1142,10 @@ paths:
       - description: 查询值
         in: query
         name: queryValue
+        type: string
+      - description: 角色ID
+        in: query
+        name: roleId
         type: string
       - description: 启用状态
         in: query

@@ -127,6 +127,10 @@ func (a *Role) Delete(ctx context.Context, id string) error {
 	}
 
 	err = a.TransModel.Exec(ctx, func(ctx context.Context) error {
+		err := a.RoleRouterModel.DeleteByRoleUD(ctx, id)
+		if err != nil {
+			return err
+		}
 		return a.RoleModel.Delete(ctx, id)
 	})
 	if err != nil {

@@ -1254,6 +1254,12 @@ var doc = `{
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "description": "角色ID",
+                        "name": "roleId",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "description": "启用状态",
                         "name": "status",
@@ -2498,6 +2504,13 @@ var doc = `{
                     "description": "角色名称",
                     "type": "string"
                 },
+                "roleRouters": {
+                    "description": "路由资源",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.RoleRouter"
+                    }
+                },
                 "sequence": {
                     "description": "排序值",
                     "type": "integer"
@@ -2508,6 +2521,23 @@ var doc = `{
                 },
                 "updatedAt": {
                     "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "schema.RoleRouter": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "唯一标识",
+                    "type": "string"
+                },
+                "roleId": {
+                    "description": "角色ID",
+                    "type": "string"
+                },
+                "routerId": {
+                    "description": "路由资源",
                     "type": "string"
                 }
             }

@@ -15,6 +15,7 @@ var RouterResourceSet = wire.NewSet(wire.Struct(new(RouterResource), "*"))
 // RouterResource 路由资源
 type RouterResource struct {
 	RouterResourceModel *repo.RouterResource
+	RoleRouterModel     *repo.RoleRouter
 }
 
 // Query 查询数据
@@ -84,6 +85,16 @@ func (a *RouterResource) Delete(ctx context.Context, id string) error {
 		return err
 	} else if oldItem == nil {
 		return errors.ErrNotFound
+	}
+
+	roleResult, err := a.RoleRouterModel.Query(ctx, schema.RoleRouterQueryParam{
+		PaginationParam: schema.PaginationParam{OnlyCount: true},
+		RouterID:        id,
+	})
+	if err != nil {
+		return err
+	} else if roleResult.PageResult.Total > 0 {
+		return errors.New400Response("该资源已被赋予角色，不允许删除")
 	}
 
 	return a.RouterResourceModel.Delete(ctx, id)

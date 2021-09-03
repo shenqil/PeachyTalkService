@@ -43,6 +43,13 @@ func (a *RouterResource) Query(ctx context.Context, params schema.RouterResource
 	if v := params.Status; v != 0 {
 		db = db.Where("status = ?", v)
 	}
+	if v := params.RoleID; v != "" {
+		subQuery := entity.GetRoleRouterDB(ctx, a.DB).
+			Where("deleted_at is null").
+			Where("role_id=?", v).
+			Select("router_id")
+		db = db.Where("id IN (?)", subQuery)
+	}
 
 	opt.OrderFields = append(opt.OrderFields, schema.NewOrderField("created_at", schema.OrderByDESC))
 	db = db.Order(ParseOrder(opt.OrderFields))
@@ -50,7 +57,7 @@ func (a *RouterResource) Query(ctx context.Context, params schema.RouterResource
 	var list entity.RouterResources
 	pr, err := WrapPageQuery(ctx, db, params.PaginationParam, &list)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	qr := &schema.RouterResourceResult{

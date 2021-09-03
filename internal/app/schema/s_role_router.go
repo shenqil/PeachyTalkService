@@ -10,8 +10,9 @@ type RoleRouter struct {
 // RoleRouterQueryParam 查询条件
 type RoleRouterQueryParam struct {
 	PaginationParam
-	RoleID  string   // 角色ID
-	RoleIDs []string // 角色ID列表
+	RouterID string   // 路由ID
+	RoleID   string   // 角色ID
+	RoleIDs  []string // 角色ID列表
 }
 
 // RoleRouterQueryOptions 查询可选参数项

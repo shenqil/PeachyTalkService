@@ -20,6 +20,7 @@ type RouterResourceQueryParam struct {
 	PaginationParam
 	IDs        []string `form:"-"`          // 唯一标识列表
 	Name       string   `form:"name"`       // 名称
+	RoleID     string   `form:"roleId"`     // 角色ID
 	QueryValue string   `form:"queryValue"` // 模糊查询
 	Status     int      `form:"status"`     // 启用状态
 }

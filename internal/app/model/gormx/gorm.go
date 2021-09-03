@@ -96,5 +96,6 @@ func AutoMigrate(db *gorm.DB) error {
 		new(entity.UserRole),
 		new(entity.User),
 		new(entity.RouterResource),
+		new(entity.RoleRouter),
 	)
 }
