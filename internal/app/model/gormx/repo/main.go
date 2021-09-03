@@ -10,5 +10,6 @@ var RepoSet = wire.NewSet(
 	TransSet,
 	UserRoleSet,
 	UserSet,
+	RoleRouterSet,
 	RouterResourceSet,
 )

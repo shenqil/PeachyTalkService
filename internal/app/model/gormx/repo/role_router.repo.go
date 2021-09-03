@@ -32,11 +32,10 @@ func (a *RoleRouter) Query(ctx context.Context, params schema.RoleRouterQueryPar
 	if v := params.RoleID; v != "" {
 		db = db.Where("role_id=?", v)
 	}
-	if v := params.RouterIDs; len(v) > 0 {
-		db = db.Where("router_id in (?)", v)
+	if v := params.RoleIDs; len(v) > 0 {
+		db = db.Where("role_id in (?)", v)
 	}
 
-	opt.OrderFields = append(opt.OrderFields, schema.NewOrderField("id", schema.OrderByDESC))
 	db = db.Order(ParseOrder(opt.OrderFields))
 
 	var list entity.RoleRouters

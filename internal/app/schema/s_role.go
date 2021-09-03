@@ -4,14 +4,15 @@ import "time"
 
 // Role 角色对象
 type Role struct {
-	ID        string    `json:"id"`                                    // 唯一标识
-	Name      string    `json:"name" binding:"required"`               // 角色名称
-	Sequence  int       `json:"sequence"`                              // 排序值
-	Memo      string    `json:"memo"`                                  // 备注
-	Status    int       `json:"status" binding:"required,max=2,min=1"` // 状态(1:启用 2:禁用)
-	Creator   string    `json:"creator"`                               // 创建者
-	CreatedAt time.Time `json:"createdAt"`                            // 创建时间
-	UpdatedAt time.Time `json:"updatedAt"`                            // 更新时间
+	ID          string      `json:"id"`                                    // 唯一标识
+	Name        string      `json:"name" binding:"required"`               // 角色名称
+	Sequence    int         `json:"sequence"`                              // 排序值
+	Memo        string      `json:"memo"`                                  // 备注
+	Status      int         `json:"status" binding:"required,max=2,min=1"` // 状态(1:启用 2:禁用)
+	Creator     string      `json:"creator"`                               // 创建者
+	CreatedAt   time.Time   `json:"createdAt"`                             // 创建时间
+	UpdatedAt   time.Time   `json:"updatedAt"`                             // 更新时间
+	RoleRouters RoleRouters `json:"roleRouters"`                           // 路由资源
 }
 
 // RoleQueryParam 查询条件
@@ -54,4 +55,27 @@ func (a Roles) ToMap() map[string]*Role {
 		m[item.ID] = item
 	}
 	return m
+}
+
+// --------------------------------- RoleShow -------------------------------
+
+// RoleShow 角色显示项
+type RoleShow struct {
+	ID              string            `json:"id"`                                    // 唯一标识
+	Name            string            `json:"name" binding:"required"`               // 角色名称
+	Sequence        int               `json:"sequence"`                              // 排序值
+	Memo            string            `json:"memo"`                                  // 备注
+	Status          int               `json:"status" binding:"required,max=2,min=1"` // 状态(1:启用 2:禁用)
+	Creator         string            `json:"creator"`                               // 创建者
+	CreatedAt       time.Time         `json:"createdAt"`                             // 创建时间
+	RouterResources []*RouterResource `json:"routerResources"`                       // 角色管理的路由资源
+}
+
+// RoleShows 角色显示列表
+type RoleShows []*RoleShow
+
+// RoleShowQueryResult 用户显示项查询结果
+type RoleShowQueryResult struct {
+	Data       RoleShows
+	PageResult *PaginationResult
 }

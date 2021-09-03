@@ -15,10 +15,12 @@ var RoleSet = wire.NewSet(wire.Struct(new(Role), "*"))
 
 // Role 角色管理
 type Role struct {
-	Enforcer      *casbin.SyncedEnforcer
-	TransModel    *repo.Trans
-	RoleModel     *repo.Role
-	UserModel     *repo.User
+	Enforcer            *casbin.SyncedEnforcer
+	TransModel          *repo.Trans
+	RoleModel           *repo.Role
+	UserModel           *repo.User
+	RoleRouterModel     *repo.RoleRouter
+	RouterResourceModel *repo.RouterResource
 }
 
 // Query 查询数据
@@ -34,6 +36,15 @@ func (a *Role) Get(ctx context.Context, id string, opts ...schema.RoleQueryOptio
 	} else if item == nil {
 		return nil, errors.ErrNotFound
 	}
+
+	roleRouter, err := a.RoleRouterModel.Query(ctx, schema.RoleRouterQueryParam{
+		RoleID: id,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	item.RoleRouters = roleRouter.Data
 
 	return item, nil
 }

@@ -44,7 +44,7 @@ func (a *RouterResource) Query(ctx context.Context, params schema.RouterResource
 		db = db.Where("status = ?", v)
 	}
 
-	opt.OrderFields = append(opt.OrderFields, schema.NewOrderField("id", schema.OrderByDESC))
+	opt.OrderFields = append(opt.OrderFields, schema.NewOrderField("created_at", schema.OrderByDESC))
 	db = db.Order(ParseOrder(opt.OrderFields))
 
 	var list entity.RouterResources
