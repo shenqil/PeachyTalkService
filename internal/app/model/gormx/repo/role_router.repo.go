@@ -39,7 +39,9 @@ func (a *RoleRouter) Query(ctx context.Context, params schema.RoleRouterQueryPar
 		db = db.Where("role_id in (?)", v)
 	}
 
-	db = db.Order(ParseOrder(opt.OrderFields))
+	if opt.OrderFields != nil {
+		db = db.Order(ParseOrder(opt.OrderFields))
+	}
 
 	var list entity.RoleRouters
 	pr, err := WrapPageQuery(ctx, db, params.PaginationParam, &list)
@@ -69,9 +71,9 @@ func (a *RoleRouter) Get(ctx context.Context, id string, opts ...schema.RoleRout
 }
 
 // Create 创建数据
-func (a *RoleRouter) Create(ctx context.Context, id string, item schema.RoleRouter) error {
+func (a *RoleRouter) Create(ctx context.Context, item schema.RoleRouter) error {
 	eitem := entity.SchemaRoleRouter(item).ToRoleRouter()
-	result := entity.GetRoleRouterDB(ctx, a.DB).Where("id=?", id).Create(eitem)
+	result := entity.GetRoleRouterDB(ctx, a.DB).Where("id=?", item.ID).Create(eitem)
 	return errors.WithStack(result.Error)
 }
 

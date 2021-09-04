@@ -57,6 +57,15 @@ func (a Roles) ToMap() map[string]*Role {
 	return m
 }
 
+// ToIDs 转换为id
+func (a Roles) ToIDs() []string {
+	ids := make([]string, len(a))
+	for i, item := range a {
+		ids[i] = item.ID
+	}
+	return ids
+}
+
 // --------------------------------- RoleShow -------------------------------
 
 // RoleShow 角色显示项

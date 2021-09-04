@@ -50,6 +50,9 @@ func (a *RouterResource) Query(ctx context.Context, params schema.RouterResource
 			Select("router_id")
 		db = db.Where("id IN (?)", subQuery)
 	}
+	if v := params.ExcludeIDs; len(v) != 0 {
+		db = db.Where("id NOT IN(?)", v)
+	}
 
 	opt.OrderFields = append(opt.OrderFields, schema.NewOrderField("created_at", schema.OrderByDESC))
 	db = db.Order(ParseOrder(opt.OrderFields))

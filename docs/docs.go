@@ -1260,6 +1260,15 @@ var doc = `{
                         "in": "query"
                     },
                     {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "需要排除的ID",
+                        "name": "excludeIDs",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "description": "启用状态",
                         "name": "status",

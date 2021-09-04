@@ -98,6 +98,25 @@ func (a *Role) Update(ctx context.Context, id string, item schema.Role) error {
 	item.Creator = oldItem.Creator
 	item.CreatedAt = oldItem.CreatedAt
 	err = a.TransModel.Exec(ctx, func(ctx context.Context) error {
+		// 存在资源列表才更改
+		if item.RoleRouters != nil {
+			addRoleRouter, delRoleRouter := a.compareRoleRouter(oldItem.RoleRouters, item.RoleRouters)
+			for _, item := range addRoleRouter {
+				item.ID = uuid.MustString()
+				item.RoleID = id
+				err := a.RoleRouterModel.Create(ctx, *item)
+				if err != nil {
+					return err
+				}
+			}
+
+			for _, item := range delRoleRouter {
+				err := a.RoleRouterModel.Delete(ctx, item.ID)
+				if err != nil {
+					return err
+				}
+			}
+		}
 		return a.RoleModel.Update(ctx, id, item)
 	})
 	if err != nil {
@@ -105,6 +124,24 @@ func (a *Role) Update(ctx context.Context, id string, item schema.Role) error {
 	}
 	LoadCasbinPolicy(ctx, a.Enforcer)
 	return nil
+}
+
+func (a *Role) compareRoleRouter(oldRoleRouters, newRoleRouters schema.RoleRouters) (addList, delList schema.RoleRouters) {
+	mOldMap := oldRoleRouters.ToMap()
+	mNewMap := newRoleRouters.ToMap()
+
+	for k, item := range mNewMap {
+		if _, ok := mOldMap[k]; ok {
+			delete(mOldMap, k)
+			continue
+		}
+		addList = append(addList, item)
+	}
+
+	for _, item := range mOldMap {
+		delList = append(delList, item)
+	}
+	return
 }
 
 // Delete 删除数据

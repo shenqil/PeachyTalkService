@@ -18,11 +18,12 @@ type RouterResource struct {
 // RouterResourceQueryParam 查询条件
 type RouterResourceQueryParam struct {
 	PaginationParam
-	IDs        []string `form:"-"`          // 唯一标识列表
-	Name       string   `form:"name"`       // 名称
-	RoleID     string   `form:"roleId"`     // 角色ID
-	QueryValue string   `form:"queryValue"` // 模糊查询
-	Status     int      `form:"status"`     // 启用状态
+	IDs        []string `form:"-"`            // 唯一标识列表
+	Name       string   `form:"name"`         // 名称
+	RoleID     string   `form:"roleId"`       // 角色ID
+	ExcludeIDs []string `form:"excludeIDs[]"` // 排除的id列表
+	QueryValue string   `form:"queryValue"`   // 模糊查询
+	Status     int      `form:"status"`       // 启用状态
 }
 
 // RouterResourceQueryOptions 查询可选参数
