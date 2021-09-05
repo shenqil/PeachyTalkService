@@ -154,8 +154,6 @@ func (a MenuTrees) ToTree() MenuTrees {
 				continue
 			}
 			*pitem.Children = append(*pitem.Children, item)
-		} else {
-			list = append(list, item)
 		}
 	}
 	return list

@@ -28,15 +28,15 @@ func CheckIsRootUser(ctx context.Context, userID string) bool {
 // User 用户对象
 type User struct {
 	ID        string    `json:"id"`                                    // 唯一标识
-	UserName  string    `json:"user_name" binding:"required"`          // 用户名
-	RealName  string    `json:"real_name" binding:"required"`          // 真实姓名
+	UserName  string    `json:"userName" binding:"required"`           // 用户名
+	RealName  string    `json:"realName" binding:"required"`           // 真实姓名
 	Password  string    `json:"password"`                              // 密码
 	Phone     string    `json:"phone"`                                 // 手机号
 	Email     string    `json:"email"`                                 // 邮箱
 	Status    int       `json:"status" binding:"required,max=2,min=1"` // 用户状态(1:启用 2:停用)
 	Creator   string    `json:"creator"`                               // 创建者
-	CreatedAt time.Time `json:"created_at"`                            // 创建时间
-	UserRoles UserRoles `json:"user_roles" binding:"required,gt=0"`    // 角色授权
+	CreatedAt time.Time `json:"createdAt"`                             // 创建时间
+	UserRoles UserRoles `json:"userRoles"`                             // 角色授权
 }
 
 func (a *User) String() string {
@@ -167,14 +167,15 @@ func (a UserRoles) ToUserIDMap() map[string]UserRoles {
 
 // UserShow 用户显示项
 type UserShow struct {
-	ID        string    `json:"id"`         // 唯一标识
-	UserName  string    `json:"user_name"`  // 用户名
-	RealName  string    `json:"real_name"`  // 真实姓名
-	Phone     string    `json:"phone"`      // 手机号
-	Email     string    `json:"email"`      // 邮箱
-	Status    int       `json:"status"`     // 用户状态(1:启用 2:停用)
-	CreatedAt time.Time `json:"created_at"` // 创建时间
-	Roles     []*Role   `json:"roles"`      // 授权角色列表
+	ID        string    `json:"id"`        // 唯一标识
+	UserName  string    `json:"userName"`  // 用户名
+	RealName  string    `json:"realName"`  // 真实姓名
+	Phone     string    `json:"phone"`     // 手机号
+	Email     string    `json:"email"`     // 邮箱
+	Status    int       `json:"status"`    // 用户状态(1:启用 2:停用)
+	Creator   string    `json:"creator"`   // 创建者
+	CreatedAt time.Time `json:"createdAt"` // 创建时间
+	Roles     []*Role   `json:"roles"`     // 授权角色列表
 }
 
 // UserShows 用户显示项列表
