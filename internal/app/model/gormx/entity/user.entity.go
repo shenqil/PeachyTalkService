@@ -41,6 +41,7 @@ type User struct {
 func (a User) ToSchemaUser() *schema.User {
 	item := new(schema.User)
 	structure.Copy(a, item)
+	item.CleanSecure()
 	return item
 }
 

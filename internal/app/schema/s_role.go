@@ -19,6 +19,7 @@ type Role struct {
 type RoleQueryParam struct {
 	PaginationParam
 	IDs        []string `form:"-"`          // 唯一标识列表
+	ExcludeIDs []string `form:"-"`          // 排除的唯一标识列表
 	Name       string   `form:"-"`          // 角色名称
 	QueryValue string   `form:"queryValue"` // 模糊查询
 	UserID     string   `form:"-"`          // 用户ID
@@ -32,8 +33,8 @@ type RoleQueryOptions struct {
 
 // RoleQueryResult 查询结果
 type RoleQueryResult struct {
-	Data       Roles
-	PageResult *PaginationResult
+	Data       Roles             `json:"list"`
+	PageResult *PaginationResult `json:"pagination"`
 }
 
 // Roles 角色对象列表

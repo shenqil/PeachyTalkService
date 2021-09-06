@@ -33,12 +33,14 @@ func (a *Role) Query(ctx context.Context, params schema.RoleQueryParam, opts ...
 	if v := params.IDs; len(v) > 0 {
 		db = db.Where("id IN (?)", v)
 	}
+	if v := params.ExcludeIDs; len(v) > 0 {
+		db = db.Where("id NOT IN (?)", v)
+	}
 	if v := params.Name; v != "" {
 		db = db.Where("name=?", v)
 	}
 	if v := params.UserID; v != "" {
 		subQuery := entity.GetUserRoleDB(ctx, a.DB).
-			Where("deleted_at is null").
 			Where("user_id=?", v).
 			Select("role_id")
 		db = db.Where("id IN (?)", subQuery)

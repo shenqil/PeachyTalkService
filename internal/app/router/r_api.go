@@ -89,6 +89,7 @@ func (a *Router) RegisterAPI(app *gin.Engine) {
 				gUser.DELETE(":id", a.UserAPI.Delete)
 				gUser.PATCH(":id/enable", a.UserAPI.Enable)
 				gUser.PATCH(":id/disable", a.UserAPI.Disable)
+				gUser.GET(":id/roles", a.UserAPI.GetRoleShow)
 			}
 
 			gRouterResources := management.Group("routerResources")

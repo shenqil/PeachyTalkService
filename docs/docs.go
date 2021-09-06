@@ -1946,6 +1946,76 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/management/users/{id}/roles": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "查询指定用户下的角色",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "分页索引",
+                        "name": "current",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "分页大小",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "查询值",
+                        "name": "queryValue",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.RoleShowByUserIDResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "404": {
+                        "description": "{error:{code:0,message:资源不存在}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/pub/current/menutree": {
             "get": {
                 "security": [
@@ -2534,6 +2604,20 @@ var doc = `{
                 }
             }
         },
+        "schema.RoleQueryResult": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.Role"
+                    }
+                },
+                "pageResult": {
+                    "$ref": "#/definitions/schema.PaginationResult"
+                }
+            }
+        },
         "schema.RoleRouter": {
             "type": "object",
             "properties": {
@@ -2548,6 +2632,22 @@ var doc = `{
                 "routerId": {
                     "description": "路由资源",
                     "type": "string"
+                }
+            }
+        },
+        "schema.RoleShowByUserIDResult": {
+            "type": "object",
+            "properties": {
+                "exist": {
+                    "description": "当前用户下存在的角色",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.Role"
+                    }
+                },
+                "notExist": {
+                    "description": "当前用户下不存在的角色",
+                    "$ref": "#/definitions/schema.RoleQueryResult"
                 }
             }
         },
@@ -2625,13 +2725,12 @@ var doc = `{
         "schema.User": {
             "type": "object",
             "required": [
-                "real_name",
+                "realName",
                 "status",
-                "user_name",
-                "user_roles"
+                "userName"
             ],
             "properties": {
-                "created_at": {
+                "createdAt": {
                     "description": "创建时间",
                     "type": "string"
                 },
@@ -2655,7 +2754,7 @@ var doc = `{
                     "description": "手机号",
                     "type": "string"
                 },
-                "real_name": {
+                "realName": {
                     "description": "真实姓名",
                     "type": "string"
                 },
@@ -2663,11 +2762,11 @@ var doc = `{
                     "description": "用户状态(1:启用 2:停用)",
                     "type": "integer"
                 },
-                "user_name": {
+                "userName": {
                     "description": "用户名",
                     "type": "string"
                 },
-                "user_roles": {
+                "userRoles": {
                     "description": "角色授权",
                     "type": "array",
                     "items": {
@@ -2720,8 +2819,12 @@ var doc = `{
         "schema.UserShow": {
             "type": "object",
             "properties": {
-                "created_at": {
+                "createdAt": {
                     "description": "创建时间",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "创建者",
                     "type": "string"
                 },
                 "email": {
@@ -2736,7 +2839,7 @@ var doc = `{
                     "description": "手机号",
                     "type": "string"
                 },
-                "real_name": {
+                "realName": {
                     "description": "真实姓名",
                     "type": "string"
                 },
@@ -2751,7 +2854,7 @@ var doc = `{
                     "description": "用户状态(1:启用 2:停用)",
                     "type": "integer"
                 },
-                "user_name": {
+                "userName": {
                     "description": "用户名",
                     "type": "string"
                 }

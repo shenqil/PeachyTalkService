@@ -110,9 +110,9 @@ func (a Users) ToUserShows(mUserRoles map[string]UserRoles, mRoles map[string]*R
 
 // UserRole 用户角色
 type UserRole struct {
-	ID     string `json:"id"`      // 唯一标识
-	UserID string `json:"user_id"` // 用户ID
-	RoleID string `json:"role_id"` // 角色ID
+	ID     string `json:"id"`     // 唯一标识
+	UserID string `json:"userId"` // 用户ID
+	RoleID string `json:"roleId"` // 角色ID
 }
 
 // UserRoleQueryParam 查询条件
@@ -185,4 +185,12 @@ type UserShows []*UserShow
 type UserShowQueryResult struct {
 	Data       UserShows
 	PageResult *PaginationResult
+}
+
+// ----------------------------------------RoleShowByUserID-------------------------------
+
+// RoleShowByUserIDResult 查询结果
+type RoleShowByUserIDResult struct {
+	Exist    Roles           `json:"exist"`    // 当前用户下存在的角色
+	NotExist RoleQueryResult `json:"notExist"` // 当前用户下不存在的角色
 }

@@ -232,3 +232,29 @@ func (a *User) UpdateStatus(ctx context.Context, id string, status int) error {
 	LoadCasbinPolicy(ctx, a.Enforcer)
 	return nil
 }
+
+// GetRoleShowByUserID 通过用户id 获取需要显示的角色
+func (a *User) GetRoleShowByUserID(ctx context.Context, id string, params schema.UserQueryParam, opts ...schema.UserQueryOptions) (*schema.RoleShowByUserIDResult, error) {
+	existRoleResult, err := a.RoleModel.Query(ctx, schema.RoleQueryParam{
+		UserID: id,
+		Status: 1,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	noExistRoleResult, err := a.RoleModel.Query(ctx, schema.RoleQueryParam{
+		PaginationParam: params.PaginationParam,
+		ExcludeIDs:      existRoleResult.Data.ToIDs(),
+		QueryValue:      params.QueryValue,
+		Status:          1,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &schema.RoleShowByUserIDResult{
+		Exist:    existRoleResult.Data,
+		NotExist: *noExistRoleResult,
+	}, nil
+}

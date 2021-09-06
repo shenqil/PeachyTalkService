@@ -7,6 +7,7 @@ import (
 	"ginAdmin/pkg/errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
+	"net/http"
 	"strings"
 )
 
@@ -43,7 +44,7 @@ func (a *User) Query(c *gin.Context) {
 	}
 
 	params.Pagination = true
-	result, err := a.UserSrv.QueryShow(ctx, params)
+	result, err := a.UserSrv.Query(ctx, params)
 	if err != nil {
 		ginx.ResError(c, err)
 		return
@@ -184,4 +185,35 @@ func (a *User) Disable(c *gin.Context) {
 		return
 	}
 	ginx.ResOK(c)
+}
+
+// GetRoleShow 查询指定用户下的角色
+// GetRoleShow 查询指定用户下的角色
+// @Tags 用户管理
+// @Summary 查询指定用户下的角色
+// @Security ApiKeyAuth
+// @Param id path string true "唯一标识"
+// @Param current query int true "分页索引" default(1)
+// @Param pageSize query int true "分页大小" default(10)
+// @Param queryValue query string false "查询值"
+// @Success 200 {object} schema.RoleShowByUserIDResult
+// @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
+// @Failure 404 {object} schema.ErrorResult "{error:{code:0,message:资源不存在}}"
+// @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
+// @Router /api/v1/management/users/{id}/roles [get]
+func (a *User) GetRoleShow(c *gin.Context) {
+	ctx := c.Request.Context()
+	var params schema.UserQueryParam
+	if err := ginx.ParseQuery(c, &params); err != nil {
+		ginx.ResError(c, err)
+		return
+	}
+	params.Pagination = true
+	result, err := a.UserSrv.GetRoleShowByUserID(ctx, c.Param("id"), params)
+	if err != nil {
+		ginx.ResError(c, err)
+		return
+	}
+
+	ginx.ResJSON(c, http.StatusOK, result)
 }
