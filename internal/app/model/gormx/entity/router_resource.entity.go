@@ -25,16 +25,16 @@ func (a SchemaRouterResource) ToRouterResource() *RouterResource {
 
 // RouterResource 路由相关资源
 type RouterResource struct {
-	ID        string     `gorm:"column:id;primary_key;size:36;"`
-	Name      string     `gorm:"column:name;size:100;default:'';not null;"`
-	Memo      string     `gorm:"column:memo;size:1024;default:'';not null;"`
-	Method    string     `gorm:"column:method;size:100;default:'';not null;"` // 资源请求方式(支持正则)
-	Path      string     `gorm:"column:path;size:100;default:'';not null;"`   // 资源请求路径（支持/:id匹配）
-	Status    int        `gorm:"column:status;index;default:0;not null;"`
-	Creator   string     `gorm:"column:creator;size:36;"` // 创建人
-	CreatedAt time.Time  `gorm:"column:created_at;index;"`
-	UpdatedAt time.Time  `gorm:"column:updated_at;index;"`
-	DeletedAt *time.Time `gorm:"column:deleted_at;index;"`
+	ID        string         `gorm:"column:id;primary_key;size:36;"`
+	Name      string         `gorm:"column:name;size:100;default:'';not null;"`
+	Memo      string         `gorm:"column:memo;size:1024;default:'';not null;"`
+	Method    string         `gorm:"column:method;size:100;default:'';not null;"` // 资源请求方式(支持正则)
+	Path      string         `gorm:"column:path;size:100;default:'';not null;"`   // 资源请求路径（支持/:id匹配）
+	Status    int            `gorm:"column:status;index;default:0;not null;"`
+	Creator   string         `gorm:"column:creator;size:36;"` // 创建人
+	CreatedAt time.Time      `gorm:"column:created_at;index;"`
+	UpdatedAt time.Time      `gorm:"column:updated_at;index;"`
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;index;"`
 }
 
 // ToSchemaRouterResource 转换为角色对象

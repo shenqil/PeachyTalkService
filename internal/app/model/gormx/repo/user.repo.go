@@ -92,7 +92,7 @@ func (a *User) Update(ctx context.Context, id string, item schema.User) error {
 
 // Delete 删除数据
 func (a *User) Delete(ctx context.Context, id string) error {
-	result := entity.GetUserDB(ctx, a.DB).Where("id=?", id).Delete(entity.User{})
+	result := entity.GetUserDB(ctx, a.DB).Where("id=?", id).Delete(&entity.User{})
 	return errors.WithStack(result.Error)
 }
 

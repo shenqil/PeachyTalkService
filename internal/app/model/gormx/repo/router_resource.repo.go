@@ -100,7 +100,7 @@ func (a *RouterResource) Update(ctx context.Context, id string, item schema.Rout
 
 // Delete 删除数据
 func (a *RouterResource) Delete(ctx context.Context, id string) error {
-	result := entity.GetRouterResourceDB(ctx, a.DB).Where("id=?", id).Delete(entity.RouterResource{})
+	result := entity.GetRouterResourceDB(ctx, a.DB).Where("id=?", id).Delete(&entity.RouterResource{})
 	return errors.WithStack(result.Error)
 }
 

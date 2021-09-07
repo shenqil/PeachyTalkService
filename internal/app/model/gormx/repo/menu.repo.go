@@ -103,7 +103,7 @@ func (a *Menu) UpdateParentPath(ctx context.Context, id, parentPath string) erro
 
 // Delete 删除数据
 func (a *Menu) Delete(ctx context.Context, id string) error {
-	result := entity.GetMenuDB(ctx, a.DB).Where("id=?", id).Delete(entity.Menu{})
+	result := entity.GetMenuDB(ctx, a.DB).Where("id=?", id).Delete(&entity.Menu{})
 	return errors.WithStack(result.Error)
 }
 

@@ -98,7 +98,7 @@ func (a *Role) Update(ctx context.Context, id string, item schema.Role) error {
 
 // Delete 删除数据
 func (a *Role) Delete(ctx context.Context, id string) error {
-	result := entity.GetRoleDB(ctx, a.DB).Where("id=?", id).Delete(entity.Role{})
+	result := entity.GetRoleDB(ctx, a.DB).Where("id=?", id).Delete(&entity.Role{})
 	return errors.WithStack(result.Error)
 }
 

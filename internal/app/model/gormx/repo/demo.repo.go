@@ -84,7 +84,7 @@ func (a *Demo) Update(ctx context.Context, id string, item schema.Demo) error {
 
 // Delete 删除数据
 func (a *Demo) Delete(ctx context.Context, id string) error {
-	result := entity.GetDemoDB(ctx, a.DB).Where("id", id).Delete(entity.Demo{})
+	result := entity.GetDemoDB(ctx, a.DB).Where("id", id).Delete(&entity.Demo{})
 	return errors.WithStack(result.Error)
 }
 
