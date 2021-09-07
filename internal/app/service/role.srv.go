@@ -194,3 +194,29 @@ func (a *Role) UpdateStatus(ctx context.Context, id string, status int) error {
 	LoadCasbinPolicy(ctx, a.Enforcer)
 	return nil
 }
+
+// GetRouterShowByRoleID 通过角色id 获取需要显示的路由资源
+func (a *Role) GetRoleShowByUserID(ctx context.Context, id string, params schema.RoleQueryParam, opts ...schema.UserQueryOptions) (*schema.RouterShowByRoleIDResult, error) {
+	existRouterResult, err := a.RouterResourceModel.Query(ctx, schema.RouterResourceQueryParam{
+		RoleID: id,
+		Status: 1,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	noExistRouterResult, err := a.RouterResourceModel.Query(ctx, schema.RouterResourceQueryParam{
+		PaginationParam: params.PaginationParam,
+		ExcludeIDs:      existRouterResult.Data.ToIDs(),
+		QueryValue:      params.QueryValue,
+		Status:          1,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &schema.RouterShowByRoleIDResult{
+		Exist:    existRouterResult.Data,
+		NotExist: *noExistRouterResult,
+	}, nil
+}

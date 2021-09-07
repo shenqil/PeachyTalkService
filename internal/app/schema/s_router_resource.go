@@ -18,12 +18,12 @@ type RouterResource struct {
 // RouterResourceQueryParam 查询条件
 type RouterResourceQueryParam struct {
 	PaginationParam
-	IDs        []string `form:"-"`            // 唯一标识列表
-	Name       string   `form:"name"`         // 名称
-	RoleID     string   `form:"roleId"`       // 角色ID
-	ExcludeIDs []string `form:"excludeIDs[]"` // 排除的id列表
-	QueryValue string   `form:"queryValue"`   // 模糊查询
-	Status     int      `form:"status"`       // 启用状态
+	IDs        []string `form:"-"`          // 唯一标识列表
+	Name       string   `form:"name"`       // 名称
+	RoleID     string   `form:"-"`          // 角色ID
+	ExcludeIDs []string `form:"-"`          // 排除的id列表
+	QueryValue string   `form:"queryValue"` // 模糊查询
+	Status     int      `form:"status"`     // 启用状态
 }
 
 // RouterResourceQueryOptions 查询可选参数
@@ -33,6 +33,27 @@ type RouterResourceQueryOptions struct {
 
 // RouterResourceResult 路由资源对象查询结果
 type RouterResourceResult struct {
-	Data       []*RouterResource
-	PageResult *PaginationResult
+	Data       RouterResources   `json:"list"`
+	PageResult *PaginationResult `json:"pagination"`
+}
+
+// RouterResources 路由资源列表
+type RouterResources []*RouterResource
+
+// ToMap 转换为键值存储
+func (a RouterResources) ToMap() map[string]*RouterResource {
+	m := make(map[string]*RouterResource)
+	for _, item := range a {
+		m[item.ID] = item
+	}
+	return m
+}
+
+// ToIDs 转换为id
+func (a RouterResources) ToIDs() []string {
+	ids := make([]string, len(a))
+	for i, item := range a {
+		ids[i] = item.ID
+	}
+	return ids
 }

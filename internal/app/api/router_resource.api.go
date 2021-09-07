@@ -23,8 +23,6 @@ type RouterResource struct {
 // @Param current query int true "分页索引" default(1)
 // @Param pageSize query int true "分页大小" default(10)
 // @Param queryValue query string false "查询值"
-// @Param roleId query string false "角色ID"
-// @Param excludeIDs query []string false "需要排除的ID"
 // @Param status query int 0 "启用状态"
 // @Success 200 {object} schema.ListResult{list=[]schema.RouterResource} "查询结果"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"

@@ -6,6 +6,7 @@ import (
 	"ginAdmin/internal/app/service"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
+	"net/http"
 )
 
 // RoleSet 注入Role
@@ -205,4 +206,35 @@ func (a *Role) Disable(c *gin.Context) {
 		return
 	}
 	ginx.ResOK(c)
+}
+
+// RouterShowByRoleID 查询指定角色下的路由资源
+// RouterShowByRoleID 查询指定角色下的路由资源
+// @Tags 角色管理
+// @Summary 查询指定角色下的路由资源
+// @Security ApiKeyAuth
+// @Param id path string true "唯一标识"
+// @Param current query int true "分页索引" default(1)
+// @Param pageSize query int true "分页大小" default(10)
+// @Param queryValue query string false "查询值"
+// @Success 200 {object} schema.RouterShowByRoleIDResult
+// @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
+// @Failure 404 {object} schema.ErrorResult "{error:{code:0,message:资源不存在}}"
+// @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
+// @Router /api/v1/management/roles/{id}/routers [get]
+func (a *Role) RouterShowByRoleID(c *gin.Context) {
+	ctx := c.Request.Context()
+	var params schema.RoleQueryParam
+	if err := ginx.ParseQuery(c, &params); err != nil {
+		ginx.ResError(c, err)
+		return
+	}
+	params.Pagination = true
+	result, err := a.RoleSrv.GetRoleShowByUserID(ctx, c.Param("id"), params)
+	if err != nil {
+		ginx.ResError(c, err)
+		return
+	}
+
+	ginx.ResJSON(c, http.StatusOK, result)
 }

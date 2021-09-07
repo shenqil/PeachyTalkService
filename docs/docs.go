@@ -1219,6 +1219,76 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/management/roles/{id}/routers": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "查询指定角色下的路由资源",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "分页索引",
+                        "name": "current",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "分页大小",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "查询值",
+                        "name": "queryValue",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.RouterShowByRoleIDResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "404": {
+                        "description": "{error:{code:0,message:资源不存在}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/management/routerResources": {
             "get": {
                 "security": [
@@ -1251,21 +1321,6 @@ var doc = `{
                         "type": "string",
                         "description": "查询值",
                         "name": "queryValue",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "角色ID",
-                        "name": "roleId",
-                        "in": "query"
-                    },
-                    {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "description": "需要排除的ID",
-                        "name": "excludeIDs",
                         "in": "query"
                     },
                     {
@@ -2613,7 +2668,7 @@ var doc = `{
                         "$ref": "#/definitions/schema.Role"
                     }
                 },
-                "pageResult": {
+                "pagination": {
                     "$ref": "#/definitions/schema.PaginationResult"
                 }
             }
@@ -2693,6 +2748,36 @@ var doc = `{
                 },
                 "updatedAt": {
                     "type": "string"
+                }
+            }
+        },
+        "schema.RouterResourceResult": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.RouterResource"
+                    }
+                },
+                "pagination": {
+                    "$ref": "#/definitions/schema.PaginationResult"
+                }
+            }
+        },
+        "schema.RouterShowByRoleIDResult": {
+            "type": "object",
+            "properties": {
+                "exist": {
+                    "description": "当前角色下存在的路由",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.RouterResource"
+                    }
+                },
+                "notExist": {
+                    "description": "当前用户下不存在的路由",
+                    "$ref": "#/definitions/schema.RouterResourceResult"
                 }
             }
         },
@@ -2806,11 +2891,11 @@ var doc = `{
                     "description": "唯一标识",
                     "type": "string"
                 },
-                "role_id": {
+                "roleId": {
                     "description": "角色ID",
                     "type": "string"
                 },
-                "user_id": {
+                "userId": {
                     "description": "用户ID",
                     "type": "string"
                 }

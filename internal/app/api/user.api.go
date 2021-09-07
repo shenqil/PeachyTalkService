@@ -187,8 +187,8 @@ func (a *User) Disable(c *gin.Context) {
 	ginx.ResOK(c)
 }
 
-// GetRoleShow 查询指定用户下的角色
-// GetRoleShow 查询指定用户下的角色
+// RoleShowByUserID 查询指定用户下的角色
+// RoleShowByUserID 查询指定用户下的角色
 // @Tags 用户管理
 // @Summary 查询指定用户下的角色
 // @Security ApiKeyAuth
@@ -201,7 +201,7 @@ func (a *User) Disable(c *gin.Context) {
 // @Failure 404 {object} schema.ErrorResult "{error:{code:0,message:资源不存在}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
 // @Router /api/v1/management/users/{id}/roles [get]
-func (a *User) GetRoleShow(c *gin.Context) {
+func (a *User) RoleShowByUserID(c *gin.Context) {
 	ctx := c.Request.Context()
 	var params schema.UserQueryParam
 	if err := ginx.ParseQuery(c, &params); err != nil {

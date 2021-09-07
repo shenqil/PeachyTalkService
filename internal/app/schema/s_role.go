@@ -89,3 +89,10 @@ type RoleShowQueryResult struct {
 	Data       RoleShows
 	PageResult *PaginationResult
 }
+
+// -----------------------RouterShowByRole ---------------------------
+// RouterShowByRoleIDResult 查询结果
+type RouterShowByRoleIDResult struct {
+	Exist    RouterResources      `json:"exist"`    // 当前角色下存在的路由
+	NotExist RouterResourceResult `json:"notExist"` // 当前用户下不存在的路由
+}

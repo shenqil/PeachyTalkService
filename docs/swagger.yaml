@@ -226,7 +226,7 @@ definitions:
         items:
           $ref: '#/definitions/schema.Role'
         type: array
-      pageResult:
+      pagination:
         $ref: '#/definitions/schema.PaginationResult'
     type: object
   schema.RoleRouter:
@@ -284,6 +284,26 @@ definitions:
     - name
     - path
     - status
+    type: object
+  schema.RouterResourceResult:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/schema.RouterResource'
+        type: array
+      pagination:
+        $ref: '#/definitions/schema.PaginationResult'
+    type: object
+  schema.RouterShowByRoleIDResult:
+    properties:
+      exist:
+        description: 当前角色下存在的路由
+        items:
+          $ref: '#/definitions/schema.RouterResource'
+        type: array
+      notExist:
+        $ref: '#/definitions/schema.RouterResourceResult'
+        description: 当前用户下不存在的路由
     type: object
   schema.StatusResult:
     properties:
@@ -364,10 +384,10 @@ definitions:
       id:
         description: 唯一标识
         type: string
-      role_id:
+      roleId:
         description: 角色ID
         type: string
-      user_id:
+      userId:
         description: 用户ID
         type: string
     type: object
@@ -1146,6 +1166,52 @@ paths:
       summary: 启用数据
       tags:
       - 角色管理
+  /api/v1/management/roles/{id}/routers:
+    get:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: id
+        required: true
+        type: string
+      - default: 1
+        description: 分页索引
+        in: query
+        name: current
+        required: true
+        type: integer
+      - default: 10
+        description: 分页大小
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - description: 查询值
+        in: query
+        name: queryValue
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.RouterShowByRoleIDResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询指定角色下的路由资源
+      tags:
+      - 角色管理
   /api/v1/management/routerResources:
     get:
       parameters:
@@ -1165,16 +1231,6 @@ paths:
         in: query
         name: queryValue
         type: string
-      - description: 角色ID
-        in: query
-        name: roleId
-        type: string
-      - description: 需要排除的ID
-        in: query
-        items:
-          type: string
-        name: excludeIDs
-        type: array
       - description: 启用状态
         in: query
         name: status
