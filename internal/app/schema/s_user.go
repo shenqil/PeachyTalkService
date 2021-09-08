@@ -106,6 +106,14 @@ func (a Users) ToUserShows(mUserRoles map[string]UserRoles, mRoles map[string]*R
 	return list
 }
 
+// CleanSecure 清理安全数据
+func (a Users) CleanSecure() Users {
+	for _, user := range a {
+		user.CleanSecure()
+	}
+	return a
+}
+
 // ----------------------------------------UserRole--------------------------------------
 
 // UserRole 用户角色

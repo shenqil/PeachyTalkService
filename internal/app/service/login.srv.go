@@ -60,6 +60,7 @@ func (a *Login) Verify(ctx context.Context, userName, password string) (*schema.
 
 	result, err := a.UserModel.Query(ctx, schema.UserQueryParam{
 		UserName: userName,
+		Status:   1,
 	})
 	if err != nil {
 		return nil, err
@@ -183,7 +184,16 @@ func (a *Login) QueryUserMenuTree(ctx context.Context, userID string) (schema.Me
 		return nil, errors.ErrNoPerm
 	}
 
-	return nil, nil
+	result, err := a.MenuModel.Query(ctx, schema.MenuQueryParam{
+		Status: 1,
+	}, schema.MenuQueryOptions{
+		OrderFields: schema.NewOrderFields(schema.NewOrderField("sequence", schema.OrderByASC)),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return result.Data.ToTree(), nil
 }
 
 // UpdatePassword 更新当前用户登陆密码

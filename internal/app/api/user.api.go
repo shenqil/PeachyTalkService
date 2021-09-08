@@ -45,6 +45,7 @@ func (a *User) Query(c *gin.Context) {
 
 	params.Pagination = true
 	result, err := a.UserSrv.Query(ctx, params)
+	result.Data.CleanSecure()
 	if err != nil {
 		ginx.ResError(c, err)
 		return
@@ -66,6 +67,7 @@ func (a *User) Query(c *gin.Context) {
 func (a *User) Get(c *gin.Context) {
 	ctx := c.Request.Context()
 	item, err := a.UserSrv.Get(ctx, c.Param("id"))
+	item.CleanSecure()
 	if err != nil {
 		ginx.ResError(c, err)
 		return

@@ -29,6 +29,12 @@ func BuildInjector() (*Injector, func(), error) {
 	role := &repo.Role{
 		DB: db,
 	}
+	routerResource := &repo.RouterResource{
+		DB: db,
+	}
+	roleRouter := &repo.RoleRouter{
+		DB: db,
+	}
 	user := &repo.User{
 		DB: db,
 	}
@@ -36,9 +42,11 @@ func BuildInjector() (*Injector, func(), error) {
 		DB: db,
 	}
 	casbinAdapter := &adapter.CasbinAdapter{
-		RoleModel:     role,
-		UserModel:     user,
-		UserRoleModel: userRole,
+		RoleModel:       role,
+		RouterModel:     routerResource,
+		RoleRouterModel: roleRouter,
+		UserModel:       user,
+		UserRoleModel:   userRole,
 	}
 	syncedEnforcer, cleanup3, err := InitCasbin(casbinAdapter)
 	if err != nil {
@@ -77,12 +85,6 @@ func BuildInjector() (*Injector, func(), error) {
 	}
 	apiMenu := &api.Menu{
 		MenuSrv: serviceMenu,
-	}
-	roleRouter := &repo.RoleRouter{
-		DB: db,
-	}
-	routerResource := &repo.RouterResource{
-		DB: db,
 	}
 	serviceRole := &service.Role{
 		Enforcer:            syncedEnforcer,
