@@ -1,30 +1,30 @@
 ##
 ## Build
 ##
-FROM golang:1.16-alpine
+FROM golang:1.16 AS build
 
 WORKDIR /app
 
 RUN go env -w GOPROXY=https://goproxy.cn,direct
 
-COPY go.sum .
-COPY go.mod .
+COPY . .
+
 RUN go mod download
 
-COPY *.go .
-
-RUN go build -o /gin-admin
+RUN GOOS=linux CGO_ENABLED=1 GOARCH=amd64 go build -o /gin-admin
 
 ##
 ## Deploy
 ##
 
-# FROM gcr.io/distroless/base-debian10
-FROM scratch
+FROM fssq/distroless_base-debian10
+# FROM scratch
 
 WORKDIR /
 
+# 复制编译后的程序
 COPY --from=build /gin-admin /gin-admin
+# 复制配置文件
 COPY configs /configs
 
 EXPOSE 8080
