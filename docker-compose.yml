@@ -2,8 +2,9 @@ version: "3.7"
 services:
   app:
     build: .
+    container_name: "admin-back"
     ports:
-      - "8080:8080"
+      - "10088:10088"
     links:
       - postgres
       - redis

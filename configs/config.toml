@@ -14,7 +14,7 @@ PrintConfig = true
 # http监听地址
 Host = "0.0.0.0"
 # http监听端口
-Port = 8080
+Port = 10088
 # 证书路径
 CertFile = ""
 # 证书密钥
