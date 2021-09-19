@@ -29,10 +29,12 @@ type Router struct {
 	RoleAPI        *api.Role
 	UserAPI        *api.User
 	RouterResource *api.RouterResource
+	IMApi          *api.IM
 }
 
 func (a *Router) Register(app *gin.Engine) error {
 	a.RegisterAPI(app)
+	a.RegisterIMAPI(app)
 	return nil
 }
 

@@ -10,4 +10,5 @@ var APISet = wire.NewSet(
 	RoleSet,
 	UserSet,
 	RouterResourceSet,
+	IMSet,
 )

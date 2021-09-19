@@ -114,6 +114,13 @@ func BuildInjector() (*Injector, func(), error) {
 	apiRouterResource := &api.RouterResource{
 		RouterResourceSrv: serviceRouterResource,
 	}
+	im := &service.IM{
+		UserModel:      user,
+		CasbinEnforcer: syncedEnforcer,
+	}
+	apiIM := &api.IM{
+		IMSrv: im,
+	}
 	routerRouter := &router.Router{
 		Auth:           auther,
 		CasbinEnforcer: syncedEnforcer,
@@ -123,6 +130,7 @@ func BuildInjector() (*Injector, func(), error) {
 		RoleAPI:        apiRole,
 		UserAPI:        apiUser,
 		RouterResource: apiRouterResource,
+		IMApi:          apiIM,
 	}
 	engine := InitGinEngine(routerRouter)
 	injector := &Injector{
