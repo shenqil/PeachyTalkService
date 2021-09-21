@@ -5,12 +5,17 @@ services:
     container_name: "admin-back"
     ports:
       - "10088:10088"
-    links:
-      - postgres
-      - redis
+    # links:
+    #   - postgres
+    #   - redis
+    networks:
+      - mqtt
+      - admin-back
 
   postgres:
     image: "postgres:alpine"
+    networks:
+      - admin-back
     environment:
       POSTGRES_DB: "gin-admin"
       POSTGRES_PASSWORD: 123456
@@ -19,9 +24,16 @@ services:
 
   redis:
     image: "redis:alpine"
+    networks:
+      - admin-back
     volumes:
       - rddata:/data
 
 volumes:
   pgdata:
   rddata:
+networks:
+  mqtt:
+    name: mqtt
+  admin-back:
+    name: admin-back
