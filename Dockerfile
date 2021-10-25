@@ -24,8 +24,6 @@ WORKDIR /
 
 # 复制编译后的程序
 COPY --from=build /gin-admin /gin-admin
-# 复制配置文件
-COPY configs /configs
 
 EXPOSE 8080
 
