@@ -18,7 +18,7 @@ type IM struct {
 	IMSrv *service.IM
 }
 
-// Login IM 账号认证
+// Auth Login IM 账号认证
 // @Tags IM
 // @Summary IM
 // @Param body body schema.IMClient true "请求参数"
@@ -46,10 +46,10 @@ func (a *IM) Auth(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-// Login IM 超级账号认证
+// Superuser Login IM 超级账号认证
 // @Tags IM
 // @Summary IM
-// @Param body body schema.IMClient true "请求参数"
+// @Param body schema.IMClient true "请求参数"
 // @Success 200
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
@@ -70,10 +70,10 @@ func (a *IM) Superuser(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-// Login IM 权限认证
+// Acl Login IM 权限认证
 // @Tags IM
 // @Summary IM
-// @Param body body schema.IMAcl true "请求参数"
+// @Param body schema.IMAcl true "请求参数"
 // @Success 200
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"

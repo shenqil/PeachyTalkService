@@ -1,6 +1,7 @@
 package app
 
 import (
+	"ginAdmin/internal/app/mqttTopic"
 	"ginAdmin/internal/app/service"
 	"ginAdmin/pkg/auth"
 	"github.com/casbin/casbin/v2"
@@ -17,4 +18,5 @@ type Injector struct {
 	Auth           auth.Auther
 	CasbinEnforcer *casbin.SyncedEnforcer
 	MenuBll        *service.Menu
+	Topic          mqttTopic.Topic
 }

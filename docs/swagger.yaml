@@ -80,8 +80,7 @@ definitions:
     type: object
   schema.ListResult:
     properties:
-      list:
-        type: object
+      list: {}
       pagination:
         $ref: '#/definitions/schema.PaginationResult'
     type: object
@@ -353,6 +352,9 @@ definitions:
     type: object
   schema.User:
     properties:
+      avatar:
+        description: 头像
+        type: string
       createdAt:
         description: 创建时间
         type: string
@@ -386,6 +388,7 @@ definitions:
           $ref: '#/definitions/schema.UserRole'
         type: array
     required:
+    - avatar
     - realName
     - status
     - userName

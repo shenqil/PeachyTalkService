@@ -54,7 +54,6 @@ func (a *User) Query(c *gin.Context) {
 }
 
 // Get 查询指定数据
-// Get 查询指定数据
 // @Tags 用户管理
 // @Summary 查询指定数据
 // @Security ApiKeyAuth
@@ -67,7 +66,6 @@ func (a *User) Query(c *gin.Context) {
 func (a *User) Get(c *gin.Context) {
 	ctx := c.Request.Context()
 	item, err := a.UserSrv.Get(ctx, c.Param("id"))
-	item.CleanSecure()
 	if err != nil {
 		ginx.ResError(c, err)
 		return
@@ -110,7 +108,7 @@ func (a *User) Create(c *gin.Context) {
 // @Summary 更新数据
 // @Security ApiKeyAuth
 // @Param id path string true "唯一标识"
-// @Param body body schema.User true "更新数据"
+// @Param body schema.User true "更新数据"
 // @Success 200 {object} schema.User
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"

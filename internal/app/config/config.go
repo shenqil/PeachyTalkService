@@ -80,6 +80,7 @@ type Config struct {
 	MySQL        MySQL
 	Postgres     Postgres
 	Sqlite3      Sqlite3
+	MQTT         MQTT
 }
 
 // IsDebugMode 是否是debug模式
@@ -270,4 +271,15 @@ type Sqlite3 struct {
 // DSN 数据库连接串
 func (a Sqlite3) DSN() string {
 	return a.Path
+}
+
+// MQTT 协议
+type MQTT struct {
+	Host        string
+	Port        uint
+	ClientID    string
+	KeepAlive   int64
+	PingTimeout int64
+	LogPrefix   string
+	TopicPrefix string
 }

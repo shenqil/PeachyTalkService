@@ -2521,9 +2521,7 @@
         "schema.ListResult": {
             "type": "object",
             "properties": {
-                "list": {
-                    "type": "object"
-                },
+                "list": {},
                 "pagination": {
                     "$ref": "#/definitions/schema.PaginationResult"
                 }
@@ -2905,11 +2903,16 @@
         "schema.User": {
             "type": "object",
             "required": [
+                "avatar",
                 "realName",
                 "status",
                 "userName"
             ],
             "properties": {
+                "avatar": {
+                    "description": "头像",
+                    "type": "string"
+                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
