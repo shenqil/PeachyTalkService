@@ -25,12 +25,11 @@ func (a Manifest) Get(client mqtt.Client, msg mqtt.Message) {
 	ctx = logger.NewTagContext(ctx, "__MQTT__")
 
 	// 解析用户名称和消息id
-	userName, msgID, err := parseUserIDAndMsgIDWithTopic(msg.Topic())
+	userName, msgID, err := parseUserNameAndMsgIDWithTopic(msg.Topic())
 	if err != nil {
 		logger.WithContext(ctx).Fatalf(err.Error())
 		return
 	}
-	ctx = logger.NewUserIDContext(ctx, userName)
 
 	manifest := new(schema.Manifest)
 
@@ -41,16 +40,16 @@ func (a Manifest) Get(client mqtt.Client, msg mqtt.Message) {
 		Status:          1,
 	})
 	if err != nil {
-		replyErr(client, userName, msgID, err.Error())
+		replyError(client, userName, msgID, err.Error())
 		return
 	}
 	ids := result.Data.ToIDs()
 	if len(ids) != 1 {
-		replyErr(client, userName, msgID, fmt.Sprintf("取到用户id数量：%d != 1", len(ids)))
+		replyError(client, userName, msgID, fmt.Sprintf("取到用户id数量：%d != 1", len(ids)))
 		return
 	}
 
 	manifest.UserID = ids[0]
 
-	replyJSON(client, userName, msgID, 0, false, manifest)
+	replySuccess(client, userName, msgID, manifest)
 }

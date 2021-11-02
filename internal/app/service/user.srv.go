@@ -74,6 +74,26 @@ func (a *User) Get(ctx context.Context, id string, opts ...schema.UserQueryOptio
 	return item, nil
 }
 
+// GetByUserName 根据用户名称查询指定数据
+func (a *User) GetByUserName(ctx context.Context, userName string, opts ...schema.UserQueryOptions) (*schema.User, error) {
+	item, err := a.UserModel.GetByUserName(ctx, userName, opts...)
+	if err != nil {
+		return nil, err
+	} else if item == nil {
+		return nil, errors.ErrNotFound
+	}
+
+	userRoleResult, err := a.UserRoleModel.Query(ctx, schema.UserRoleQueryParam{
+		UserID: item.ID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	item.UserRoles = userRoleResult.Data
+
+	return item, nil
+}
+
 // Create 创建数据
 func (a *User) Create(ctx context.Context, item schema.User) (*schema.IDResult, error) {
 	err := a.checkUserName(ctx, item)

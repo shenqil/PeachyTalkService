@@ -76,6 +76,19 @@ func (a *User) Get(ctx context.Context, id string, opts ...schema.UserQueryOptio
 	return item.ToSchemaUser(), nil
 }
 
+// GetByUserName 使用用户名获取用户信息
+func (a *User) GetByUserName(ctx context.Context, userName string, opts ...schema.UserQueryOptions) (*schema.User, error) {
+	var item entity.User
+	ok, err := FindOne(ctx, entity.GetUserDB(ctx, a.DB).Where("user_name=?", userName), &item)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	} else if !ok {
+		return nil, nil
+	}
+
+	return item.ToSchemaUser(), nil
+}
+
 // Create 创建数据
 func (a *User) Create(ctx context.Context, item schema.User) error {
 	sitem := entity.SchemaUser(item)
