@@ -42,6 +42,9 @@ func (a *User) Query(ctx context.Context, params schema.UserQueryParam, opts ...
 			Where("role_id IN (?)", v)
 		db = db.Where("id IN (?)", subQuery)
 	}
+	if v := params.UserIDs; len(v) > 0 {
+		db = db.Where("id IN (?)", v)
+	}
 	if v := params.QueryValue; v != "" {
 		v = "%" + v + "%"
 		db = db.Where("user_name LIKE ? OR real_name LIKE ? OR phone LIKE ? OR email LIKE ?", v, v, v, v)

@@ -143,9 +143,21 @@ func BuildInjector() (*Injector, func(), error) {
 	manifest := &mqttApi.Manifest{
 		UserSrv: serviceUser,
 	}
+	userFriend := &repo.UserFriend{
+		DB: db,
+	}
+	friend := &service.Friend{
+		UserModel:       user,
+		UserFriendModel: userFriend,
+	}
+	mqttApiFriend := &mqttApi.Friend{
+		FriendSrc: friend,
+		UserSrv:   serviceUser,
+	}
 	topic := mqttTopic.Topic{
 		UserAPI:     mqttApiUser,
 		ManifestAPI: manifest,
+		FriendAPI:   mqttApiFriend,
 	}
 	injector := &Injector{
 		Engine:         engine,

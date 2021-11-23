@@ -49,7 +49,7 @@ func (a *IM) Auth(c *gin.Context) {
 // Superuser Login IM 超级账号认证
 // @Tags IM
 // @Summary IM
-// @Param body schema.IMClient true "请求参数"
+// @Param body body schema.IMClient true "请求参数"
 // @Success 200
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
@@ -73,7 +73,7 @@ func (a *IM) Superuser(c *gin.Context) {
 // Acl Login IM 权限认证
 // @Tags IM
 // @Summary IM
-// @Param body schema.IMAcl true "请求参数"
+// @Param body body schema.IMAcl true "请求参数"
 // @Success 200
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"

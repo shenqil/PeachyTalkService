@@ -108,7 +108,7 @@ func (a *User) Create(c *gin.Context) {
 // @Summary 更新数据
 // @Security ApiKeyAuth
 // @Param id path string true "唯一标识"
-// @Param body schema.User true "更新数据"
+// @Param body body schema.User true "更新数据"
 // @Success 200 {object} schema.User
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"

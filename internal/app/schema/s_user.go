@@ -50,6 +50,18 @@ func (a *User) CleanSecure() *User {
 	return a
 }
 
+// ToFriendInfo 转换为好友信息
+func (a *User) ToFriendInfo() *FriendInfo {
+	return &FriendInfo{
+		ID:       a.ID,
+		UserName: a.UserName,
+		RealName: a.RealName,
+		Avatar:   a.Avatar,
+		Phone:    a.Phone,
+		Email:    a.Email,
+	}
+}
+
 // UserQueryParam 查询条件
 type UserQueryParam struct {
 	PaginationParam
@@ -57,6 +69,7 @@ type UserQueryParam struct {
 	QueryValue string   `form:"queryValue"` // 模糊查询
 	Status     int      `form:"status"`     // 用户状态(1:启用 2:停用)
 	RoleIDs    []string `form:"-"`          // 角色ID列表
+	UserIDs    []string `form:"-"`          // 用户ID列表
 }
 
 // UserQueryOptions 查询可选参数项
@@ -113,6 +126,16 @@ func (a Users) CleanSecure() Users {
 		user.CleanSecure()
 	}
 	return a
+}
+
+// ToFriendInfo 转换为好友信息
+func (a Users) ToFriendInfo() FriendList {
+	list := make(FriendList, len(a))
+	for i, item := range a {
+		list[i] = item.ToFriendInfo()
+	}
+
+	return list
 }
 
 // ----------------------------------------UserRole--------------------------------------

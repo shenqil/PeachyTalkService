@@ -8,4 +8,5 @@ import (
 var MQTTApiSet = wire.NewSet(
 	UserSet,
 	ManifestSet,
+	FriendSet,
 )

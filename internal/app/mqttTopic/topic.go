@@ -20,6 +20,7 @@ type ITopic interface {
 type Topic struct {
 	UserAPI     *mqttApi.User
 	ManifestAPI *mqttApi.Manifest
+	FriendAPI   *mqttApi.Friend
 }
 
 func (a *Topic) Register(cli mqtt.Client) error {
