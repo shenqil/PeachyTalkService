@@ -13,7 +13,7 @@ import (
 func replySuccess(client mqtt.Client, userName string, msgId string, payload interface{}) error {
 	buf, err := json.Marshal(payload)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	topic := fmt.Sprintf("IMClient/%s/reply/success/%s", userName, msgId)
 	token := client.Publish(topic, 0, false, buf)
@@ -31,48 +31,15 @@ func replyError(client mqtt.Client, userName string, msgId string, err string) e
 	return token.Error()
 }
 
-// 发送添加好友消息
-func joinFriend(client mqtt.Client, formUserName string, toUserName string) error {
-	topic := fmt.Sprintf("IMClient/%s/friend/join/%s", toUserName, formUserName)
-	token := client.Publish(topic, 1, true, fmt.Sprintf("%d", time.Now().UnixMilli()))
-	token.Wait()
-
-	return token.Error()
-}
-
-// 好友添加成功
-func joinFriendSuccess(client mqtt.Client, formUserName string, toUserName string) error {
-	timestamp := fmt.Sprintf("%d", time.Now().UnixMilli())
-
-	topic := fmt.Sprintf("IMClient/%s/friend/joinSuccess/%s", toUserName, formUserName)
-	token := client.Publish(topic, 1, true, timestamp)
-	token.Wait()
-	err := token.Error()
+// friendsChange 好友变动
+func friendsChange(client mqtt.Client, userName string, payload interface{}) error {
+	buf, err := json.Marshal(payload)
 	if err != nil {
 		return err
 	}
 
-	topic = fmt.Sprintf("IMClient/%s/friend/joinSuccess/%s", formUserName, toUserName)
-	token = client.Publish(topic, 1, true, timestamp)
-	token.Wait()
-
-	return token.Error()
-}
-
-// 删除好友
-func deleteFriend(client mqtt.Client, formUserName string, toUserName string) error {
-	timestamp := fmt.Sprintf("%d", time.Now().UnixMilli())
-
-	topic := fmt.Sprintf("IMClient/%s/friend/deleteFriend/%s", toUserName, formUserName)
-	token := client.Publish(topic, 1, true, timestamp)
-	token.Wait()
-	err := token.Error()
-	if err != nil {
-		return err
-	}
-
-	topic = fmt.Sprintf("IMClient/%s/friend/deleteFriend/%s", formUserName, toUserName)
-	token = client.Publish(topic, 1, true, timestamp)
+	topic := fmt.Sprintf("IMClient/%s/friend/change/%d", userName, time.Now().UnixMilli())
+	token := client.Publish(topic, 0, false, buf)
 	token.Wait()
 
 	return token.Error()

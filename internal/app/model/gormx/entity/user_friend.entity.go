@@ -5,6 +5,7 @@ import (
 	"ginAdmin/internal/app/schema"
 	"ginAdmin/pkg/util/structure"
 	"gorm.io/gorm"
+	"time"
 )
 
 // GetUserFriendDB 获取用户好友关系储存
@@ -24,11 +25,14 @@ func (a SchemaUserFriend) ToUserFriend() *UserFriend {
 
 // UserFriend 用户好友关联实体
 type UserFriend struct {
-	ID      string `gorm:"column:id;primaryKey;size:72;"`
-	UserID1 string `gorm:"column:user_id1;size:36;index;default:'';not null;"` // 用户1内码
-	UserID2 string `gorm:"column:user_id2;size:36;index;default:'';not null;"` // 用户2内码
-	Status1 int    `gorm:"column:status1;size:36;index;default:0;not null;"`   // 用户1好友状态
-	Status2 int    `gorm:"column:status2;size:36;index;default:0;not null;"`   // 用户2好友状态
+	ID        string         `gorm:"column:id;primaryKey;size:72;"`
+	UserID1   string         `gorm:"column:user_id1;size:36;index;default:'';not null;"` // 用户1内码
+	UserID2   string         `gorm:"column:user_id2;size:36;index;default:'';not null;"` // 用户2内码
+	Status1   int            `gorm:"column:status1;size:36;index;default:0;not null;"`   // 用户1好友状态
+	Status2   int            `gorm:"column:status2;size:36;index;default:0;not null;"`   // 用户2好友状态
+	CreatedAt time.Time      `gorm:"column:created_at;index;"`
+	UpdatedAt time.Time      `gorm:"column:updated_at;index;"`
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;index;"`
 }
 
 // ToSchemaUserFriend 转换为用户好友对象

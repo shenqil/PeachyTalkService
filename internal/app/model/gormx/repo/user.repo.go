@@ -49,6 +49,9 @@ func (a *User) Query(ctx context.Context, params schema.UserQueryParam, opts ...
 		v = "%" + v + "%"
 		db = db.Where("user_name LIKE ? OR real_name LIKE ? OR phone LIKE ? OR email LIKE ?", v, v, v, v)
 	}
+	if v := params.PreciseSearch; v != "" {
+		db = db.Where("user_name = ? OR phone = ?", v, v)
+	}
 
 	opt.OrderFields = append(opt.OrderFields, schema.NewOrderField("id", schema.OrderByDESC))
 	db = db.Order(ParseOrder(opt.OrderFields))

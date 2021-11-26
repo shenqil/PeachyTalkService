@@ -65,11 +65,12 @@ func (a *User) ToFriendInfo() *FriendInfo {
 // UserQueryParam 查询条件
 type UserQueryParam struct {
 	PaginationParam
-	UserName   string   `form:"userName"`   // 用户名
-	QueryValue string   `form:"queryValue"` // 模糊查询
-	Status     int      `form:"status"`     // 用户状态(1:启用 2:停用)
-	RoleIDs    []string `form:"-"`          // 角色ID列表
-	UserIDs    []string `form:"-"`          // 用户ID列表
+	UserName      string   `form:"userName"`   // 用户名
+	QueryValue    string   `form:"queryValue"` // 模糊查询
+	Status        int      `form:"status"`     // 用户状态(1:启用 2:停用)
+	PreciseSearch string   `form:"-"`          // 精确查询查询
+	RoleIDs       []string `form:"-"`          // 角色ID列表
+	UserIDs       []string `form:"-"`          // 用户ID列表
 }
 
 // UserQueryOptions 查询可选参数项

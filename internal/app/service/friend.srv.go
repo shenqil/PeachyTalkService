@@ -7,6 +7,7 @@ import (
 	"ginAdmin/pkg/errors"
 	"github.com/google/wire"
 	"strings"
+	"time"
 )
 
 // FriendSet 注入好友
@@ -18,9 +19,29 @@ type Friend struct {
 	UserFriendModel *repo.UserFriend
 }
 
-// Query 查询数据
-func (a *Friend) Query(ctx context.Context, params schema.UserFriendQueryParam, opts ...schema.UserFriendQueryOptions) (*schema.FriendListQueryResult, error) {
-	result, err := a.UserFriendModel.Query(ctx, params, opts...)
+// Search 查询指定数据
+func (a *Friend) Search(ctx context.Context, keywords string, opts ...schema.UserFriendQueryOptions) (*schema.FriendInfo, error) {
+	userInfoResult, err := a.UserModel.Query(ctx, schema.UserQueryParam{
+		PreciseSearch:   keywords,
+		Status:          1,
+		PaginationParam: schema.PaginationParam{Pagination: false},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(userInfoResult.Data) == 0 {
+		return nil, nil
+	}
+
+	friendInfo := userInfoResult.Data.ToFriendInfo()
+
+	return friendInfo[0], nil
+}
+
+// MyFriendList 获取我的好友
+func (a *Friend) MyFriendList(ctx context.Context, userID string, opts ...schema.UserFriendQueryOptions) (*schema.FriendListQueryResult, error) {
+	result, err := a.UserFriendModel.MyFriendList(ctx, userID)
 	if err != nil {
 		return nil, err
 	} else if result == nil {
@@ -28,7 +49,8 @@ func (a *Friend) Query(ctx context.Context, params schema.UserFriendQueryParam, 
 	}
 
 	userInfoResult, err := a.UserModel.Query(ctx, schema.UserQueryParam{
-		UserIDs: result.Data.ToFriendIDs(params.UserID),
+		UserIDs:         result.Data.ToFriendIDs(userID),
+		PaginationParam: schema.PaginationParam{Pagination: false},
 	})
 	if err != nil {
 		return nil, err
@@ -40,6 +62,49 @@ func (a *Friend) Query(ctx context.Context, params schema.UserFriendQueryParam, 
 	}
 
 	return UserFriendResult, nil
+}
+
+// QuasiFriendList 获取准好友列表
+func (a *Friend) QuasiFriendList(ctx context.Context, userID string, opts ...schema.UserFriendQueryOptions) (*schema.QuasiFriendQueryResult, error) {
+	result, err := a.UserFriendModel.QuasiFriendList(ctx, userID, opts...)
+	if err != nil {
+		return nil, err
+	} else if result == nil || len(result.Data) == 0 {
+		return nil, nil
+	}
+
+	userInfoResult, err := a.UserModel.Query(ctx, schema.UserQueryParam{
+		UserIDs:         result.Data.ToFriendIDs(userID),
+		PaginationParam: schema.PaginationParam{Pagination: false},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	friendList := userInfoResult.Data.ToFriendInfo()
+
+	// 合并数据
+	quasiFriends := make(schema.QuasiFriends, len(friendList))
+	for i, item := range friendList {
+		var status *schema.UserFriend
+
+		// 查找好友状态
+		for _, item2 := range result.Data {
+			if item2.UserID1 == item.ID || item2.UserID2 == item.ID {
+				status = item2
+				break
+			}
+		}
+		quasiFriends[i] = &schema.QuasiFriend{
+			Info:   item,
+			Status: status,
+		}
+	}
+
+	return &schema.QuasiFriendQueryResult{
+		Data:       quasiFriends,
+		PageResult: nil,
+	}, nil
 }
 
 func (a *Friend) getUserFriendInfo(id1, id2 string, status1, status2 int) schema.UserFriend {
@@ -71,25 +136,42 @@ func (a *Friend) Add(ctx context.Context, fromUserID, toUserID string) (*schema.
 		return nil, errors.WithStack(err)
 	}
 
-	if oldUserFriend.ID == "" {
+	if oldUserFriend == nil {
+		// 创建
 		err = a.UserFriendModel.Create(ctx, userFriend)
 	} else {
+		// 更新
+		if oldUserFriend.Status2 == schema.FriendIgnore {
+			userFriend.Status2 = schema.FriendUnsubscribe
+		}
 		err = a.UserFriendModel.Update(ctx, userFriend.ID, userFriend)
+
+		//	合并数据
+		userFriend.UpdatedAt = oldUserFriend.UpdatedAt
+		userFriend.Status2 = oldUserFriend.Status2
 	}
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 
-	//	合并数据
-	if userFriend.Status1 == schema.FriendNone {
-		userFriend.Status1 = oldUserFriend.Status1
-	}
-
-	if userFriend.Status2 == schema.FriendNone {
-		userFriend.Status2 = oldUserFriend.Status2
-	}
-
 	return &userFriend, nil
+}
+
+// Ignore 忽略对方本地添加
+func (a *Friend) Ignore(ctx context.Context, fromUserID, toUserID string) (*schema.UserFriend, error) {
+	userFriend := a.getUserFriendInfo(fromUserID, toUserID, schema.FriendIgnore, schema.FriendNone)
+
+	err := a.UserFriendModel.Update(ctx, userFriend.ID, userFriend)
+	if err != nil {
+		return nil, err
+	}
+
+	newUserFriend, err := a.UserFriendModel.Get(ctx, userFriend.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return newUserFriend, nil
 }
 
 // Delete 删除好友
@@ -97,10 +179,11 @@ func (a *Friend) Delete(ctx context.Context, fromUserID, toUserID string) (*sche
 	// 得到表结构数据
 	userFriend := a.getUserFriendInfo(fromUserID, toUserID, schema.FriendUnsubscribe, schema.FriendUnsubscribe)
 
-	err := a.UserFriendModel.Update(ctx, userFriend.ID, userFriend)
+	err := a.UserFriendModel.Delete(ctx, userFriend.ID)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+	userFriend.UpdatedAt = time.Now()
 
 	return &userFriend, nil
 }

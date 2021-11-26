@@ -26,19 +26,60 @@ func (a *UserFriend) getQueryOption(opts ...schema.UserFriendQueryOptions) schem
 }
 
 // Query 查询数据
-func (a *UserFriend) Query(ctx context.Context, params schema.UserFriendQueryParam, opts ...schema.UserFriendQueryOptions) (*schema.UserFriendQueryResult, error) {
+func (a *UserFriend) Query(ctx context.Context, userID string, opts ...schema.UserFriendQueryOptions) (*schema.UserFriendQueryResult, error) {
 	opt := a.getQueryOption(opts...)
 
-	db := entity.GetUserDB(ctx, a.DB)
-	if v := params.UserID; v != "" {
-		db = db.Where("user_name=?", v)
+	db := entity.GetUserFriendDB(ctx, a.DB)
+	if userID != "" {
+		db = db.Where("user_id1=? OR user_id2=?", userID, userID)
 	}
 
 	opt.OrderFields = append(opt.OrderFields, schema.NewOrderField("id", schema.OrderByDESC))
 	db = db.Order(ParseOrder(opt.OrderFields))
 
 	var list entity.UserFriends
-	pr, err := WrapPageQuery(ctx, db, params.PaginationParam, &list)
+	pr, err := WrapPageQuery(ctx, db, schema.PaginationParam{Pagination: false}, &list)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	qr := &schema.UserFriendQueryResult{
+		PageResult: pr,
+		Data:       list.ToSchemaUserFriends(),
+	}
+	return qr, nil
+}
+
+// MyFriendList 获取我的好友列表
+func (a *UserFriend) MyFriendList(ctx context.Context, userID string) (*schema.UserFriendQueryResult, error) {
+	db := entity.GetUserFriendDB(ctx, a.DB)
+	db = db.Where("user_id1=? OR user_id2=?", userID, userID).Where("status1=? AND status2=?", schema.FriendSubscribe, schema.FriendSubscribe)
+
+	var list entity.UserFriends
+	pr, err := WrapPageQuery(ctx, db, schema.PaginationParam{Pagination: false}, &list)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	qr := &schema.UserFriendQueryResult{
+		PageResult: pr,
+		Data:       list.ToSchemaUserFriends(),
+	}
+	return qr, nil
+}
+
+// QuasiFriendList 获取准好友列表
+func (a *UserFriend) QuasiFriendList(ctx context.Context, userID string, opts ...schema.UserFriendQueryOptions) (*schema.UserFriendQueryResult, error) {
+	opt := a.getQueryOption(opts...)
+
+	db := entity.GetUserFriendDB(ctx, a.DB)
+	db = db.Where("user_id1=? OR user_id2=?", userID, userID).Where("status1<>? or status2<>?", schema.FriendSubscribe, schema.FriendSubscribe)
+
+	opt.OrderFields = append(opt.OrderFields, schema.NewOrderField("updated_at", schema.OrderByDESC))
+	db = db.Order(ParseOrder(opt.OrderFields))
+
+	var list entity.UserFriends
+	pr, err := WrapPageQuery(ctx, db, schema.PaginationParam{Pagination: false}, &list)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

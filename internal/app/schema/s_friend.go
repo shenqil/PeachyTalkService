@@ -1,10 +1,13 @@
 package schema
 
+import "time"
+
 // 枚举好友状态
 const (
 	FriendSubscribe   = 1
 	FriendUnsubscribe = 2
 	FriendRefuse      = 3
+	FriendIgnore      = 4
 	FriendNone        = 0
 )
 
@@ -13,8 +16,8 @@ const (
 // FriendInfo 好友信息
 type FriendInfo struct {
 	ID       string `json:"id"`
-	UserName string `json:"user_name"`
-	RealName string `json:"real_name"`
+	UserName string `json:"userName"`
+	RealName string `json:"realName"`
 	Avatar   string `json:"avatar"`
 	Phone    string `json:"phone"`
 	Email    string `json:"email"`
@@ -33,17 +36,12 @@ type FriendList []*FriendInfo
 
 // UserFriend 用户好友
 type UserFriend struct {
-	ID      string `json:"id"`
-	UserID1 string `json:"userID1"` // 用户内码1
-	UserID2 string `json:"userID1"` // 用户内码2
-	Status1 int    `json:"status1"` // 用户1好友状态
-	Status2 int    `json:"status2"` // 用户2好友状态
-}
-
-// UserFriendQueryParam 查询条件
-type UserFriendQueryParam struct {
-	UserID string `form:"userID" json:"userID"` // 用户ID
-	PaginationParam
+	ID        string    `json:"id"`
+	UserID1   string    `json:"userID1"`   // 用户内码1
+	UserID2   string    `json:"userID2"`   // 用户内码2
+	Status1   int       `json:"status1"`   // 用户1好友状态
+	Status2   int       `json:"status2"`   // 用户2好友状态
+	UpdatedAt time.Time `json:"updatedAt"` // 更新时间
 }
 
 // UserFriendOperateParam 好友操作参数
@@ -77,4 +75,21 @@ func (a UserFriends) ToFriendIDs(userID string) []string {
 		}
 	}
 	return list
+}
+
+// --------------------------- QuasiFriend ------------------------
+
+// QuasiFriend 准好友
+type QuasiFriend struct {
+	Info   *FriendInfo `json:"info"`
+	Status *UserFriend `json:"status"`
+}
+
+// QuasiFriends 准好友列表
+type QuasiFriends []*QuasiFriend
+
+// QuasiFriendQueryResult 查询结果
+type QuasiFriendQueryResult struct {
+	Data       QuasiFriends
+	PageResult *PaginationResult
 }

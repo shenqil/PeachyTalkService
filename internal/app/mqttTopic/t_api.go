@@ -20,9 +20,12 @@ func (a *Topic) RegisterAPI(cli mqtt.Client) {
 	subscribe(cli, "user/get/#", 0, a.UserAPI.Get)
 	subscribe(cli, "user/getToken/#", 0, a.UserAPI.GetToken)
 
-	subscribe(cli, "friend/query/#", 0, a.FriendAPI.Query)
-	subscribe(cli, "friend/add/#", 1, a.FriendAPI.Add)
-	subscribe(cli, "friend/delete/#", 1, a.FriendAPI.Delete)
+	subscribe(cli, "friend/search/#", 0, a.FriendAPI.Search)
+	subscribe(cli, "friend/myFriends/#", 0, a.FriendAPI.MyFriendList)
+	subscribe(cli, "friend/quasiFriends/#", 0, a.FriendAPI.QuasiFriendList)
+	subscribe(cli, "friend/add/#", 0, a.FriendAPI.Add)
+	subscribe(cli, "friend/ignore/#", 0, a.FriendAPI.Ignore)
+	subscribe(cli, "friend/delete/#", 0, a.FriendAPI.Delete)
 }
 
 // 订阅一个主题
