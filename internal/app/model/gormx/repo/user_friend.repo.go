@@ -121,6 +121,6 @@ func (a *UserFriend) Update(ctx context.Context, id string, item schema.UserFrie
 
 // Delete 删除数据
 func (a *UserFriend) Delete(ctx context.Context, id string) error {
-	result := entity.GetUserFriendDB(ctx, a.DB).Where("id=?", id).Delete(entity.UserFriend{})
+	result := entity.GetUserFriendDB(ctx, a.DB).Where("id=?", id).Unscoped().Delete(&entity.UserFriend{})
 	return errors.WithStack(result.Error)
 }

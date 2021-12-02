@@ -134,13 +134,18 @@ func (a *Friend) Add(client mqtt.Client, msg mqtt.Message) {
 		return
 	}
 
+	quasiFriend := &schema.QuasiFriend{
+		Info:   friendInfo.ToFriendInfo(),
+		Status: userFriend,
+	}
+
 	// 推送消息给双方
-	err = friendsChange(client, userName, userFriend)
+	err = friendsChange(client, userName, quasiFriend)
 	if err != nil {
 		replyError(client, userName, msgID, err.Error())
 		return
 	}
-	err = friendsChange(client, friendInfo.UserName, userFriend)
+	err = friendsChange(client, friendInfo.UserName, quasiFriend)
 	if err != nil {
 		replyError(client, userName, msgID, err.Error())
 		return
@@ -184,13 +189,18 @@ func (a *Friend) Ignore(client mqtt.Client, msg mqtt.Message) {
 		return
 	}
 
+	quasiFriend := &schema.QuasiFriend{
+		Info:   friendInfo.ToFriendInfo(),
+		Status: userFriend,
+	}
+
 	// 推送消息给双方
-	err = friendsChange(client, userName, userFriend)
+	err = friendsChange(client, userName, quasiFriend)
 	if err != nil {
 		replyError(client, userName, msgID, err.Error())
 		return
 	}
-	err = friendsChange(client, friendInfo.UserName, userFriend)
+	err = friendsChange(client, friendInfo.UserName, quasiFriend)
 	if err != nil {
 		replyError(client, userName, msgID, err.Error())
 		return
@@ -234,13 +244,18 @@ func (a *Friend) Delete(client mqtt.Client, msg mqtt.Message) {
 		return
 	}
 
+	quasiFriend := &schema.QuasiFriend{
+		Info:   friendInfo.ToFriendInfo(),
+		Status: userFriend,
+	}
+
 	// 推送消息给双方
-	err = friendsChange(client, userName, userFriend)
+	err = friendsChange(client, userName, quasiFriend)
 	if err != nil {
 		replyError(client, userName, msgID, err.Error())
 		return
 	}
-	err = friendsChange(client, friendInfo.UserName, userFriend)
+	err = friendsChange(client, friendInfo.UserName, quasiFriend)
 	if err != nil {
 		replyError(client, userName, msgID, err.Error())
 		return

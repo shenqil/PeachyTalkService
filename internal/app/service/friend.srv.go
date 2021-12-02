@@ -46,6 +46,8 @@ func (a *Friend) MyFriendList(ctx context.Context, userID string, opts ...schema
 		return nil, err
 	} else if result == nil {
 		return nil, nil
+	} else if len(result.Data) == 0 {
+		return nil, nil
 	}
 
 	userInfoResult, err := a.UserModel.Query(ctx, schema.UserQueryParam{
@@ -141,20 +143,30 @@ func (a *Friend) Add(ctx context.Context, fromUserID, toUserID string) (*schema.
 		err = a.UserFriendModel.Create(ctx, userFriend)
 	} else {
 		// 更新
-		if oldUserFriend.Status2 == schema.FriendIgnore {
-			userFriend.Status2 = schema.FriendUnsubscribe
-		}
-		err = a.UserFriendModel.Update(ctx, userFriend.ID, userFriend)
 
-		//	合并数据
-		userFriend.UpdatedAt = oldUserFriend.UpdatedAt
-		userFriend.Status2 = oldUserFriend.Status2
+		// 如果对方忽略，重新添加时置为FriendUnsubscribe
+		if fromUserID == oldUserFriend.UserID1 {
+			if oldUserFriend.Status2 == schema.FriendIgnore {
+				userFriend.Status2 = schema.FriendUnsubscribe
+			}
+		} else {
+			if oldUserFriend.Status1 == schema.FriendIgnore {
+				userFriend.Status1 = schema.FriendUnsubscribe
+			}
+		}
+
+		err = a.UserFriendModel.Update(ctx, userFriend.ID, userFriend)
 	}
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 
-	return &userFriend, nil
+	result, err := a.UserFriendModel.Get(ctx, userFriend.ID)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return result, nil
 }
 
 // Ignore 忽略对方本地添加
@@ -166,12 +178,12 @@ func (a *Friend) Ignore(ctx context.Context, fromUserID, toUserID string) (*sche
 		return nil, err
 	}
 
-	newUserFriend, err := a.UserFriendModel.Get(ctx, userFriend.ID)
+	result, err := a.UserFriendModel.Get(ctx, userFriend.ID)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
-	return newUserFriend, nil
+	return result, nil
 }
 
 // Delete 删除好友
