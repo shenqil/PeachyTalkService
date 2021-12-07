@@ -40,16 +40,16 @@ func (a Manifest) Get(client mqtt.Client, msg mqtt.Message) {
 		Status:          1,
 	})
 	if err != nil {
-		replyError(client, userName, msgID, err.Error())
+		logger.WithContext(ctx).Fatalf(err.Error())
 		return
 	}
 	ids := result.Data.ToIDs()
 	if len(ids) != 1 {
-		replyError(client, userName, msgID, fmt.Sprintf("取到用户id数量：%d != 1", len(ids)))
+		logger.WithContext(ctx).Fatalf(fmt.Sprintf("取到用户id数量：%d != 1", len(ids)))
 		return
 	}
 
 	manifest.UserID = ids[0]
 
-	replySuccess(client, userName, msgID, manifest)
+	replySuccess(client, manifest.UserID, msgID, manifest)
 }
