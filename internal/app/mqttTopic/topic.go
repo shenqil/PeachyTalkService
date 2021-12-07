@@ -21,6 +21,7 @@ type Topic struct {
 	UserAPI     *mqttApi.User
 	ManifestAPI *mqttApi.Manifest
 	FriendAPI   *mqttApi.Friend
+	GroupAPI    *mqttApi.Group
 }
 
 func (a *Topic) Register(cli mqtt.Client) error {

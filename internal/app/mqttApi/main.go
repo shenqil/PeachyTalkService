@@ -9,4 +9,5 @@ var MQTTApiSet = wire.NewSet(
 	UserSet,
 	ManifestSet,
 	FriendSet,
+	GroupSet,
 )

@@ -45,6 +45,20 @@ func friendsChange(client mqtt.Client, userName string, payload interface{}) err
 	return token.Error()
 }
 
+// groupChange 群组变动
+func groupChange(client mqtt.Client, userID, groupID, operate string, payload interface{}) error {
+	buf, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+
+	topic := fmt.Sprintf("IMClient/%s/group/%s/%s", userID, operate, groupID)
+	token := client.Publish(topic, 0, false, buf)
+	token.Wait()
+
+	return token.Error()
+}
+
 // 解析 topic 里面的用户名称和消息id
 func parseUserNameAndMsgIDWithTopic(topic string) (userName, MsgID string, err error) {
 	ary := strings.Split(topic, "/")

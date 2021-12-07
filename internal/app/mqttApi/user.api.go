@@ -24,20 +24,20 @@ func (a User) Get(client mqtt.Client, msg mqtt.Message) {
 	ctx = logger.NewTagContext(ctx, "__MQTT__")
 
 	// 解析用户id和消息id
-	userName, msgID, err := parseUserNameAndMsgIDWithTopic(msg.Topic())
+	userID, msgID, err := parseUserNameAndMsgIDWithTopic(msg.Topic())
 	if err != nil {
 		logger.WithContext(ctx).Fatalf(err.Error())
 		return
 	}
 
 	// 拿到用户信息
-	item, err := a.UserSrv.GetByUserName(ctx, userName)
+	item, err := a.UserSrv.Get(ctx, userID)
 	if err != nil {
-		replyError(client, userName, msgID, err.Error())
+		replyError(client, userID, msgID, err.Error())
 		return
 	}
 
-	replySuccess(client, userName, msgID, item.CleanSecure())
+	replySuccess(client, userID, msgID, item.CleanSecure())
 }
 
 // GetToken 获取Token
@@ -47,25 +47,18 @@ func (a User) GetToken(client mqtt.Client, msg mqtt.Message) {
 	ctx = logger.NewTagContext(ctx, "__MQTT__")
 
 	// 解析用户id和消息id
-	userName, msgID, err := parseUserNameAndMsgIDWithTopic(msg.Topic())
+	userID, msgID, err := parseUserNameAndMsgIDWithTopic(msg.Topic())
 	if err != nil {
 		logger.WithContext(ctx).Fatalf(err.Error())
 		return
 	}
 
-	// 拿到用户信息
-	item, err := a.UserSrv.GetByUserName(ctx, userName)
-	if err != nil {
-		replyError(client, userName, msgID, err.Error())
-		return
-	}
-
 	// 生成一个Token
-	tokenInfo, err := a.LoginSrv.GenerateToken(ctx, item.ID)
+	tokenInfo, err := a.LoginSrv.GenerateToken(ctx, userID)
 	if err != nil {
-		replyError(client, userName, msgID, err.Error())
+		replyError(client, userID, msgID, err.Error())
 		return
 	}
 
-	replySuccess(client, userName, msgID, tokenInfo)
+	replySuccess(client, userID, msgID, tokenInfo)
 }
