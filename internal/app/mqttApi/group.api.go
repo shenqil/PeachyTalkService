@@ -14,7 +14,7 @@ import (
 )
 
 // GroupSet 注入群组
-var GroupSet = wire.NewSet(wire.Struct(new(Group)), "*")
+var GroupSet = wire.NewSet(wire.Struct(new(Group), "*"))
 
 // Group 群组
 type Group struct {

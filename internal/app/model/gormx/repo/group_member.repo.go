@@ -10,7 +10,7 @@ import (
 )
 
 // GroupMemberSet 注入群组成员GroupMember
-var GroupMemberSet = wire.NewSet(wire.Struct(new(GroupMember)), "*")
+var GroupMemberSet = wire.NewSet(wire.Struct(new(GroupMember), "*"))
 
 // GroupMember 群组成员关联
 type GroupMember struct {

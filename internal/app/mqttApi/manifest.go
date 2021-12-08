@@ -51,5 +51,5 @@ func (a Manifest) Get(client mqtt.Client, msg mqtt.Message) {
 
 	manifest.UserID = ids[0]
 
-	replySuccess(client, manifest.UserID, msgID, manifest)
+	replySuccess(client, userName, msgID, manifest)
 }

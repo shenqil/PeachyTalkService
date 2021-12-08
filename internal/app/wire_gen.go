@@ -154,10 +154,26 @@ func BuildInjector() (*Injector, func(), error) {
 		FriendSrc: friend,
 		UserSrv:   serviceUser,
 	}
+	group := &repo.Group{
+		DB: db,
+	}
+	groupMember := &repo.GroupMember{
+		DB: db,
+	}
+	serviceGroup := &service.Group{
+		TransModel:       trans,
+		GroupModel:       group,
+		GroupMemberModel: groupMember,
+	}
+	mqttApiGroup := &mqttApi.Group{
+		GroupSrc: serviceGroup,
+		UserSrv:  serviceUser,
+	}
 	topic := mqttTopic.Topic{
 		UserAPI:     mqttApiUser,
 		ManifestAPI: manifest,
 		FriendAPI:   mqttApiFriend,
+		GroupAPI:    mqttApiGroup,
 	}
 	injector := &Injector{
 		Engine:         engine,
