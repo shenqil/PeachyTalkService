@@ -2,8 +2,10 @@ package mqttApi
 
 import (
 	"context"
+	"ginAdmin/internal/app/schema"
 	"ginAdmin/internal/app/service"
 	"ginAdmin/pkg/logger"
+	"ginAdmin/pkg/util/json"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/google/wire"
 )
@@ -18,7 +20,7 @@ type User struct {
 }
 
 // Get 查询指定数据
-func (a User) Get(client mqtt.Client, msg mqtt.Message) {
+func (a *User) Get(client mqtt.Client, msg mqtt.Message) {
 	// 创建一个上下文
 	ctx := logger.NewTraceIDContext(context.Background(), msg.Topic())
 	ctx = logger.NewTagContext(ctx, "__MQTT__")
@@ -41,7 +43,7 @@ func (a User) Get(client mqtt.Client, msg mqtt.Message) {
 }
 
 // GetToken 获取Token
-func (a User) GetToken(client mqtt.Client, msg mqtt.Message) {
+func (a *User) GetToken(client mqtt.Client, msg mqtt.Message) {
 	// 创建一个上下文
 	ctx := logger.NewTraceIDContext(context.Background(), msg.Topic())
 	ctx = logger.NewTagContext(ctx, "__MQTT__")
@@ -61,4 +63,36 @@ func (a User) GetToken(client mqtt.Client, msg mqtt.Message) {
 	}
 
 	replySuccess(client, userID, msgID, tokenInfo)
+}
+
+// GetUserInfo  根据 id 查找用户信息
+func (a *User) GetUserInfo(client mqtt.Client, msg mqtt.Message) {
+	// 创建一个上下文
+	ctx := logger.NewTraceIDContext(context.Background(), msg.Topic())
+	ctx = logger.NewTagContext(ctx, "__MQTT__")
+
+	// 解析用户id和消息id
+	userID, msgID, err := parseUserNameAndMsgIDWithTopic(msg.Topic())
+	if err != nil {
+		logger.WithContext(ctx).Fatalf(err.Error())
+		return
+	}
+
+	// 解析参数
+	var ids []string
+	err = json.Unmarshal(msg.Payload(), &ids)
+	if err != nil {
+		replyError(client, userID, msgID, err.Error())
+		return
+	}
+
+	result, err := a.UserSrv.Query(ctx, schema.UserQueryParam{
+		PaginationParam: schema.PaginationParam{
+			Pagination: false,
+		},
+		Status:  1,
+		UserIDs: ids,
+	})
+
+	replySuccess(client, userID, msgID, result.Data.ToFriendInfo())
 }

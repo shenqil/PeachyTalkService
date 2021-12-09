@@ -85,10 +85,10 @@ type GroupMemberChangesInfo struct {
 
 // GroupMemberChangesParam 成员变动参数
 type GroupMemberChangesParam struct {
-	FromID   string `json:"fromId"`   // 操作人id
-	FromName string `json:"fromName"` // 操作人名称
-	GroupID  string `json:"groupId"`  // 群ID
-	List     []*GroupMemberChangesInfo
+	FromID   string                    `json:"fromId"`   // 操作人id
+	FromName string                    `json:"fromName"` // 操作人名称
+	GroupID  string                    `json:"groupId"`  // 群ID
+	List     []*GroupMemberChangesInfo `json:"list"`     // 成员列表
 }
 
 // GroupMembers 群组成员关联列表对象
