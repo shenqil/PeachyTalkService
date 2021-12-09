@@ -120,36 +120,10 @@ func (a *Group) Update(ctx context.Context, id, userId string, item schema.Group
 		return nil, errors.ErrNotFound
 	}
 
-	OldGroupMembers, err := a.GroupMemberModel.Query(ctx, schema.GroupMemberQueryParam{
-		GroupIDs: []string{id},
-	})
-	if err != nil {
-		return nil, err
-	}
-
 	item.ID = oldItem.ID
 	item.Creator = oldItem.Creator
 	item.CreatedAt = oldItem.CreatedAt
 	err = a.TransModel.Exec(ctx, func(ctx context.Context) error {
-		addIDsList, delList := a.compareGroupMembers(ctx, OldGroupMembers.Data, item.MemberIDs)
-		for _, memberId := range addIDsList {
-			err := a.GroupMemberModel.Create(ctx, schema.GroupMember{
-				ID:      uuid.MustString(),
-				GroupID: item.ID,
-				UserID:  memberId,
-			})
-			if err != nil {
-				return err
-			}
-		}
-
-		for _, member := range delList {
-			err := a.GroupMemberModel.Delete(ctx, member.ID)
-			if err != nil {
-				return err
-			}
-		}
-
 		return a.GroupModel.Create(ctx, item)
 	})
 	if err != nil {
