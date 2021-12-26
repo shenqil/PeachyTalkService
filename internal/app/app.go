@@ -113,7 +113,7 @@ func Init(ctx context.Context, opts ...Option) (func(), error) {
 	// 初始化HTTP服务
 	httpServerCleanFunc := InitHTTPServer(ctx, injector.Engine)
 
-	//// 初始化 MQTT 连接
+	// 初始化 MQTT 连接
 	mqttServerCleanFunc := InitMQTTSever(injector.Topic)
 
 	return func() {

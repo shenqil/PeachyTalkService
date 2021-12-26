@@ -36,6 +36,10 @@ func (a *GroupMember) Query(ctx context.Context, params schema.GroupMemberQueryP
 		db = db.Where("user_id=?", v)
 	}
 
+	if v := params.GroupIDs; len(v) != 0 {
+		db = db.Where("group_id IN (?)", v)
+	}
+
 	opt.OrderFields = append(opt.OrderFields, schema.NewOrderField("id", schema.OrderByDESC))
 	db = db.Order(ParseOrder(opt.OrderFields))
 

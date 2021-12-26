@@ -10,7 +10,7 @@ import (
 
 // GetGroupDB 获取群组数据
 func GetGroupDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
-	return GetDBWithModel(ctx, defDB, new(User))
+	return GetDBWithModel(ctx, defDB, new(Group))
 }
 
 // SchemaGroup 群组对象

@@ -25,6 +25,6 @@ WORKDIR /
 # 复制编译后的程序
 COPY --from=build /gin-admin /gin-admin
 
-EXPOSE 8080
+EXPOSE 10088
 
 ENTRYPOINT ["/gin-admin"]
