@@ -123,9 +123,8 @@ func (a *Group) Update(ctx context.Context, id, userId string, item schema.Group
 	item.ID = oldItem.ID
 	item.Creator = oldItem.Creator
 	item.CreatedAt = oldItem.CreatedAt
-	err = a.TransModel.Exec(ctx, func(ctx context.Context) error {
-		return a.GroupModel.Create(ctx, item)
-	})
+	err = a.GroupModel.Update(ctx, id, item)
+
 	if err != nil {
 		return nil, err
 	}

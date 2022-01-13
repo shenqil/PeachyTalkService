@@ -90,7 +90,7 @@ func (a *Group) Create(ctx context.Context, item schema.Group) error {
 func (a *Group) Update(ctx context.Context, id string, item schema.Group) error {
 	sitem := entity.SchemaGroup(item)
 
-	result := entity.GetGroupDB(ctx, a.DB).Updates(sitem.ToGroup())
+	result := entity.GetGroupDB(ctx, a.DB).Where("id=?", id).Updates(sitem.ToGroup())
 
 	return errors.WithStack(result.Error)
 }

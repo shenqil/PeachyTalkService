@@ -234,7 +234,7 @@ func (a *Group) DelMembers(client mqtt.Client, msg mqtt.Message) {
 	}
 
 	//	操作
-	result, memberIDs, err := a.GroupSrc.AddMembers(ctx, params)
+	result, memberIDs, err := a.GroupSrc.DelMembers(ctx, params)
 	if err != nil {
 		replyError(client, userID, msgID, err.Error())
 		return
