@@ -4,13 +4,14 @@ import (
 	"ginAdmin/internal/app/config"
 	"ginAdmin/internal/app/model/gormx/entity"
 	"ginAdmin/pkg/logger"
+	"strings"
+	"time"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"strings"
-	"time"
 )
 
 // Config 配置参数
@@ -91,12 +92,7 @@ func AutoMigrate(db *gorm.DB) error {
 
 	return db.AutoMigrate(
 		new(entity.Demo),
-		new(entity.Menu),
-		new(entity.Role),
-		new(entity.UserRole),
 		new(entity.User),
-		new(entity.RouterResource),
-		new(entity.RoleRouter),
 		new(entity.UserFriend),
 		new(entity.Group),
 		new(entity.GroupMembers),

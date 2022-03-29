@@ -9,7 +9,6 @@ package app
 import (
 	"ginAdmin/internal/app/api"
 	"ginAdmin/internal/app/model/gormx/repo"
-	"ginAdmin/internal/app/module/adapter"
 	"ginAdmin/internal/app/mqttApi"
 	"ginAdmin/internal/app/mqttTopic"
 	"ginAdmin/internal/app/router"
@@ -29,34 +28,6 @@ func BuildInjector() (*Injector, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	role := &repo.Role{
-		DB: db,
-	}
-	routerResource := &repo.RouterResource{
-		DB: db,
-	}
-	roleRouter := &repo.RoleRouter{
-		DB: db,
-	}
-	user := &repo.User{
-		DB: db,
-	}
-	userRole := &repo.UserRole{
-		DB: db,
-	}
-	casbinAdapter := &adapter.CasbinAdapter{
-		RoleModel:       role,
-		RouterModel:     routerResource,
-		RoleRouterModel: roleRouter,
-		UserModel:       user,
-		UserRoleModel:   userRole,
-	}
-	syncedEnforcer, cleanup3, err := InitCasbin(casbinAdapter)
-	if err != nil {
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
 	demo := &repo.Demo{
 		DB: db,
 	}
@@ -66,15 +37,12 @@ func BuildInjector() (*Injector, func(), error) {
 	apiDemo := &api.Demo{
 		DemoSrv: serviceDemo,
 	}
-	menu := &repo.Menu{
+	user := &repo.User{
 		DB: db,
 	}
 	login := &service.Login{
-		Auth:          auther,
-		UserModel:     user,
-		UserRoleModel: userRole,
-		RoleModel:     role,
-		MenuModel:     menu,
+		Auth:      auther,
+		UserModel: user,
 	}
 	apiLogin := &api.Login{
 		LoginSrv: login,
@@ -82,58 +50,25 @@ func BuildInjector() (*Injector, func(), error) {
 	trans := &repo.Trans{
 		DB: db,
 	}
-	serviceMenu := &service.Menu{
-		TransModel: trans,
-		MenuModel:  menu,
-	}
-	apiMenu := &api.Menu{
-		MenuSrv: serviceMenu,
-	}
-	serviceRole := &service.Role{
-		Enforcer:            syncedEnforcer,
-		TransModel:          trans,
-		RoleModel:           role,
-		UserModel:           user,
-		RoleRouterModel:     roleRouter,
-		RouterResourceModel: routerResource,
-	}
-	apiRole := &api.Role{
-		RoleSrv: serviceRole,
-	}
 	serviceUser := &service.User{
-		Enforcer:      syncedEnforcer,
-		TransModel:    trans,
-		UserModel:     user,
-		UserRoleModel: userRole,
-		RoleModel:     role,
+		TransModel: trans,
+		UserModel:  user,
 	}
 	apiUser := &api.User{
 		UserSrv: serviceUser,
 	}
-	serviceRouterResource := &service.RouterResource{
-		RouterResourceModel: routerResource,
-		RoleRouterModel:     roleRouter,
-	}
-	apiRouterResource := &api.RouterResource{
-		RouterResourceSrv: serviceRouterResource,
-	}
 	im := &service.IM{
-		UserModel:      user,
-		CasbinEnforcer: syncedEnforcer,
+		UserModel: user,
 	}
 	apiIM := &api.IM{
 		IMSrv: im,
 	}
 	routerRouter := &router.Router{
-		Auth:           auther,
-		CasbinEnforcer: syncedEnforcer,
-		DemoAPI:        apiDemo,
-		LoginAPI:       apiLogin,
-		MenuAPI:        apiMenu,
-		RoleAPI:        apiRole,
-		UserAPI:        apiUser,
-		RouterResource: apiRouterResource,
-		IMApi:          apiIM,
+		Auth:     auther,
+		DemoAPI:  apiDemo,
+		LoginAPI: apiLogin,
+		UserAPI:  apiUser,
+		IMApi:    apiIM,
 	}
 	engine := InitGinEngine(routerRouter)
 	mqttApiUser := &mqttApi.User{
@@ -176,14 +111,11 @@ func BuildInjector() (*Injector, func(), error) {
 		GroupAPI:    mqttApiGroup,
 	}
 	injector := &Injector{
-		Engine:         engine,
-		Auth:           auther,
-		CasbinEnforcer: syncedEnforcer,
-		MenuBll:        serviceMenu,
-		Topic:          topic,
+		Engine: engine,
+		Auth:   auther,
+		Topic:  topic,
 	}
 	return injector, func() {
-		cleanup3()
 		cleanup2()
 		cleanup()
 	}, nil

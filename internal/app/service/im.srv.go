@@ -6,7 +6,7 @@ import (
 	"ginAdmin/internal/app/schema"
 	"ginAdmin/pkg/errors"
 	"ginAdmin/pkg/util/hash"
-	"github.com/casbin/casbin/v2"
+
 	"github.com/google/wire"
 )
 
@@ -15,8 +15,7 @@ var IMSet = wire.NewSet(wire.Struct(new(IM), "*"))
 
 // IM 管理
 type IM struct {
-	UserModel      *repo.User
-	CasbinEnforcer *casbin.SyncedEnforcer
+	UserModel *repo.User
 }
 
 // Verify 登陆验证

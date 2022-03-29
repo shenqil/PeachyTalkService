@@ -27,9 +27,6 @@ type Logger = logrus.Logger
 // Entry Logrus entry
 type Entry = logrus.Entry
 
-// Hook 定义日志钩子别名
-type Hook = logrus.Hook
-
 // StandardLogger 获取标准日志
 func StandardLogger() *Logger {
 	return logrus.StandardLogger()
@@ -58,11 +55,6 @@ func SetOutput(out io.Writer) {
 // SetVersion 设定版本
 func SetVersion(v string) {
 	version = v
-}
-
-// AddHook 增加日志钩子
-func AddHook(hook Hook) {
-	logrus.AddHook(hook)
 }
 
 type (
@@ -169,8 +161,8 @@ func WithContext(ctx context.Context) *Entry {
 var (
 	Tracef = logrus.Tracef
 	Debugf = logrus.Debugf
-	Infof = logrus.Infof
-	Warnf = logrus.Warnf
+	Infof  = logrus.Infof
+	Warnf  = logrus.Warnf
 	Errorf = logrus.Errorf
 	Fatalf = logrus.Fatalf
 	Panicf = logrus.Panicf

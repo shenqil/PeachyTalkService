@@ -5,6 +5,7 @@ import (
 	"ginAdmin/internal/app/model/gormx/entity"
 	"ginAdmin/internal/app/schema"
 	"ginAdmin/pkg/errors"
+
 	"github.com/google/wire"
 	"gorm.io/gorm"
 )
@@ -92,7 +93,7 @@ func (a *UserFriend) QuasiFriendList(ctx context.Context, userID string, opts ..
 }
 
 // Get 查询指定数据
-func (a *UserFriend) Get(ctx context.Context, id string, opts ...schema.UserRoleQueryOptions) (*schema.UserFriend, error) {
+func (a *UserFriend) Get(ctx context.Context, id string) (*schema.UserFriend, error) {
 	db := entity.GetUserFriendDB(ctx, a.DB).Where("id=?", id)
 	var item entity.UserFriend
 	ok, err := FindOne(ctx, db, &item)

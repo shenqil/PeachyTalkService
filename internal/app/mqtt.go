@@ -5,10 +5,9 @@ import (
 	"ginAdmin/internal/app/config"
 	"ginAdmin/internal/app/mqttTopic"
 	"ginAdmin/pkg/util/hash"
-	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"log"
-	"os"
 	"time"
+
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
 var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
@@ -19,10 +18,6 @@ var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 func InitMQTTSever(t mqttTopic.Topic) func() {
 	cfg := config.C.MQTT
 	root := config.C.Root
-	mqtt.ERROR = log.New(os.Stdout, "mqtt_[ERROR] ", 0)
-	mqtt.CRITICAL = log.New(os.Stdout, "mqtt_[CRIT] ", 0)
-	//mqtt.WARN = log.New(os.Stdout, "mqtt_[WARN]  ", 0)
-	//mqtt.DEBUG = log.New(os.Stdout, "mqtt_[DEBUG] ", 0)
 
 	addr := fmt.Sprintf("tcp://%s:%d", cfg.Host, cfg.Port)
 	opts := mqtt.NewClientOptions().AddBroker(addr).SetClientID(cfg.ClientID)

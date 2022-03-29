@@ -7,7 +7,6 @@ package app
 import (
 	"ginAdmin/internal/app/api"
 	"ginAdmin/internal/app/model/gormx/repo"
-	"ginAdmin/internal/app/module/adapter"
 	"ginAdmin/internal/app/mqttApi"
 	"ginAdmin/internal/app/mqttTopic"
 	"ginAdmin/internal/app/router"
@@ -22,12 +21,10 @@ func BuildInjector() (*Injector, func(), error) {
 		InitGormDB,
 		repo.RepoSet,
 		InitAuth,
-		InitCasbin,
 		InitGinEngine,
 		service.ServiceSet,
 		api.APISet,
 		router.RouterSet,
-		adapter.CasbinAdapterSet,
 		mqttTopic.TopicSet,
 		mqttApi.MQTTApiSet,
 		InjectorSet,

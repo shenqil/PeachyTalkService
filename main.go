@@ -14,9 +14,6 @@ func main() {
 	ctx := logger.NewTagContext(context.Background(), "__main__")
 	app.Run(ctx,
 		app.SetConfigFile("./configs/config.toml"),
-		app.SetModelFile("./configs/model.conf"),
-		app.SetWWWDir("www"),
-		app.SetMenuFile("./configs/menu.yaml"),
 		app.SetVersion(VERSION),
 	)
 }

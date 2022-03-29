@@ -1,4 +1,4 @@
-<h1 align="center">Gin Admin</h1>
+# Gin Admin
 
 ## 特性
 

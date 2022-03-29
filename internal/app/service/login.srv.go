@@ -7,9 +7,10 @@ import (
 	"ginAdmin/pkg/auth"
 	"ginAdmin/pkg/errors"
 	"ginAdmin/pkg/util/hash"
+	"net/http"
+
 	"github.com/LyricTian/captcha"
 	"github.com/google/wire"
-	"net/http"
 )
 
 // LoginSet 注入Login
@@ -17,11 +18,8 @@ var LoginSet = wire.NewSet(wire.Struct(new(Login), "*"))
 
 // Login 登陆管理
 type Login struct {
-	Auth          auth.Auther
-	UserModel     *repo.User
-	UserRoleModel *repo.UserRole
-	RoleModel     *repo.Role
-	MenuModel     *repo.Menu
+	Auth      auth.Auther
+	UserModel *repo.User
 }
 
 // GetCaptcha 获取图形验证码信息
@@ -136,64 +134,7 @@ func (a *Login) GetLoginInfo(ctx context.Context, userID string) (*schema.UserLo
 		RealName: user.RealName,
 	}
 
-	userRoleResult, err := a.UserRoleModel.Query(ctx, schema.UserRoleQueryParam{
-		UserID: userID,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	if roleIDs := userRoleResult.Data.ToRoleIDs(); len(roleIDs) > 0 {
-		roleResult, err := a.RoleModel.Query(ctx, schema.RoleQueryParam{
-			IDs:    roleIDs,
-			Status: 1,
-		})
-		if err != nil {
-			return nil, err
-		}
-		info.Roles = roleResult.Data
-	}
-
 	return info, nil
-}
-
-// QueryUserMenuTree 查询当前用户的权限菜单
-func (a *Login) QueryUserMenuTree(ctx context.Context, userID string) (schema.MenuTrees, error) {
-	isRoot := schema.CheckIsRootUser(ctx, userID)
-
-	// 如果是root用户 则查询所有显示的菜单树
-	if isRoot {
-		result, err := a.MenuModel.Query(ctx, schema.MenuQueryParam{
-			Status: 1,
-		}, schema.MenuQueryOptions{
-			OrderFields: schema.NewOrderFields(schema.NewOrderField("sequence", schema.OrderByASC)),
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		return result.Data.ToTree(), nil
-	}
-
-	userRoleResult, err := a.UserRoleModel.Query(ctx, schema.UserRoleQueryParam{
-		UserID: userID,
-	})
-	if err != nil {
-		return nil, err
-	} else if len(userRoleResult.Data) == 0 {
-		return nil, errors.ErrNoPerm
-	}
-
-	result, err := a.MenuModel.Query(ctx, schema.MenuQueryParam{
-		Status: 1,
-	}, schema.MenuQueryOptions{
-		OrderFields: schema.NewOrderFields(schema.NewOrderField("sequence", schema.OrderByASC)),
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return result.Data.ToTree(), nil
 }
 
 // UpdatePassword 更新当前用户登陆密码

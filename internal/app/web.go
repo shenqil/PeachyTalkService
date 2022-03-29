@@ -4,8 +4,12 @@ import (
 	"ginAdmin/internal/app/config"
 	"ginAdmin/internal/app/middleware"
 	"ginAdmin/internal/app/router"
+
 	"github.com/LyricTian/gzip"
 	"github.com/gin-gonic/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // InitGinEngine 初始化gin引擎
@@ -46,14 +50,9 @@ func InitGinEngine(r router.IRouter) *gin.Engine {
 	// Router register
 	r.Register(app)
 
-	//// Swagger
-	//if config.C.Swagger {
-	//	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	//}
-
-	// Website
-	if dir := config.C.WWW; dir != "" {
-		app.Use(middleware.WWWMiddleware(dir, middleware.AllowPathPrefixSkipper(prefixes...)))
+	// Swagger
+	if config.C.Swagger {
+		app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 
 	return app

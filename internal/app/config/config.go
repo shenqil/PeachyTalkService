@@ -3,10 +3,11 @@ package config
 import (
 	"fmt"
 	"ginAdmin/pkg/util/json"
-	"github.com/koding/multiconfig"
 	"os"
 	"strings"
 	"sync"
+
+	"github.com/koding/multiconfig"
 )
 
 var (
@@ -58,29 +59,23 @@ func PrintWithJSON() {
 
 // Config 配置参数
 type Config struct {
-	RunMode      string
-	WWW          string
-	Swagger      bool
-	PrintConfig  bool
-	HTTP         HTTP
-	Menu         Menu
-	Casbin       Casbin
-	Log          Log
-	LogGormHook  LogGormHook
-	LogMongoHook LogMongoHook
-	Root         Root
-	JWTAuth      JWTAuth
-	Monitor      Monitor
-	Captcha      Captcha
-	RateLimiter  RateLimiter
-	CORS         CORS
-	GZIP         GZIP
-	Redis        Redis
-	Gorm         Gorm
-	MySQL        MySQL
-	Postgres     Postgres
-	Sqlite3      Sqlite3
-	MQTT         MQTT
+	RunMode     string
+	Swagger     bool
+	PrintConfig bool
+	HTTP        HTTP
+	Log         Log
+	Root        Root
+	JWTAuth     JWTAuth
+	Monitor     Monitor
+	Captcha     Captcha
+	RateLimiter RateLimiter
+	CORS        CORS
+	GZIP        GZIP
+	Redis       Redis
+	Gorm        Gorm
+	MySQL       MySQL
+	Postgres    Postgres
+	MQTT        MQTT
 }
 
 // IsDebugMode 是否是debug模式
@@ -88,59 +83,12 @@ func (c *Config) IsDebugMode() bool {
 	return c.RunMode == "debug"
 }
 
-// Menu 菜单配置参数
-type Menu struct {
-	Enable bool
-	Data   string
-}
-
-// Casbin 配置参数
-type Casbin struct {
-	Enable           bool
-	Debug            bool
-	Model            string
-	AutoLoad         bool
-	AutoLoadInternal int
-}
-
-// LogHook 日志钩子
-type LogHook string
-
-// IsGorm 是否是gorm钩子
-func (h LogHook) IsGorm() bool {
-	return h == "gorm"
-}
-
-// IsMongo 是否是mongo钩子
-func (h LogHook) IsMongo() bool {
-	return h == "mongo"
-}
-
 // Log 日志配置参数
 type Log struct {
-	Level         int
-	Format        string
-	Output        string
-	OutputFile    string
-	EnableHook    bool
-	HookLevels    []string
-	Hook          LogHook
-	HookMaxThread int
-	HookMaxBuffer int
-}
-
-// LogGormHook 日志gorm钩子配置
-type LogGormHook struct {
-	DBType       string
-	MaxLifetime  int
-	MaxOpenConns int
-	MaxIdleConns int
-	Table        string
-}
-
-// LogMongoHook 日志mongo钩子配置
-type LogMongoHook struct {
-	Collection string
+	Level      int
+	Format     string
+	Output     string
+	OutputFile string
 }
 
 // Root root用户
@@ -261,16 +209,6 @@ type Postgres struct {
 func (a Postgres) DSN() string {
 	return fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=%s TimeZone=Asia/Shanghai",
 		a.Host, a.Port, a.User, a.DBName, a.Password, a.SSLMode)
-}
-
-// Sqlite3 sqlite3配置参数
-type Sqlite3 struct {
-	Path string
-}
-
-// DSN 数据库连接串
-func (a Sqlite3) DSN() string {
-	return a.Path
 }
 
 // MQTT 协议

@@ -5,6 +5,7 @@ import (
 	"ginAdmin/internal/app/model/gormx/entity"
 	"ginAdmin/internal/app/schema"
 	"ginAdmin/pkg/errors"
+
 	"github.com/google/wire"
 	"gorm.io/gorm"
 )
@@ -35,12 +36,6 @@ func (a *User) Query(ctx context.Context, params schema.UserQueryParam, opts ...
 	}
 	if v := params.Status; v > 0 {
 		db = db.Where("status=?", v)
-	}
-	if v := params.RoleIDs; len(v) > 0 {
-		subQuery := entity.GetUserRoleDB(ctx, a.DB).
-			Select("user_id").
-			Where("role_id IN (?)", v)
-		db = db.Where("id IN (?)", subQuery)
 	}
 	if v := params.UserIDs; len(v) > 0 {
 		db = db.Where("id IN (?)", v)

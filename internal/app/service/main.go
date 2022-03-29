@@ -6,10 +6,7 @@ import "github.com/google/wire"
 var ServiceSet = wire.NewSet(
 	DemoSet,
 	LoginSet,
-	MenuSet,
-	RoleSet,
 	UserSet,
-	RouterResourceSet,
 	IMSet,
 	FriendSet,
 	GroupSet,

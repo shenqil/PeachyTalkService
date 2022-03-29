@@ -6,15 +6,16 @@ import (
 	"fmt"
 	"ginAdmin/internal/app/config"
 	"ginAdmin/pkg/logger"
-	"github.com/LyricTian/captcha"
-	"github.com/LyricTian/captcha/store"
-	"github.com/go-redis/redis"
-	"github.com/google/gops/agent"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/LyricTian/captcha"
+	"github.com/LyricTian/captcha/store"
+	"github.com/go-redis/redis"
+	"github.com/google/gops/agent"
 )
 
 type options struct {
@@ -70,18 +71,9 @@ func Init(ctx context.Context, opts ...Option) (func(), error) {
 		opt(&o)
 	}
 
+	// 初始化配置文件
 	config.MustLoad(o.ConfigFile)
-	if v := o.ModelFile; v != "" {
-		config.C.Casbin.Model = v
-	}
-	if v := o.WWWDir; v != "" {
-		config.C.WWW = v
-	}
-	if v := o.MenuFile; v != "" {
-		config.C.Menu.Data = v
-	}
 	config.PrintWithJSON()
-
 	logger.WithContext(ctx).Printf("服务启动，运行模式：%s，版本号：%s，进程号：%d", config.C.RunMode, o.Version, os.Getpid())
 
 	// 初始化日志模块
@@ -102,26 +94,18 @@ func Init(ctx context.Context, opts ...Option) (func(), error) {
 		return nil, err
 	}
 
-	// 初始化菜单数据
-	if config.C.Menu.Enable && config.C.Menu.Data != "" {
-		err = injector.MenuBll.InitData(ctx, config.C.Menu.Data)
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	// 初始化HTTP服务
 	httpServerCleanFunc := InitHTTPServer(ctx, injector.Engine)
 
-	// 初始化 MQTT 连接
-	mqttServerCleanFunc := InitMQTTSever(injector.Topic)
+	// // 初始化 MQTT 连接
+	// mqttServerCleanFunc := InitMQTTSever(injector.Topic)
 
 	return func() {
 		httpServerCleanFunc()
 		injectorCleanFunc()
 		monitorCleanFunc()
 		loggerCleanFunc()
-		mqttServerCleanFunc()
+		// mqttServerCleanFunc()
 	}, nil
 }
 

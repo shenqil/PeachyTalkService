@@ -7,6 +7,7 @@ import (
 	"ginAdmin/internal/app/service"
 	"ginAdmin/pkg/errors"
 	"ginAdmin/pkg/logger"
+
 	"github.com/LyricTian/captcha"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
@@ -165,24 +166,6 @@ func (a *Login) GetUserInfo(c *gin.Context) {
 		return
 	}
 	ginx.ResSuccess(c, info)
-}
-
-// QueryUserMenuTree 查询当前用户菜单树
-// @Tags 登录管理
-// @Summary 查询当前用户菜单树
-// @Security ApiKeyAuth
-// @Success 200 {object} schema.ListResult{list=[]schema.MenuTree} "查询结果"
-// @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
-// @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/pub/current/menutree [get]
-func (a *Login) QueryUserMenuTree(c *gin.Context) {
-	ctx := c.Request.Context()
-	menus, err := a.LoginSrv.QueryUserMenuTree(ctx, ginx.GetUserID(c))
-	if err != nil {
-		ginx.ResError(c, err)
-		return
-	}
-	ginx.ResList(c, menus)
 }
 
 // UpdatePassword 更新个人密码

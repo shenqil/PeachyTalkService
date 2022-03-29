@@ -4,9 +4,8 @@ import (
 	"errors"
 	"ginAdmin/internal/app/config"
 	"ginAdmin/internal/app/model/gormx"
+
 	"gorm.io/gorm"
-	"os"
-	"path/filepath"
 )
 
 // InitGormDB 初始化gorm存储
@@ -34,9 +33,6 @@ func NewGormDB() (*gorm.DB, func(), error) {
 	switch cfg.Gorm.DBType {
 	case "mysql":
 		dsn = cfg.MySQL.DSN()
-	case "sqlite3":
-		dsn = cfg.Sqlite3.DSN()
-		_ = os.MkdirAll(filepath.Dir(dsn), 0777)
 	case "postgres":
 		dsn = cfg.Postgres.DSN()
 	default:

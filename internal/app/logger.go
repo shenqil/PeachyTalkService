@@ -1,12 +1,8 @@
 package app
 
 import (
-	"errors"
 	"ginAdmin/internal/app/config"
 	"ginAdmin/pkg/logger"
-	loggerhook "ginAdmin/pkg/logger/hook"
-	loggergormhook "ginAdmin/pkg/logger/hook/gorm"
-	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 )
@@ -39,57 +35,9 @@ func InitLogger() (func(), error) {
 		}
 	}
 
-	var hook *loggerhook.Hook
-	if c.EnableHook {
-		var hookLevels []logrus.Level
-		for _, lvl := range c.HookLevels {
-			plvl, err := logrus.ParseLevel(lvl)
-			if err != nil {
-				return nil, err
-			}
-			hookLevels = append(hookLevels, plvl)
-		}
-
-		switch {
-		case c.Hook.IsGorm():
-			hc := config.C.LogGormHook
-
-			var dsn string
-			switch hc.DBType {
-			case "mysql":
-				dsn = config.C.MySQL.DSN()
-			case "sqlite3":
-				dsn = config.C.Sqlite3.DSN()
-			case "postgres":
-				dsn = config.C.Postgres.DSN()
-			default:
-				return nil, errors.New("unknown db")
-			}
-
-			h := loggerhook.New(loggergormhook.New(&loggergormhook.Config{
-				DBType:       hc.DBType,
-				DSN:          dsn,
-				MaxLifetime:  hc.MaxLifetime,
-				MaxOpenConns: hc.MaxOpenConns,
-				MaxIdleConns: hc.MaxIdleConns,
-				TableName:    hc.Table,
-			}),
-				loggerhook.SetMaxWorkers(c.HookMaxThread),
-				loggerhook.SetMaxQueues(c.HookMaxBuffer),
-				loggerhook.SetLevels(hookLevels...),
-			)
-			logger.AddHook(h)
-			hook = h
-		}
-	}
-
 	return func() {
 		if file != nil {
 			file.Close()
-		}
-
-		if hook != nil {
-			hook.Flush()
 		}
 	}, nil
 }
