@@ -3,7 +3,9 @@ package logger
 import (
 	"context"
 	"fmt"
-	"io"
+	"ginAdmin/internal/app/config"
+	"os"
+	"path/filepath"
 
 	"github.com/sirupsen/logrus"
 )
@@ -32,37 +34,60 @@ func StandardLogger() *Logger {
 	return logrus.StandardLogger()
 }
 
-// SetLevel 设定日志级别
-func SetLevel(level int) {
-	logrus.SetLevel(logrus.Level(level))
-}
-
-// serFormatter 设置日志输出格式
-func SetFormatter(format string) {
-	switch format {
-	case "json":
-		logrus.SetFormatter(new(logrus.JSONFormatter))
-	default:
-		logrus.SetFormatter(new(logrus.TextFormatter))
-	}
-}
-
-// SetOutput 设定日志输出
-func SetOutput(out io.Writer) {
-	logrus.SetOutput(out)
-}
-
-// SetVersion 设定版本
-func SetVersion(v string) {
-	version = v
-}
-
 type (
 	traceIDKey struct{}
 	userIDKey  struct{}
 	tagKey     struct{}
 	stackKey   struct{}
 )
+
+// InitLogger 初始化日志模块
+func InitLogger() (func(), error) {
+	c := config.C.Log
+
+	// 日志级别
+	logrus.SetLevel(logrus.Level(c.Level))
+
+	// 日志格式
+	if c.Format == "json" {
+		logrus.SetFormatter(new(logrus.JSONFormatter))
+	} else {
+		logrus.SetFormatter(new(logrus.TextFormatter))
+	}
+
+	// 设定日志输出
+	var file *os.File
+	if c.Output != "" {
+		switch c.Output {
+		case "stdout":
+			logrus.SetOutput(os.Stdout)
+		case "stderr":
+			logrus.SetOutput(os.Stderr)
+		case "file":
+			if name := c.OutputFile; name != "" {
+				_ = os.MkdirAll(filepath.Dir(name), 0777)
+
+				f, err := os.OpenFile(name, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
+				if err != nil {
+					return nil, err
+				}
+				logrus.SetOutput(f)
+				file = f
+			}
+		}
+	}
+
+	return func() {
+		if file != nil {
+			file.Close()
+		}
+	}, nil
+}
+
+// 设置版本号
+func SetVersion(v string) {
+	version = v
+}
 
 // NewTraceIDContext 创建跟踪ID上下文
 func NewTraceIDContext(ctx context.Context, traceID string) context.Context {

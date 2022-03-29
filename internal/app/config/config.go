@@ -47,21 +47,18 @@ func MustLoad(fpaths ...string) {
 
 // PrintWithJSON 基于JSON格式输出配置
 func PrintWithJSON() {
-	if C.PrintConfig {
-		b, err := json.MarshalIndent(C, "", " ")
-		if err != nil {
-			os.Stdout.WriteString("[CONFIG] JSON marshal error: " + err.Error())
-			return
-		}
-		os.Stdout.WriteString(string(b) + "\n")
+	b, err := json.MarshalIndent(C, "", " ")
+	if err != nil {
+		os.Stdout.WriteString("[CONFIG] JSON marshal error: " + err.Error())
+		return
 	}
+	os.Stdout.WriteString(string(b) + "\n")
 }
 
 // Config 配置参数
 type Config struct {
 	RunMode     string
 	Swagger     bool
-	PrintConfig bool
 	HTTP        HTTP
 	Log         Log
 	Root        Root

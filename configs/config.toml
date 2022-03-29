@@ -7,9 +7,6 @@ WWW = ""
 # 是否启用swagger
 Swagger = true
 
-# 启动时是否打印配置参数
-PrintConfig = true
-
 [HTTP]
 # http监听地址
 Host = "0.0.0.0"

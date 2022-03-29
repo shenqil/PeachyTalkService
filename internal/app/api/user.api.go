@@ -27,7 +27,7 @@ type User struct {
 // @Param queryValue query string false "查询值"
 // @Param roleIDs query string false "角色ID(多个以英文逗号分隔)"
 // @Param status query int false "状态(1:启用 2:停用)"
-// @Success 200 {object} schema.ListResult{list=[]schema.UserShow} "查询结果"
+// @Success 200 {object} schema.ListResult{list=[]schema.Users} "查询结果"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
 // @Router /api/v1/management/users [get]
