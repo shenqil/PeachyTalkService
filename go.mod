@@ -5,8 +5,6 @@ go 1.16
 require (
 	github.com/LyricTian/captcha v1.1.0
 	github.com/LyricTian/gzip v0.1.1
-	github.com/LyricTian/queue v1.2.0
-	github.com/casbin/casbin/v2 v2.31.10
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/eclipse/paho.mqtt.golang v1.3.5
 	github.com/fatih/camelcase v1.0.0 // indirect
