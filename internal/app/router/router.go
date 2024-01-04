@@ -25,12 +25,10 @@ type Router struct {
 	DemoAPI  *api.Demo
 	LoginAPI *api.Login
 	UserAPI  *api.User
-	IMApi    *api.IM
 }
 
 func (a *Router) Register(app *gin.Engine) error {
 	a.RegisterAPI(app)
-	a.RegisterIMAPI(app)
 	return nil
 }
 

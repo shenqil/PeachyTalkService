@@ -50,34 +50,6 @@ definitions:
       id:
         type: string
     type: object
-  schema.IMAcl:
-    properties:
-      access:
-        type: string
-      clientId:
-        type: string
-      ipAddr:
-        type: string
-      mountPoint:
-        type: string
-      topic:
-        type: string
-      username:
-        type: string
-    required:
-    - username
-    type: object
-  schema.IMClient:
-    properties:
-      clientId:
-        type: string
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - username
-    type: object
   schema.ListResult:
     properties:
       list: {}
@@ -202,52 +174,6 @@ definitions:
 info:
   contact: {}
 paths:
-  /api/v1/im/acl:
-    post:
-      parameters:
-      - description: 请求参数
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/schema.IMAcl'
-      responses:
-        "200":
-          description: ""
-        "400":
-          description: '{error:{code:0,message:无效的请求参数}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      summary: IM
-      tags:
-      - IM
-  /api/v1/im/auth:
-    post:
-      parameters:
-      - description: 请求参数
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/schema.IMClient'
-      responses:
-        "200":
-          description: ""
-        "400":
-          description: '{error:{code:0,message:无效的请求参数}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      summary: IM
-      tags:
-      - IM
   /api/v1/management/demos:
     get:
       parameters:
@@ -482,10 +408,6 @@ paths:
       - description: 查询值
         in: query
         name: queryValue
-        type: string
-      - description: 角色ID(多个以英文逗号分隔)
-        in: query
-        name: roleIDs
         type: string
       - description: 状态(1:启用 2:停用)
         in: query

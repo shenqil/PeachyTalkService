@@ -1,7 +1,6 @@
 package app
 
 import (
-	"ginAdmin/internal/app/mqttTopic"
 	"ginAdmin/pkg/auth"
 
 	"github.com/gin-gonic/gin"
@@ -15,5 +14,5 @@ var InjectorSet = wire.NewSet(wire.Struct(new(Injector), "*"))
 type Injector struct {
 	Engine *gin.Engine
 	Auth   auth.Auther
-	Topic  mqttTopic.Topic
+	//Topic  mqttTopic.Topic
 }

@@ -9,8 +9,6 @@ package app
 import (
 	"ginAdmin/internal/app/api"
 	"ginAdmin/internal/app/model/gormx/repo"
-	"ginAdmin/internal/app/mqttApi"
-	"ginAdmin/internal/app/mqttTopic"
 	"ginAdmin/internal/app/router"
 	"ginAdmin/internal/app/service"
 )
@@ -57,63 +55,16 @@ func BuildInjector() (*Injector, func(), error) {
 	apiUser := &api.User{
 		UserSrv: serviceUser,
 	}
-	im := &service.IM{
-		UserModel: user,
-	}
-	apiIM := &api.IM{
-		IMSrv: im,
-	}
 	routerRouter := &router.Router{
 		Auth:     auther,
 		DemoAPI:  apiDemo,
 		LoginAPI: apiLogin,
 		UserAPI:  apiUser,
-		IMApi:    apiIM,
 	}
 	engine := InitGinEngine(routerRouter)
-	mqttApiUser := &mqttApi.User{
-		UserSrv:  serviceUser,
-		LoginSrv: login,
-	}
-	manifest := &mqttApi.Manifest{
-		UserSrv: serviceUser,
-	}
-	userFriend := &repo.UserFriend{
-		DB: db,
-	}
-	friend := &service.Friend{
-		UserModel:       user,
-		UserFriendModel: userFriend,
-	}
-	mqttApiFriend := &mqttApi.Friend{
-		FriendSrc: friend,
-		UserSrv:   serviceUser,
-	}
-	group := &repo.Group{
-		DB: db,
-	}
-	groupMember := &repo.GroupMember{
-		DB: db,
-	}
-	serviceGroup := &service.Group{
-		TransModel:       trans,
-		GroupModel:       group,
-		GroupMemberModel: groupMember,
-	}
-	mqttApiGroup := &mqttApi.Group{
-		GroupSrc: serviceGroup,
-		UserSrv:  serviceUser,
-	}
-	topic := mqttTopic.Topic{
-		UserAPI:     mqttApiUser,
-		ManifestAPI: manifest,
-		FriendAPI:   mqttApiFriend,
-		GroupAPI:    mqttApiGroup,
-	}
 	injector := &Injector{
 		Engine: engine,
 		Auth:   auther,
-		Topic:  topic,
 	}
 	return injector, func() {
 		cleanup2()

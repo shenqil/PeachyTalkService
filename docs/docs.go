@@ -23,78 +23,6 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/im/acl": {
-            "post": {
-                "tags": [
-                    "IM"
-                ],
-                "summary": "IM",
-                "parameters": [
-                    {
-                        "description": "请求参数",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/schema.IMAcl"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": ""
-                    },
-                    "400": {
-                        "description": "{error:{code:0,message:无效的请求参数}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/im/auth": {
-            "post": {
-                "tags": [
-                    "IM"
-                ],
-                "summary": "IM",
-                "parameters": [
-                    {
-                        "description": "请求参数",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/schema.IMClient"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": ""
-                    },
-                    "400": {
-                        "description": "{error:{code:0,message:无效的请求参数}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/management/demos": {
             "get": {
                 "security": [
@@ -474,12 +402,6 @@ var doc = `{
                         "type": "string",
                         "description": "查询值",
                         "name": "queryValue",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "角色ID(多个以英文逗号分隔)",
-                        "name": "roleIDs",
                         "in": "query"
                     },
                     {
@@ -1104,49 +1026,6 @@ var doc = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "string"
-                }
-            }
-        },
-        "schema.IMAcl": {
-            "type": "object",
-            "required": [
-                "username"
-            ],
-            "properties": {
-                "access": {
-                    "type": "string"
-                },
-                "clientId": {
-                    "type": "string"
-                },
-                "ipAddr": {
-                    "type": "string"
-                },
-                "mountPoint": {
-                    "type": "string"
-                },
-                "topic": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "schema.IMClient": {
-            "type": "object",
-            "required": [
-                "username"
-            ],
-            "properties": {
-                "clientId": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }

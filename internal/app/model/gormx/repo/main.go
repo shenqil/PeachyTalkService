@@ -7,7 +7,7 @@ var RepoSet = wire.NewSet(
 	DemoSet,
 	TransSet,
 	UserSet,
-	UserFriendSet,
-	GroupSet,
-	GroupMemberSet,
+	//UserFriendSet,
+	//GroupSet,
+	//GroupMemberSet,
 )

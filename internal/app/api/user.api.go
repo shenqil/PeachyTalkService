@@ -25,7 +25,6 @@ type User struct {
 // @Param current query int true "分页索引" default(1)
 // @Param pageSize query int true "分页大小" default(10)
 // @Param queryValue query string false "查询值"
-// @Param roleIDs query string false "角色ID(多个以英文逗号分隔)"
 // @Param status query int false "状态(1:启用 2:停用)"
 // @Success 200 {object} schema.ListResult{list=[]schema.Users} "查询结果"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"

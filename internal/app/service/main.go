@@ -7,7 +7,7 @@ var ServiceSet = wire.NewSet(
 	DemoSet,
 	LoginSet,
 	UserSet,
-	IMSet,
-	FriendSet,
-	GroupSet,
+	//IMSet,
+	//FriendSet,
+	//GroupSet,
 )
