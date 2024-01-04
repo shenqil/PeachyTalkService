@@ -1,12 +1,12 @@
 package service
 
 import (
+	"PeachyTalkService/internal/app/model/gormx/repo"
+	"PeachyTalkService/internal/app/schema"
+	"PeachyTalkService/pkg/auth"
+	"PeachyTalkService/pkg/errors"
+	"PeachyTalkService/pkg/util/hash"
 	"context"
-	"ginAdmin/internal/app/model/gormx/repo"
-	"ginAdmin/internal/app/schema"
-	"ginAdmin/pkg/auth"
-	"ginAdmin/pkg/errors"
-	"ginAdmin/pkg/util/hash"
 	"net/http"
 
 	"github.com/LyricTian/captcha"

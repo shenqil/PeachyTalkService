@@ -1,9 +1,9 @@
 package api
 
 import (
-	"ginAdmin/internal/app/ginx"
-	"ginAdmin/internal/app/schema"
-	"ginAdmin/internal/app/service"
+	"PeachyTalkService/internal/app/ginx"
+	"PeachyTalkService/internal/app/schema"
+	"PeachyTalkService/internal/app/service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"

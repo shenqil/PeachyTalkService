@@ -1,12 +1,13 @@
 package repo
 
 import (
+	"PeachyTalkService/internal/app/contextx"
+	"PeachyTalkService/internal/app/schema"
 	"context"
 	"fmt"
-	"ginAdmin/internal/app/contextx"
-	"ginAdmin/internal/app/schema"
-	"gorm.io/gorm"
 	"strings"
+
+	"gorm.io/gorm"
 )
 
 // TransFunc 定义事务执行函数

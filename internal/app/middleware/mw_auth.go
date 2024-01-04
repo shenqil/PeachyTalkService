@@ -1,12 +1,13 @@
 package middleware
 
 import (
-	"ginAdmin/internal/app/config"
-	"ginAdmin/internal/app/contextx"
-	"ginAdmin/internal/app/ginx"
-	"ginAdmin/pkg/auth"
-	"ginAdmin/pkg/errors"
-	"ginAdmin/pkg/logger"
+	"PeachyTalkService/internal/app/config"
+	"PeachyTalkService/internal/app/contextx"
+	"PeachyTalkService/internal/app/ginx"
+	"PeachyTalkService/pkg/auth"
+	"PeachyTalkService/pkg/errors"
+	"PeachyTalkService/pkg/logger"
+
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,9 +1,9 @@
 package app
 
 import (
+	"PeachyTalkService/internal/app/config"
+	"PeachyTalkService/internal/app/model/gormx"
 	"errors"
-	"ginAdmin/internal/app/config"
-	"ginAdmin/internal/app/model/gormx"
 
 	"gorm.io/gorm"
 )

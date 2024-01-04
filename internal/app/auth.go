@@ -1,10 +1,11 @@
 package app
 
 import (
-	"ginAdmin/internal/app/config"
-	"ginAdmin/pkg/auth"
-	"ginAdmin/pkg/auth/jwtauth"
-	"ginAdmin/pkg/auth/jwtauth/store/redis"
+	"PeachyTalkService/internal/app/config"
+	"PeachyTalkService/pkg/auth"
+	"PeachyTalkService/pkg/auth/jwtauth"
+	"PeachyTalkService/pkg/auth/jwtauth/store/redis"
+
 	jwt "github.com/dgrijalva/jwt-go"
 )
 

@@ -1,8 +1,8 @@
 package auth
 
 import (
+	"PeachyTalkService/pkg/errors"
 	"context"
-	"ginAdmin/pkg/errors"
 )
 
 // 定义错误

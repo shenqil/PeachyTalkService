@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"PeachyTalkService/internal/app/ginx"
+	"PeachyTalkService/pkg/errors"
 	"fmt"
-	"ginAdmin/internal/app/ginx"
-	"ginAdmin/pkg/errors"
-	"github.com/gin-gonic/gin"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 // NoMethodHandler 未找到请求方法的处理函数

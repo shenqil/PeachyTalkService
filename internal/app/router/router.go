@@ -1,8 +1,8 @@
 package router
 
 import (
-	"ginAdmin/internal/app/api"
-	"ginAdmin/pkg/auth"
+	"PeachyTalkService/internal/app/api"
+	"PeachyTalkService/pkg/auth"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"

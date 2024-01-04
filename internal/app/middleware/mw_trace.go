@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"ginAdmin/internal/app/contextx"
-	"ginAdmin/pkg/logger"
-	"ginAdmin/pkg/util/trace"
+	"PeachyTalkService/internal/app/contextx"
+	"PeachyTalkService/pkg/logger"
+	"PeachyTalkService/pkg/util/trace"
+
 	"github.com/gin-gonic/gin"
 )
 

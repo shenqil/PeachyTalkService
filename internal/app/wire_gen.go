@@ -7,10 +7,10 @@
 package app
 
 import (
-	"ginAdmin/internal/app/api"
-	"ginAdmin/internal/app/model/gormx/repo"
-	"ginAdmin/internal/app/router"
-	"ginAdmin/internal/app/service"
+	"PeachyTalkService/internal/app/api"
+	"PeachyTalkService/internal/app/model/gormx/repo"
+	"PeachyTalkService/internal/app/router"
+	"PeachyTalkService/internal/app/service"
 )
 
 // Injectors from wire.go:

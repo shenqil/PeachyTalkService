@@ -1,13 +1,14 @@
 package jwtauth
 
 import (
+	"PeachyTalkService/pkg/auth"
 	"context"
-	"ginAdmin/pkg/auth"
-	jwt "github.com/dgrijalva/jwt-go"
 	"time"
+
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
-const defaultKey = "ginAdmin"
+const defaultKey = "PeachyTalkService"
 
 type options struct {
 	tokenType     string

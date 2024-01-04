@@ -1,14 +1,15 @@
 package middleware
 
 import (
+	"PeachyTalkService/internal/app/config"
+	"PeachyTalkService/internal/app/ginx"
 	"bytes"
 	"compress/gzip"
-	"ginAdmin/internal/app/config"
-	"ginAdmin/internal/app/ginx"
-	"github.com/gin-gonic/gin"
 	"io"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // CopyBodyMiddleware 复制正文

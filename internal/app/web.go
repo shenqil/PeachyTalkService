@@ -1,9 +1,9 @@
 package app
 
 import (
-	"ginAdmin/internal/app/config"
-	"ginAdmin/internal/app/middleware"
-	"ginAdmin/internal/app/router"
+	"PeachyTalkService/internal/app/config"
+	"PeachyTalkService/internal/app/middleware"
+	"PeachyTalkService/internal/app/router"
 
 	"github.com/LyricTian/gzip"
 	"github.com/gin-gonic/gin"

@@ -1,13 +1,14 @@
 package service
 
 import (
+	"PeachyTalkService/internal/app/model/gormx/repo"
+	"PeachyTalkService/internal/app/schema"
+	"PeachyTalkService/pkg/errors"
 	"context"
-	"ginAdmin/internal/app/model/gormx/repo"
-	"ginAdmin/internal/app/schema"
-	"ginAdmin/pkg/errors"
-	"github.com/google/wire"
 	"strings"
 	"time"
+
+	"github.com/google/wire"
 )
 
 // FriendSet 注入好友

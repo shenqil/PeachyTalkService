@@ -1,10 +1,10 @@
 package schema
 
 import (
+	"PeachyTalkService/internal/app/config"
+	"PeachyTalkService/pkg/util/hash"
+	"PeachyTalkService/pkg/util/json"
 	"context"
-	"ginAdmin/internal/app/config"
-	"ginAdmin/pkg/util/hash"
-	"ginAdmin/pkg/util/json"
 	"time"
 )
 

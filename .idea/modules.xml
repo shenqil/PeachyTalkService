@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ginAdmin.iml" filepath="$PROJECT_DIR$/.idea/ginAdmin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PeachyTalkService.iml" filepath="$PROJECT_DIR$/.idea/PeachyTalkService.iml" />
     </modules>
   </component>
 </project>

@@ -1,10 +1,11 @@
 package middleware
 
 import (
-	"ginAdmin/internal/app/config"
+	"PeachyTalkService/internal/app/config"
+	"time"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"time"
 )
 
 // CORSMiddleware 跨域请求中间件

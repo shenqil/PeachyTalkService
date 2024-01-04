@@ -1,15 +1,16 @@
 package ginx
 
 import (
+	"PeachyTalkService/internal/app/schema"
+	"PeachyTalkService/pkg/errors"
+	"PeachyTalkService/pkg/logger"
+	"PeachyTalkService/pkg/util/json"
 	"fmt"
-	"ginAdmin/internal/app/schema"
-	"ginAdmin/pkg/errors"
-	"ginAdmin/pkg/logger"
-	"ginAdmin/pkg/util/json"
-	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 // 定义上下文中的键

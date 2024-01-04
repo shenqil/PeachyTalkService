@@ -1,15 +1,16 @@
 package middleware
 
 import (
-	"ginAdmin/internal/app/config"
-	"ginAdmin/internal/app/ginx"
-	"ginAdmin/pkg/errors"
+	"PeachyTalkService/internal/app/config"
+	"PeachyTalkService/internal/app/ginx"
+	"PeachyTalkService/pkg/errors"
+	"strconv"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"github.com/go-redis/redis_rate"
 	"golang.org/x/time/rate"
-	"strconv"
-	"time"
 )
 
 // RateLimiterMiddleware 请求频率限制中间件

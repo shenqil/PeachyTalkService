@@ -1,12 +1,12 @@
 package api
 
 import (
-	"ginAdmin/internal/app/config"
-	"ginAdmin/internal/app/ginx"
-	"ginAdmin/internal/app/schema"
-	"ginAdmin/internal/app/service"
-	"ginAdmin/pkg/errors"
-	"ginAdmin/pkg/logger"
+	"PeachyTalkService/internal/app/config"
+	"PeachyTalkService/internal/app/ginx"
+	"PeachyTalkService/internal/app/schema"
+	"PeachyTalkService/internal/app/service"
+	"PeachyTalkService/pkg/errors"
+	"PeachyTalkService/pkg/logger"
 
 	"github.com/LyricTian/captcha"
 	"github.com/gin-gonic/gin"

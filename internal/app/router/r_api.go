@@ -1,8 +1,8 @@
 package router
 
 import (
-	_ "ginAdmin/docs"
-	"ginAdmin/internal/app/middleware"
+	_ "PeachyTalkService/docs"
+	"PeachyTalkService/internal/app/middleware"
 
 	"github.com/gin-gonic/gin"
 )

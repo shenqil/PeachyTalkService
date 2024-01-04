@@ -1,7 +1,7 @@
 package app
 
 import (
-	"ginAdmin/pkg/auth"
+	"PeachyTalkService/pkg/auth"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"

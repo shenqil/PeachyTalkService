@@ -1,14 +1,15 @@
 package middleware
 
 import (
+	"PeachyTalkService/internal/app/ginx"
+	"PeachyTalkService/pkg/errors"
+	"PeachyTalkService/pkg/logger"
 	"bytes"
 	"fmt"
-	"ginAdmin/internal/app/ginx"
-	"ginAdmin/pkg/errors"
-	"ginAdmin/pkg/logger"
-	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"runtime"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (

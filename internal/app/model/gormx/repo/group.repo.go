@@ -1,10 +1,11 @@
 package repo
 
 import (
+	"PeachyTalkService/internal/app/model/gormx/entity"
+	"PeachyTalkService/internal/app/schema"
+	"PeachyTalkService/pkg/errors"
 	"context"
-	"ginAdmin/internal/app/model/gormx/entity"
-	"ginAdmin/internal/app/schema"
-	"ginAdmin/pkg/errors"
+
 	"github.com/google/wire"
 	"gorm.io/gorm"
 )

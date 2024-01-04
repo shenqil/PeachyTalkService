@@ -1,11 +1,11 @@
 package app
 
 import (
+	"PeachyTalkService/internal/app/config"
+	"PeachyTalkService/pkg/logger"
 	"context"
 	"crypto/tls"
 	"fmt"
-	"ginAdmin/internal/app/config"
-	"ginAdmin/pkg/logger"
 	"net/http"
 	"os"
 	"os/signal"

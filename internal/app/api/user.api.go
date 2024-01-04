@@ -1,10 +1,10 @@
 package api
 
 import (
-	"ginAdmin/internal/app/ginx"
-	"ginAdmin/internal/app/schema"
-	"ginAdmin/internal/app/service"
-	"ginAdmin/pkg/errors"
+	"PeachyTalkService/internal/app/ginx"
+	"PeachyTalkService/internal/app/schema"
+	"PeachyTalkService/internal/app/service"
+	"PeachyTalkService/pkg/errors"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"

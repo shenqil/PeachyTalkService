@@ -1,12 +1,12 @@
 package service
 
 import (
+	"PeachyTalkService/internal/app/model/gormx/repo"
+	"PeachyTalkService/internal/app/schema"
+	"PeachyTalkService/pkg/errors"
+	"PeachyTalkService/pkg/util/hash"
+	"PeachyTalkService/pkg/util/uuid"
 	"context"
-	"ginAdmin/internal/app/model/gormx/repo"
-	"ginAdmin/internal/app/schema"
-	"ginAdmin/pkg/errors"
-	"ginAdmin/pkg/util/hash"
-	"ginAdmin/pkg/util/uuid"
 
 	"github.com/google/wire"
 )

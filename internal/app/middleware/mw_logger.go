@@ -1,13 +1,14 @@
 package middleware
 
 import (
-	"ginAdmin/internal/app/config"
-	"ginAdmin/internal/app/ginx"
-	"ginAdmin/pkg/logger"
-	"github.com/gin-gonic/gin"
+	"PeachyTalkService/internal/app/config"
+	"PeachyTalkService/internal/app/ginx"
+	"PeachyTalkService/pkg/logger"
 	"mime"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // LoggerMiddleware 日志中间件

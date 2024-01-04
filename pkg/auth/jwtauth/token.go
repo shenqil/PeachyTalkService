@@ -1,6 +1,6 @@
 package jwtauth
 
-import "ginAdmin/pkg/util/json"
+import "PeachyTalkService/pkg/util/json"
 
 // tokenInfo 令牌信息
 type tokenInfo struct {

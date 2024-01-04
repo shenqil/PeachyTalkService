@@ -1,9 +1,10 @@
 package entity
 
 import (
+	"PeachyTalkService/internal/app/schema"
+	"PeachyTalkService/pkg/util/structure"
 	"context"
-	"ginAdmin/internal/app/schema"
-	"ginAdmin/pkg/util/structure"
+
 	"gorm.io/gorm"
 )
 

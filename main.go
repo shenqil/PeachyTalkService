@@ -1,9 +1,9 @@
 package main
 
 import (
+	"PeachyTalkService/internal/app"
+	"PeachyTalkService/pkg/logger"
 	"context"
-	"ginAdmin/internal/app"
-	"ginAdmin/pkg/logger"
 )
 
 // VERSION 版本号

@@ -1,9 +1,9 @@
 package logger
 
 import (
+	"PeachyTalkService/internal/app/config"
 	"context"
 	"fmt"
-	"ginAdmin/internal/app/config"
 	"os"
 	"path/filepath"
 

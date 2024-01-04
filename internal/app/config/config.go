@@ -1,8 +1,8 @@
 package config
 
 import (
+	"PeachyTalkService/pkg/util/json"
 	"fmt"
-	"ginAdmin/pkg/util/json"
 	"os"
 	"strings"
 	"sync"

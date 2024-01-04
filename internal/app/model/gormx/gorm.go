@@ -1,9 +1,9 @@
 package gormx
 
 import (
-	"ginAdmin/internal/app/config"
-	"ginAdmin/internal/app/model/gormx/entity"
-	"ginAdmin/pkg/logger"
+	"PeachyTalkService/internal/app/config"
+	"PeachyTalkService/internal/app/model/gormx/entity"
+	"PeachyTalkService/pkg/logger"
 	"strings"
 	"time"
 

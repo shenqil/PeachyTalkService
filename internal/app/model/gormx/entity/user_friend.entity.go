@@ -1,11 +1,12 @@
 package entity
 
 import (
+	"PeachyTalkService/internal/app/schema"
+	"PeachyTalkService/pkg/util/structure"
 	"context"
-	"ginAdmin/internal/app/schema"
-	"ginAdmin/pkg/util/structure"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 // GetUserFriendDB 获取用户好友关系储存

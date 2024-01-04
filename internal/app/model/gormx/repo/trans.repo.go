@@ -1,8 +1,9 @@
 package repo
 
 import (
+	"PeachyTalkService/internal/app/contextx"
 	"context"
-	"ginAdmin/internal/app/contextx"
+
 	"github.com/google/wire"
 	"gorm.io/gorm"
 )
