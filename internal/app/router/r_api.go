@@ -12,55 +12,48 @@ func (a *Router) RegisterAPI(app *gin.Engine) {
 	g := app.Group("/api")
 
 	g.Use(middleware.UserAuthMiddleware(a.Auth,
-		middleware.AllowPathPrefixSkipper("/api/v1/pub/login"),
+		middleware.AllowPathPrefixSkipper("/api/v1/login"),
 	))
 
 	g.Use(middleware.RateLimiterMiddleware())
 
 	v1 := g.Group("/v1")
 	{
-		pub := v1.Group("/pub")
+		gLogin := v1.Group("login")
 		{
-			gLogin := pub.Group("login")
-			{
-				gLogin.GET("captchaid", a.LoginAPI.GetCaptcha)
-				gLogin.GET("captcha", a.LoginAPI.ResCaptcha)
-				gLogin.POST("", a.LoginAPI.Login)
-				gLogin.POST("exit", a.LoginAPI.Logout)
-			}
-
-			gCurrent := pub.Group("current")
-			{
-				gCurrent.PUT("password", a.LoginAPI.UpdatePassword)
-				gCurrent.GET("user", a.LoginAPI.GetUserInfo)
-			}
-			pub.POST("/refresh-token", a.LoginAPI.RefreshToken)
+			gLogin.GET("captchaid", a.LoginAPI.GetCaptcha)
+			gLogin.GET("captcha", a.LoginAPI.ResCaptcha)
+			gLogin.POST("", a.LoginAPI.Login)
+			gLogin.POST("exit", a.LoginAPI.Logout)
 		}
 
-		management := v1.Group("/management")
+		gCurrent := v1.Group("current")
 		{
-			gDemo := management.Group("demos")
-			{
-				gDemo.GET("", a.DemoAPI.Query)
-				gDemo.GET(":id", a.DemoAPI.Get)
-				gDemo.POST("", a.DemoAPI.Create)
-				gDemo.PUT(":id", a.DemoAPI.Update)
-				gDemo.DELETE(":id", a.DemoAPI.Delete)
-				gDemo.PATCH(":id/enable", a.DemoAPI.Enable)
-				gDemo.PATCH(":id/disable", a.DemoAPI.Disable)
-			}
+			gCurrent.PUT("password", a.LoginAPI.UpdatePassword)
+			gCurrent.GET("user", a.LoginAPI.GetUserInfo)
+		}
+		v1.POST("/refresh-token", a.LoginAPI.RefreshToken)
 
-			gUser := management.Group("users")
-			{
-				gUser.GET("", a.UserAPI.Query)
-				gUser.GET(":id", a.UserAPI.Get)
-				gUser.POST("", a.UserAPI.Create)
-				gUser.PUT(":id", a.UserAPI.Update)
-				gUser.DELETE(":id", a.UserAPI.Delete)
-				gUser.PATCH(":id/enable", a.UserAPI.Enable)
-				gUser.PATCH(":id/disable", a.UserAPI.Disable)
-			}
+		gDemo := v1.Group("demos")
+		{
+			gDemo.GET("", a.DemoAPI.Query)
+			gDemo.GET(":id", a.DemoAPI.Get)
+			gDemo.POST("", a.DemoAPI.Create)
+			gDemo.PUT(":id", a.DemoAPI.Update)
+			gDemo.DELETE(":id", a.DemoAPI.Delete)
+			gDemo.PATCH(":id/enable", a.DemoAPI.Enable)
+			gDemo.PATCH(":id/disable", a.DemoAPI.Disable)
 		}
 
+		gUser := v1.Group("user")
+		{
+			gUser.GET("", a.UserAPI.Query)
+			gUser.GET(":id", a.UserAPI.Get)
+			gUser.POST("", a.UserAPI.Create)
+			gUser.PUT(":id", a.UserAPI.Update)
+			gUser.DELETE(":id", a.UserAPI.Delete)
+			gUser.PATCH(":id/enable", a.UserAPI.Enable)
+			gUser.PATCH(":id/disable", a.UserAPI.Disable)
+		}
 	}
 }

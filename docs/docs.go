@@ -23,7 +23,90 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/management/demos": {
+        "/api/v1/current/password": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "登录管理"
+                ],
+                "summary": "更新个人密码",
+                "parameters": [
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.UpdatePasswordParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:无效的请求参数}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/current/user": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "登录管理"
+                ],
+                "summary": "获取当前用户信息",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.UserLoginInfo"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/demos": {
             "get": {
                 "security": [
                     {
@@ -143,7 +226,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/management/demos/{id}": {
+        "/api/v1/demos/{id}": {
             "get": {
                 "security": [
                     {
@@ -286,7 +369,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/management/demos/{id}/disable": {
+        "/api/v1/demos/{id}/disable": {
             "patch": {
                 "security": [
                     {
@@ -328,7 +411,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/management/demos/{id}/enable": {
+        "/api/v1/demos/{id}/enable": {
             "patch": {
                 "security": [
                     {
@@ -370,7 +453,154 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/management/users": {
+        "/api/v1/login/exit": {
+            "post": {
+                "tags": [
+                    "登录管理"
+                ],
+                "summary": "用户登出",
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/pub/login": {
+            "post": {
+                "tags": [
+                    "登录管理"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.LoginParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.LoginTokenInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:无效的请求参数}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/pub/login/captcha": {
+            "get": {
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "登录管理"
+                ],
+                "summary": "响应图形验证码",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "验证码ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "重新加载",
+                        "name": "reload",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "图形验证码"
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:无效的请求参数}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/pub/login/captchaid": {
+            "get": {
+                "tags": [
+                    "登录管理"
+                ],
+                "summary": "获取验证码信息",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.LoginCaptcha"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/refresh-token": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "登录管理"
+                ],
+                "summary": "刷新令牌",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.LoginTokenInfo"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user": {
             "get": {
                 "security": [
                     {
@@ -499,7 +729,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/management/users/{id}": {
+        "/api/v1/user/{id}": {
             "get": {
                 "security": [
                     {
@@ -642,7 +872,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/management/users/{id}/disable": {
+        "/api/v1/user/{id}/disable": {
             "patch": {
                 "security": [
                     {
@@ -684,7 +914,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/management/users/{id}/enable": {
+        "/api/v1/user/{id}/enable": {
             "patch": {
                 "security": [
                     {
@@ -709,236 +939,6 @@ var doc = `{
                         "description": "{status:OK}",
                         "schema": {
                             "$ref": "#/definitions/schema.StatusResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/pub/current/password": {
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "登录管理"
-                ],
-                "summary": "更新个人密码",
-                "parameters": [
-                    {
-                        "description": "请求参数",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/schema.UpdatePasswordParam"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{status:OK}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.StatusResult"
-                        }
-                    },
-                    "400": {
-                        "description": "{error:{code:0,message:无效的请求参数}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/pub/current/user": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "登录管理"
-                ],
-                "summary": "获取当前用户信息",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.UserLoginInfo"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/pub/login": {
-            "post": {
-                "tags": [
-                    "登录管理"
-                ],
-                "summary": "用户登录",
-                "parameters": [
-                    {
-                        "description": "请求参数",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/schema.LoginParam"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.LoginTokenInfo"
-                        }
-                    },
-                    "400": {
-                        "description": "{error:{code:0,message:无效的请求参数}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/pub/login/captcha": {
-            "get": {
-                "produces": [
-                    "image/png"
-                ],
-                "tags": [
-                    "登录管理"
-                ],
-                "summary": "响应图形验证码",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "验证码ID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "重新加载",
-                        "name": "reload",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "图形验证码"
-                    },
-                    "400": {
-                        "description": "{error:{code:0,message:无效的请求参数}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/pub/login/captchaid": {
-            "get": {
-                "tags": [
-                    "登录管理"
-                ],
-                "summary": "获取验证码信息",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.LoginCaptcha"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/pub/login/exit": {
-            "post": {
-                "tags": [
-                    "登录管理"
-                ],
-                "summary": "用户登出",
-                "responses": {
-                    "200": {
-                        "description": "{status:OK}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.StatusResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/pub/refresh-token": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "登录管理"
-                ],
-                "summary": "刷新令牌",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.LoginTokenInfo"
                         }
                     },
                     "401": {
@@ -1135,7 +1135,6 @@ var doc = `{
         "schema.User": {
             "type": "object",
             "required": [
-                "avatar",
                 "realName",
                 "status",
                 "userName"

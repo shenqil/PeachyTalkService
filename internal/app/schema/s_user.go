@@ -30,7 +30,7 @@ type User struct {
 	UserName  string    `json:"userName" binding:"required"`           // 用户名
 	RealName  string    `json:"realName" binding:"required"`           // 真实姓名
 	Password  string    `json:"password"`                              // 密码
-	Avatar    string    `json:"avatar" binding:"required"`             // 头像
+	Avatar    string    `json:"avatar"`                                // 头像
 	Phone     string    `json:"phone"`                                 // 手机号
 	Email     string    `json:"email"`                                 // 邮箱
 	Status    int       `json:"status" binding:"required,max=2,min=1"` // 用户状态(1:启用 2:停用)

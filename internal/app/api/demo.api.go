@@ -27,7 +27,7 @@ type Demo struct {
 // @Success 200 {object} schema.ListResult{list=[]schema.Demo} "查询结果"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/demos [get]
+// @Router /api/v1/demos [get]
 func (a *Demo) Query(c *gin.Context) {
 	ctx := c.Request.Context()
 	var params schema.DemoQueryParam
@@ -55,7 +55,7 @@ func (a *Demo) Query(c *gin.Context) {
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 404 {object} schema.ErrorResult "{error:{code:0,message:资源不存在}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/demos/{id} [get]
+// @Router /api/v1/demos/{id} [get]
 func (a *Demo) Get(c *gin.Context) {
 	ctx := c.Request.Context()
 	item, err := a.DemoSrv.Get(ctx, c.Param("id"))
@@ -75,7 +75,7 @@ func (a *Demo) Get(c *gin.Context) {
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/demos [post]
+// @Router /api/v1/demos [post]
 func (a *Demo) Create(c *gin.Context) {
 	ctx := c.Request.Context()
 	var item schema.Demo
@@ -102,7 +102,7 @@ func (a *Demo) Create(c *gin.Context) {
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/demos/{id} [put]
+// @Router /api/v1/demos/{id} [put]
 func (a *Demo) Update(c *gin.Context) {
 	ctx := c.Request.Context()
 	var item schema.Demo
@@ -128,7 +128,7 @@ func (a *Demo) Update(c *gin.Context) {
 // @Success 200 {object} schema.StatusResult "{status:OK}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/demos/{id} [delete]
+// @Router /api/v1/demos/{id} [delete]
 func (a *Demo) Delete(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := a.DemoSrv.Delete(ctx, c.Param("id"))
@@ -147,7 +147,7 @@ func (a *Demo) Delete(c *gin.Context) {
 // @Success 200 {object} schema.StatusResult "{status:OK}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/demos/{id}/enable [patch]
+// @Router /api/v1/demos/{id}/enable [patch]
 func (a *Demo) Enable(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := a.DemoSrv.UpdateStatus(ctx, c.Param("id"), 1)
@@ -166,7 +166,7 @@ func (a *Demo) Enable(c *gin.Context) {
 // @Success 200 {object} schema.StatusResult "{status:OK}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/demos/{id}/disable [patch]
+// @Router /api/v1/demos/{id}/disable [patch]
 func (a *Demo) Disable(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := a.DemoSrv.UpdateStatus(ctx, c.Param("id"), 2)

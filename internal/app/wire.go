@@ -7,6 +7,7 @@ package app
 import (
 	"PeachyTalkService/internal/app/api"
 	"PeachyTalkService/internal/app/model/gormx/repo"
+	"PeachyTalkService/internal/app/model/miniox/bucket"
 	"PeachyTalkService/internal/app/router"
 	"PeachyTalkService/internal/app/service"
 	"github.com/google/wire"
@@ -17,7 +18,9 @@ func BuildInjector() (*Injector, func(), error) {
 	wire.Build(
 		// mock.MockSet,
 		InitGormDB,
+		InitMinio,
 		repo.RepoSet,
+		bucket.BucketSet,
 		InitAuth,
 		InitGinEngine,
 		service.ServiceSet,

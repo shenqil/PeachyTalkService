@@ -72,7 +72,7 @@ type Config struct {
 	Gorm        Gorm
 	MySQL       MySQL
 	Postgres    Postgres
-	MQTT        MQTT
+	MINIO       MINIO
 }
 
 // IsDebugMode 是否是debug模式
@@ -208,13 +208,12 @@ func (a Postgres) DSN() string {
 		a.Host, a.Port, a.User, a.DBName, a.Password, a.SSLMode)
 }
 
-// MQTT 协议
-type MQTT struct {
-	Host        string
-	Port        uint
-	ClientID    string
-	KeepAlive   int64
-	PingTimeout int64
-	LogPrefix   string
-	TopicPrefix string
+// MINIO 存储桶
+type MINIO struct {
+	Endpoint        string
+	AccessKeyID     string
+	SecretAccessKey string
+	UseSSL          bool
+	Debug           bool
+	AutoMakeBucket  bool
 }

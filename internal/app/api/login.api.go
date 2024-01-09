@@ -115,7 +115,7 @@ func (a *Login) Login(c *gin.Context) {
 // @Tags 登录管理
 // @Summary 用户登出
 // @Success 200 {object} schema.StatusResult "{status:OK}"
-// @Router /api/v1/pub/login/exit [post]
+// @Router /api/v1/login/exit [post]
 func (a *Login) Logout(c *gin.Context) {
 	ctx := c.Request.Context()
 
@@ -139,7 +139,7 @@ func (a *Login) Logout(c *gin.Context) {
 // @Success 200 {object} schema.LoginTokenInfo
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/pub/refresh-token [post]
+// @Router /api/v1/refresh-token [post]
 func (a *Login) RefreshToken(c *gin.Context) {
 	ctx := c.Request.Context()
 	tokenInfo, err := a.LoginSrv.GenerateToken(ctx, ginx.GetUserID(c))
@@ -157,7 +157,7 @@ func (a *Login) RefreshToken(c *gin.Context) {
 // @Success 200 {object} schema.UserLoginInfo
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/pub/current/user [get]
+// @Router /api/v1/current/user [get]
 func (a *Login) GetUserInfo(c *gin.Context) {
 	ctx := c.Request.Context()
 	info, err := a.LoginSrv.GetLoginInfo(ctx, ginx.GetUserID(c))
@@ -177,7 +177,7 @@ func (a *Login) GetUserInfo(c *gin.Context) {
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/pub/current/password [put]
+// @Router /api/v1/current/password [put]
 func (a *Login) UpdatePassword(c *gin.Context) {
 	ctx := c.Request.Context()
 	var item schema.UpdatePasswordParam

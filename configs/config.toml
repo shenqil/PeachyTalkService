@@ -182,18 +182,11 @@ DBName = "gin-admin"
 # SSL模式
 SSLMode = "disable"
 
-[MQTT]
+[MINIO]
+Debug = false
+AutoMakeBucket = true
 # 连接地址
-Host = "127.0.0.1"
-# 连接端口
-Port = 1883
-# 客户端ID
-ClientID = "IM_Server"
-# 多久未通讯认为是断开
-KeepAlive = 60
-# 心跳包
-PingTimeout = 1
-# 日志前缀
-LogPrefix = "mqtt_"
-# 主题前缀
-TopicPrefix = "IMServer"
+Endpoint = "localhost:9000"
+AccessKeyID = "toQVQar56ALcXP4k0oNv"
+SecretAccessKey = "7styo8rKK73AqZZlJ9qC4rtIJH74NOtnmG9YD9oN"
+UseSSL = false

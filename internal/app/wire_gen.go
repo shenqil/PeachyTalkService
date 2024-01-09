@@ -9,6 +9,7 @@ package app
 import (
 	"PeachyTalkService/internal/app/api"
 	"PeachyTalkService/internal/app/model/gormx/repo"
+	"PeachyTalkService/internal/app/model/miniox/bucket"
 	"PeachyTalkService/internal/app/router"
 	"PeachyTalkService/internal/app/service"
 )
@@ -48,9 +49,19 @@ func BuildInjector() (*Injector, func(), error) {
 	trans := &repo.Trans{
 		DB: db,
 	}
+	client, cleanup3, err := InitMinio()
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	avatar := &bucket.Avatar{
+		MinioClient: client,
+	}
 	serviceUser := &service.User{
-		TransModel: trans,
-		UserModel:  user,
+		TransModel:  trans,
+		UserModel:   user,
+		AvatarModel: avatar,
 	}
 	apiUser := &api.User{
 		UserSrv: serviceUser,
@@ -67,6 +78,7 @@ func BuildInjector() (*Injector, func(), error) {
 		Auth:   auther,
 	}
 	return injector, func() {
+		cleanup3()
 		cleanup2()
 		cleanup()
 	}, nil

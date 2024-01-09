@@ -93,8 +93,8 @@ func AutoMigrate(db *gorm.DB) error {
 	return db.AutoMigrate(
 		new(entity.Demo),
 		new(entity.User),
-		new(entity.UserFriend),
-		new(entity.Group),
-		new(entity.GroupMembers),
+		//new(entity.UserFriend),
+		//new(entity.Group),
+		//new(entity.GroupMembers),
 	)
 }

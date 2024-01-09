@@ -2,12 +2,16 @@ package service
 
 import (
 	"PeachyTalkService/internal/app/model/gormx/repo"
+	"PeachyTalkService/internal/app/model/miniox/bucket"
 	"PeachyTalkService/internal/app/schema"
 	"PeachyTalkService/pkg/errors"
+	"PeachyTalkService/pkg/logger"
+	"PeachyTalkService/pkg/util/font2Img"
 	"PeachyTalkService/pkg/util/hash"
 	"PeachyTalkService/pkg/util/uuid"
 	"context"
-
+	"crypto/md5"
+	"fmt"
 	"github.com/google/wire"
 )
 
@@ -16,8 +20,9 @@ var UserSet = wire.NewSet(wire.Struct(new(User), "*"))
 
 // User 用户管理
 type User struct {
-	TransModel *repo.Trans
-	UserModel  *repo.User
+	TransModel  *repo.Trans
+	UserModel   *repo.User
+	AvatarModel *bucket.Avatar
 }
 
 // Query 查询数据
@@ -58,6 +63,25 @@ func (a *User) Create(ctx context.Context, item schema.User) (*schema.IDResult, 
 
 	item.Password = hash.SHA1String(item.Password)
 	item.ID = uuid.MustString()
+
+	if item.Avatar == "" {
+		reader, err := font2Img.GetReader(item.RealName)
+		if err == nil {
+			h := md5.New()
+			h.Write([]byte(item.RealName))
+			fileName := fmt.Sprintf("%x.png", h.Sum(nil))
+
+			info, err := a.AvatarModel.Upload(ctx, fileName, reader, -1, "image/png")
+			if err == nil {
+				item.Avatar = info.Key
+			} else {
+				logger.WithContext(ctx).Errorf("[user.srv][Create] UploadAvatar err = %s", err.Error())
+			}
+		} else {
+			logger.WithContext(ctx).Errorf("[user.srv][Create] GetReader err = %s", err.Error())
+		}
+	}
+
 	err = a.TransModel.Exec(ctx, func(ctx context.Context) error {
 		return a.UserModel.Create(ctx, item)
 	})

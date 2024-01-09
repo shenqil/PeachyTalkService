@@ -29,7 +29,7 @@ type User struct {
 // @Success 200 {object} schema.ListResult{list=[]schema.Users} "查询结果"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/users [get]
+// @Router /api/v1/user [get]
 func (a *User) Query(c *gin.Context) {
 	ctx := c.Request.Context()
 	var params schema.UserQueryParam
@@ -57,7 +57,7 @@ func (a *User) Query(c *gin.Context) {
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 404 {object} schema.ErrorResult "{error:{code:0,message:资源不存在}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/users/{id} [get]
+// @Router /api/v1/user/{id} [get]
 func (a *User) Get(c *gin.Context) {
 	ctx := c.Request.Context()
 	item, err := a.UserSrv.Get(ctx, c.Param("id"))
@@ -77,7 +77,7 @@ func (a *User) Get(c *gin.Context) {
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/users [post]
+// @Router /api/v1/user [post]
 func (a *User) Create(c *gin.Context) {
 	ctx := c.Request.Context()
 	var item schema.User
@@ -108,7 +108,7 @@ func (a *User) Create(c *gin.Context) {
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/users/{id} [put]
+// @Router /api/v1/user/{id} [put]
 func (a *User) Update(c *gin.Context) {
 	ctx := c.Request.Context()
 	var item schema.User
@@ -133,7 +133,7 @@ func (a *User) Update(c *gin.Context) {
 // @Success 200 {object} schema.StatusResult "{status:OK}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/users/{id} [delete]
+// @Router /api/v1/user/{id} [delete]
 func (a *User) Delete(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := a.UserSrv.Delete(ctx, c.Param("id"))
@@ -152,7 +152,7 @@ func (a *User) Delete(c *gin.Context) {
 // @Success 200 {object} schema.StatusResult "{status:OK}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/users/{id}/enable [patch]
+// @Router /api/v1/user/{id}/enable [patch]
 func (a *User) Enable(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := a.UserSrv.UpdateStatus(ctx, c.Param("id"), 1)
@@ -171,7 +171,7 @@ func (a *User) Enable(c *gin.Context) {
 // @Success 200 {object} schema.StatusResult "{status:OK}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /api/v1/management/users/{id}/disable [patch]
+// @Router /api/v1/user/{id}/disable [patch]
 func (a *User) Disable(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := a.UserSrv.UpdateStatus(ctx, c.Param("id"), 2)

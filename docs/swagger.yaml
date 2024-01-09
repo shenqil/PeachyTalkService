@@ -154,7 +154,6 @@ definitions:
         description: 用户名
         type: string
     required:
-    - avatar
     - realName
     - status
     - userName
@@ -174,7 +173,58 @@ definitions:
 info:
   contact: {}
 paths:
-  /api/v1/management/demos:
+  /api/v1/current/password:
+    put:
+      parameters:
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.UpdatePasswordParam'
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新个人密码
+      tags:
+      - 登录管理
+  /api/v1/current/user:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.UserLoginInfo'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取当前用户信息
+      tags:
+      - 登录管理
+  /api/v1/demos:
     get:
       parameters:
       - default: 1
@@ -248,7 +298,7 @@ paths:
       summary: 创建数据
       tags:
       - Demo
-  /api/v1/management/demos/{id}:
+  /api/v1/demos/{id}:
     delete:
       parameters:
       - description: 唯一标识
@@ -338,7 +388,7 @@ paths:
       summary: 更新数据
       tags:
       - Demo
-  /api/v1/management/demos/{id}/disable:
+  /api/v1/demos/{id}/disable:
     patch:
       parameters:
       - description: 唯一标识
@@ -364,7 +414,7 @@ paths:
       summary: 禁用数据
       tags:
       - Demo
-  /api/v1/management/demos/{id}/enable:
+  /api/v1/demos/{id}/enable:
     patch:
       parameters:
       - description: 唯一标识
@@ -390,7 +440,100 @@ paths:
       summary: 启用数据
       tags:
       - Demo
-  /api/v1/management/users:
+  /api/v1/login/exit:
+    post:
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+      summary: 用户登出
+      tags:
+      - 登录管理
+  /api/v1/pub/login:
+    post:
+      parameters:
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.LoginParam'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.LoginTokenInfo'
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      summary: 用户登录
+      tags:
+      - 登录管理
+  /api/v1/pub/login/captcha:
+    get:
+      parameters:
+      - description: 验证码ID
+        in: query
+        name: id
+        required: true
+        type: string
+      - description: 重新加载
+        in: query
+        name: reload
+        type: string
+      produces:
+      - image/png
+      responses:
+        "200":
+          description: 图形验证码
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      summary: 响应图形验证码
+      tags:
+      - 登录管理
+  /api/v1/pub/login/captchaid:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.LoginCaptcha'
+      summary: 获取验证码信息
+      tags:
+      - 登录管理
+  /api/v1/refresh-token:
+    post:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.LoginTokenInfo'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 刷新令牌
+      tags:
+      - 登录管理
+  /api/v1/user:
     get:
       parameters:
       - default: 1
@@ -470,7 +613,7 @@ paths:
       summary: 创建数据
       tags:
       - 用户管理
-  /api/v1/management/users/{id}:
+  /api/v1/user/{id}:
     delete:
       parameters:
       - description: 唯一标识
@@ -560,7 +703,7 @@ paths:
       summary: 更新数据
       tags:
       - 用户管理
-  /api/v1/management/users/{id}/disable:
+  /api/v1/user/{id}/disable:
     patch:
       parameters:
       - description: 唯一标识
@@ -586,7 +729,7 @@ paths:
       summary: 禁用数据
       tags:
       - 用户管理
-  /api/v1/management/users/{id}/enable:
+  /api/v1/user/{id}/enable:
     patch:
       parameters:
       - description: 唯一标识
@@ -612,148 +755,4 @@ paths:
       summary: 启用数据
       tags:
       - 用户管理
-  /api/v1/pub/current/password:
-    put:
-      parameters:
-      - description: 请求参数
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/schema.UpdatePasswordParam'
-      responses:
-        "200":
-          description: '{status:OK}'
-          schema:
-            $ref: '#/definitions/schema.StatusResult'
-        "400":
-          description: '{error:{code:0,message:无效的请求参数}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 更新个人密码
-      tags:
-      - 登录管理
-  /api/v1/pub/current/user:
-    get:
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.UserLoginInfo'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 获取当前用户信息
-      tags:
-      - 登录管理
-  /api/v1/pub/login:
-    post:
-      parameters:
-      - description: 请求参数
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/schema.LoginParam'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.LoginTokenInfo'
-        "400":
-          description: '{error:{code:0,message:无效的请求参数}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      summary: 用户登录
-      tags:
-      - 登录管理
-  /api/v1/pub/login/captcha:
-    get:
-      parameters:
-      - description: 验证码ID
-        in: query
-        name: id
-        required: true
-        type: string
-      - description: 重新加载
-        in: query
-        name: reload
-        type: string
-      produces:
-      - image/png
-      responses:
-        "200":
-          description: 图形验证码
-        "400":
-          description: '{error:{code:0,message:无效的请求参数}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      summary: 响应图形验证码
-      tags:
-      - 登录管理
-  /api/v1/pub/login/captchaid:
-    get:
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.LoginCaptcha'
-      summary: 获取验证码信息
-      tags:
-      - 登录管理
-  /api/v1/pub/login/exit:
-    post:
-      responses:
-        "200":
-          description: '{status:OK}'
-          schema:
-            $ref: '#/definitions/schema.StatusResult'
-      summary: 用户登出
-      tags:
-      - 登录管理
-  /api/v1/pub/refresh-token:
-    post:
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.LoginTokenInfo'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 刷新令牌
-      tags:
-      - 登录管理
 swagger: "2.0"
