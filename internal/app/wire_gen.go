@@ -66,11 +66,18 @@ func BuildInjector() (*Injector, func(), error) {
 	apiUser := &api.User{
 		UserSrv: serviceUser,
 	}
+	file := &service.File{
+		AvatarModel: avatar,
+	}
+	apiFile := &api.File{
+		FileSrv: file,
+	}
 	routerRouter := &router.Router{
 		Auth:     auther,
 		DemoAPI:  apiDemo,
 		LoginAPI: apiLogin,
 		UserAPI:  apiUser,
+		File:     apiFile,
 	}
 	engine := InitGinEngine(routerRouter)
 	injector := &Injector{

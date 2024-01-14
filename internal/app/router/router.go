@@ -25,6 +25,7 @@ type Router struct {
 	DemoAPI  *api.Demo
 	LoginAPI *api.Login
 	UserAPI  *api.User
+	File     *api.File
 }
 
 func (a *Router) Register(app *gin.Engine) error {

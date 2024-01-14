@@ -7,4 +7,5 @@ var APISet = wire.NewSet(
 	DemoSet,
 	LoginSet,
 	UserSet,
+	FileSet,
 )

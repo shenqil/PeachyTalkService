@@ -55,5 +55,10 @@ func (a *Router) RegisterAPI(app *gin.Engine) {
 			gUser.PATCH(":id/enable", a.UserAPI.Enable)
 			gUser.PATCH(":id/disable", a.UserAPI.Disable)
 		}
+
+		gFile := v1.Group("file")
+		{
+			gFile.POST("", a.File.Upload)
+		}
 	}
 }

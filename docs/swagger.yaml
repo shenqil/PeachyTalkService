@@ -132,9 +132,15 @@ definitions:
       creator:
         description: 创建者
         type: string
+      dateOfBirth:
+        description: 出生日期
+        type: integer
       email:
         description: 邮箱
         type: string
+      gender:
+        description: 性别(1:男 0:女)
+        type: integer
       id:
         description: 唯一标识
         type: string
@@ -440,6 +446,50 @@ paths:
       summary: 启用数据
       tags:
       - Demo
+  /api/v1/file:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 文件名称
+        in: formData
+        name: name
+        type: string
+      - description: 文件大小
+        in: formData
+        name: size
+        type: integer
+      - description: 是否为上传头像
+        in: formData
+        name: avatar
+        type: boolean
+      - description: file
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.IDResult'
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 上传文件
+      tags:
+      - File
   /api/v1/login/exit:
     post:
       responses:

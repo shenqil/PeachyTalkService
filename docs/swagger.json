@@ -434,6 +434,75 @@
                 }
             }
         },
+        "/api/v1/file": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "上传文件",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "文件名称",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "文件大小",
+                        "name": "size",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "是否为上传头像",
+                        "name": "avatar",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "file",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.IDResult"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:无效的请求参数}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/login/exit": {
             "post": {
                 "tags": [
@@ -1133,9 +1202,17 @@
                     "description": "创建者",
                     "type": "string"
                 },
+                "dateOfBirth": {
+                    "description": "出生日期",
+                    "type": "integer"
+                },
                 "email": {
                     "description": "邮箱",
                     "type": "string"
+                },
+                "gender": {
+                    "description": "性别(1:男 0:女)",
+                    "type": "integer"
                 },
                 "id": {
                     "description": "唯一标识",
