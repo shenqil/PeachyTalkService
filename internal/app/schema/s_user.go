@@ -32,7 +32,7 @@ type User struct {
 	Password    string    `json:"password"`                              // 密码
 	Avatar      string    `json:"avatar"`                                // 头像
 	Gender      int       `json:"gender"`                                // 性别(1:男 0:女)
-	DateOfBirth int       `json:"dateOfBirth"`                           // 出生日期
+	DateOfBirth string    `json:"dateOfBirth"`                           // 出生日期
 	Phone       string    `json:"phone"`                                 // 手机号
 	Email       string    `json:"email"`                                 // 邮箱
 	Status      int       `json:"status" binding:"required,max=2,min=1"` // 用户状态(1:启用 2:停用)
