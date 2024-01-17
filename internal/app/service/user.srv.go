@@ -10,7 +10,6 @@ import (
 	"PeachyTalkService/pkg/util/hash"
 	"PeachyTalkService/pkg/util/uuid"
 	"context"
-	"fmt"
 	"github.com/google/wire"
 )
 
@@ -66,8 +65,7 @@ func (a *User) Create(ctx context.Context, item schema.User) (*schema.IDResult, 
 	if item.Avatar == "" {
 		reader, err := font2Img.GetReader(item.RealName)
 		if err == nil {
-			fileName := fmt.Sprintf("%s.png", item.UserName)
-			info, err := a.AvatarModel.Upload(ctx, fileName, reader, -1, "image/png")
+			info, err := a.AvatarModel.Upload(ctx, item.UserName, reader, -1, "image/png")
 			if err == nil {
 				item.Avatar = info.Key
 			} else {

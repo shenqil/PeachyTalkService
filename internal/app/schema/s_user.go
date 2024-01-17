@@ -31,7 +31,7 @@ type User struct {
 	RealName    string    `json:"realName" binding:"required"`           // 真实姓名
 	Password    string    `json:"password"`                              // 密码
 	Avatar      string    `json:"avatar"`                                // 头像
-	Gender      int       `json:"gender"`                                // 性别(1:男 0:女)
+	Gender      int       `json:"gender"`                                // 性别(1:男 2:女)
 	DateOfBirth string    `json:"dateOfBirth"`                           // 出生日期
 	Phone       string    `json:"phone"`                                 // 手机号
 	Email       string    `json:"email"`                                 // 邮箱
