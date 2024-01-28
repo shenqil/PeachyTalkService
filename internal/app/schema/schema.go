@@ -123,6 +123,11 @@ func NewIDResult(id string) *IDResult {
 	}
 }
 
+// IDsRequest 请求的id列表
+type IDsRequest struct {
+	IDs []string `json:"ids"`
+}
+
 // IDResult 响应唯一标识
 type IDResult struct {
 	ID string `json:"id"`

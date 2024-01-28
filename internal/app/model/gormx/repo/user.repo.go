@@ -110,6 +110,12 @@ func (a *User) Delete(ctx context.Context, id string) error {
 	return errors.WithStack(result.Error)
 }
 
+// BatchDelete 批量删除
+func (a *User) BatchDelete(ctx context.Context, ids []string) error {
+	result := entity.GetUserDB(ctx, a.DB).Where("id in (?)", ids).Delete(&entity.User{})
+	return errors.WithStack(result.Error)
+}
+
 // UpdateStatus 更新状态
 func (a *User) UpdateStatus(ctx context.Context, id string, status int) error {
 	result := entity.GetUserDB(ctx, a.DB).Where("id=?", id).Update("status", status)

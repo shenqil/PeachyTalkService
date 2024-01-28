@@ -45,12 +45,13 @@ func (a *Router) RegisterAPI(app *gin.Engine) {
 			gDemo.PATCH(":id/disable", a.DemoAPI.Disable)
 		}
 
-		gUser := v1.Group("user")
+		gUser := v1.Group("users")
 		{
 			gUser.GET("", a.UserAPI.Query)
 			gUser.GET(":id", a.UserAPI.Get)
 			gUser.POST("", a.UserAPI.Create)
 			gUser.PUT(":id", a.UserAPI.Update)
+			gUser.DELETE("", a.UserAPI.BatchDelete)
 			gUser.DELETE(":id", a.UserAPI.Delete)
 			gUser.PATCH(":id/enable", a.UserAPI.Enable)
 			gUser.PATCH(":id/disable", a.UserAPI.Disable)

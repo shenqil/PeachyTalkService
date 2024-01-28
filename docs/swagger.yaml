@@ -50,6 +50,13 @@ definitions:
       id:
         type: string
     type: object
+  schema.IDsRequest:
+    properties:
+      ids:
+        items:
+          type: string
+        type: array
+    type: object
   schema.ListResult:
     properties:
       list: {}
@@ -134,12 +141,12 @@ definitions:
         type: string
       dateOfBirth:
         description: 出生日期
-        type: integer
+        type: string
       email:
         description: 邮箱
         type: string
       gender:
-        description: 性别(1:男 0:女)
+        description: 性别(1:男 2:女)
         type: integer
       id:
         description: 唯一标识
@@ -583,7 +590,33 @@ paths:
       summary: 刷新令牌
       tags:
       - 登录管理
-  /api/v1/user:
+  /api/v1/users:
+    delete:
+      parameters:
+      - description: 需要删除的
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.IDsRequest'
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除数据
+      tags:
+      - 用户管理
     get:
       parameters:
       - default: 1
@@ -663,7 +696,7 @@ paths:
       summary: 创建数据
       tags:
       - 用户管理
-  /api/v1/user/{id}:
+  /api/v1/users/{id}:
     delete:
       parameters:
       - description: 唯一标识
@@ -753,7 +786,7 @@ paths:
       summary: 更新数据
       tags:
       - 用户管理
-  /api/v1/user/{id}/disable:
+  /api/v1/users/{id}/disable:
     patch:
       parameters:
       - description: 唯一标识
@@ -779,7 +812,7 @@ paths:
       summary: 禁用数据
       tags:
       - 用户管理
-  /api/v1/user/{id}/enable:
+  /api/v1/users/{id}/enable:
     patch:
       parameters:
       - description: 唯一标识

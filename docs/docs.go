@@ -669,7 +669,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/user": {
+        "/api/v1/users": {
             "get": {
                 "security": [
                     {
@@ -796,9 +796,51 @@ var doc = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "批量删除数据",
+                "parameters": [
+                    {
+                        "description": "需要删除的",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.IDsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:OK}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.StatusResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
             }
         },
-        "/api/v1/user/{id}": {
+        "/api/v1/users/{id}": {
             "get": {
                 "security": [
                     {
@@ -941,7 +983,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/user/{id}/disable": {
+        "/api/v1/users/{id}/disable": {
             "patch": {
                 "security": [
                     {
@@ -983,7 +1025,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/user/{id}/enable": {
+        "/api/v1/users/{id}/enable": {
             "patch": {
                 "security": [
                     {
@@ -1096,6 +1138,17 @@ var doc = `{
             "properties": {
                 "id": {
                     "type": "string"
+                }
+            }
+        },
+        "schema.IDsRequest": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -1223,14 +1276,14 @@ var doc = `{
                 },
                 "dateOfBirth": {
                     "description": "出生日期",
-                    "type": "integer"
+                    "type": "string"
                 },
                 "email": {
                     "description": "邮箱",
                     "type": "string"
                 },
                 "gender": {
-                    "description": "性别(1:男 0:女)",
+                    "description": "性别(1:男 2:女)",
                     "type": "integer"
                 },
                 "id": {

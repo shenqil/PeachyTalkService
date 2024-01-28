@@ -155,6 +155,19 @@ func (a *User) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
+// BatchDelete 批量删除
+func (a *User) BatchDelete(ctx context.Context, ids []string) error {
+
+	err := a.TransModel.Exec(ctx, func(ctx context.Context) error {
+		return a.UserModel.BatchDelete(ctx, ids)
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // UpdateStatus 更新状态
 func (a *User) UpdateStatus(ctx context.Context, id string, status int) error {
 	oldItem, err := a.UserModel.Get(ctx, id)
